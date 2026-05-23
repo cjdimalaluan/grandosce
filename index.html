@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPCM Pediatrics OSCE Simulator</title>
+    <title>2025 UPCM Pediatrics OSCE Trainer - Ultimate Master Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans">
     <div id="root"></div>
@@ -15,83 +23,93 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- View 1: Master Reference ---
+        // --- View 1: Ultimate Master Cheat Sheet ---
         const MasterReference = () => (
-            <div className="space-y-10 animate-fade-in">
-                {/* Anthro & Vitals Section */}
+            <div className="space-y-10 animate-fade-in pb-10">
+                {/* Reporting & Scripts Section */}
                 <div>
-                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Anthropometrics & Vital Signs Reference</h2>
+                    <h2 className="text-2xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-4">Must-Knows: OSCE Reporting & Scripts</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="overflow-x-auto shadow rounded-lg border border-slate-200">
-                            <table className="min-w-full text-left text-sm bg-white">
-                                <thead className="bg-indigo-50 text-indigo-900">
-                                    <tr>
-                                        <th className="p-3 font-semibold">Age Group</th>
-                                        <th className="p-3 font-semibold">Heart Rate (bpm)</th>
-                                        <th className="p-3 font-semibold">Resp. Rate (cpm)</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-200">
-                                    <tr><td className="p-3 font-medium">Neonate (0-28 days)</td><td className="p-3">100 - 205</td><td className="p-3">40 - 60</td></tr>
-                                    <tr><td className="p-3 font-medium">Infant (1 mo - 1 yr)</td><td className="p-3">100 - 190</td><td className="p-3">30 - 53</td></tr>
-                                    <tr><td className="p-3 font-medium">Toddler (1 - 2 yrs)</td><td className="p-3">98 - 140</td><td className="p-3">22 - 37</td></tr>
-                                    <tr><td className="p-3 font-medium">Preschool (3 - 5 yrs)</td><td className="p-3">80 - 120</td><td className="p-3">20 - 28</td></tr>
-                                    <tr><td className="p-3 font-medium">School Age (6 - 11 yrs)</td><td className="p-3">75 - 118</td><td className="p-3">18 - 25</td></tr>
-                                </tbody>
-                            </table>
+                        <div className="bg-emerald-50 shadow rounded-lg border border-emerald-200 p-5">
+                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">Consultant Reporting Template (Anthro/Vitals)</h3>
+                            <p className="text-sm text-slate-700 italic mb-2">"Doc, presenting my patient, a [Age]-old [Gender]."</p>
+                            <ul className="text-sm space-y-2 text-slate-800">
+                                <li><strong>Vitals:</strong> "Heart rate is [HR], which is [Normal/Tachycardic/Bradycardic] for age. Respiratory rate is [RR], which is [Normal/Tachypneic/Bradypneic] for age."</li>
+                                <li><strong>Anthro Execution:</strong> "Because the patient is [under/over] 2 years old, I used a [Recumbent Board / Stadiometer]. [If applicable: "Since they refused to stand, I measured recumbent and subtracted 0.7cm."]"</li>
+                                <li><strong>Diagnosis:</strong> "Based on the adjusted measurements, the WFH Z-score is [X], indicating [Diagnosis]. However, noting the presence of [MUAC &lt; 11.5cm / Bilateral Edema], the final diagnosis is Severe Acute Malnutrition (SAM)."</li>
+                            </ul>
                         </div>
+                        <div className="bg-emerald-50 shadow rounded-lg border border-emerald-200 p-5">
+                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">Patient Counseling Script (Vaccines)</h3>
+                            <ul className="text-sm space-y-2 text-slate-800">
+                                <li><strong>Intro:</strong> "Magandang araw po, ako po si Dok, ang clinical clerk na titingin kay baby ngayon."</li>
+                                <li><strong>Action (IM/SC):</strong> "Mommy, ituturok po natin itong bakuna sa [kanang hita / braso] ni baby. Ang bakunang ito ay para proteksyunan siya sa..."</li>
+                                <li><strong>Action (PO):</strong> "Papainumin po natin si baby ng oral drops para sa Rotavirus/Polio."</li>
+                                <li><strong>Side Effects:</strong> "Inaasahan po natin na baka mamula, mamaga, o sumakit ang tinurukan, at baka lagnatin si baby. Pwede po nating punasan ng maligamgam na tubig at painumin ng paracetamol kung kinakailangan."</li>
+                                <li><strong>Deferral:</strong> "Dahil marami na po tayong ituturok ngayon, ipagpapaliban po muna natin ang [Vaccine] para hindi masyadong masaktan si baby."</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-                        <div className="space-y-4">
-                            <div className="bg-white shadow rounded-lg border border-slate-200 p-4">
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">Measurement Rules</h3>
-                                <ul className="text-sm space-y-2 text-slate-700">
-                                    <li><span className="font-bold text-slate-900">&lt; 2 years old:</span> MUST use <strong>Recumbent Length Board</strong>. Requires two people. Push knees flat.</li>
-                                    <li><span className="font-bold text-slate-900">&ge; 2 years old:</span> MUST use <strong>Standing Height (Stadiometer)</strong>. Heels, buttocks, shoulders, back of head touching the board.</li>
-                                    <li><span className="font-bold text-slate-900">Head Circumference:</span> Measure over the most prominent part of the occiput and just above the supraorbital ridges.</li>
+                {/* Anthro Rules */}
+                <div>
+                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Anthropometrics & SAM Rules</h2>
+                    <div className="bg-white shadow rounded-lg border border-slate-200 p-5">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <h3 className="font-bold text-indigo-800 mb-2">Adjustment Rule (+/- 0.7 cm)</h3>
+                                <ul className="text-sm text-slate-700 space-y-1">
+                                    <li>• &lt;2 years measured Standing: <strong>ADD 0.7 cm</strong></li>
+                                    <li>• &ge;2 years measured Recumbent: <strong>SUBTRACT 0.7 cm</strong></li>
                                 </ul>
                             </div>
-                            <div className="bg-white shadow rounded-lg border border-slate-200 p-4">
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">WHO Z-Score Cutoffs</h3>
-                                <ul className="text-sm space-y-1 text-slate-700">
-                                    <li><strong>WFH &lt; -3:</strong> Severe Wasting (SAM)</li>
-                                    <li><strong>WFH &lt; -2:</strong> Wasting (MAM)</li>
-                                    <li><strong>HFA &lt; -3:</strong> Severe Stunting</li>
-                                    <li><strong>HFA &lt; -2:</strong> Stunting</li>
-                                    <li><strong>WFA &lt; -3:</strong> Severely Underweight</li>
-                                    <li><strong>WFA &lt; -2:</strong> Underweight</li>
+                            <div>
+                                <h3 className="font-bold text-indigo-800 mb-2">Independent SAM Criteria</h3>
+                                <ul className="text-sm text-slate-700 space-y-1">
+                                    <li>1. WFH Z-Score &lt; -3</li>
+                                    <li>2. MUAC &lt; 11.5 cm (Ages 6-59m)</li>
+                                    <li>3. Bilateral pitting edema</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-indigo-800 mb-2">Vitals Cutoffs</h3>
+                                <ul className="text-sm text-slate-700 space-y-1">
+                                    <li><strong>Neonate:</strong> HR 100-205 | RR 40-60</li>
+                                    <li><strong>Infant:</strong> HR 100-190 | RR 30-53</li>
+                                    <li><strong>Toddler:</strong> HR 98-140 | RR 22-37</li>
+                                    <li><strong>Preschool:</strong> HR 80-120 | RR 20-28</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Vaccines Section */}
+                {/* Vaccine Cutoffs */}
                 <div>
-                    <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-4">2025 NIP vs Routine Vaccine Matrix</h2>
+                    <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-4">2025 Vaccine Absolute Cutoffs & Traps</h2>
                     <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6 text-sm text-blue-900">
-                        <strong>OSCE Rule:</strong> For this exam, you are graded strictly on the <strong>National Immunization Program (NIP)</strong>. NIP vaccines are free at health centers. "Routine" vaccines are highly recommended by the PPS but are out-of-pocket. 
+                        <strong>NIP / DOH Guidelines:</strong> You must prioritize National Immunization Program (NIP) vaccines: BCG, monovalent Hepatitis B, Pentavalent vaccine (DTwP-Hib-HepB), Bivalent OPV, IPV, PCV, MMR/MR[cite: 49]. School-based: MR, Td, HPV[cite: 50]. Routine vaccines are out-of-pocket recommendations[cite: 45].
                     </div>
                     <div className="overflow-x-auto shadow rounded-lg border border-slate-200">
                         <table className="min-w-full text-left text-sm bg-white">
-                            <thead className="bg-slate-100 text-slate-700">
+                            <thead className="bg-blue-50 text-blue-900">
                                 <tr>
-                                    <th className="p-3 font-semibold">Vaccine</th>
-                                    <th className="p-3 font-semibold">Category</th>
-                                    <th className="p-3 font-semibold">Target Age</th>
-                                    <th className="p-3 font-semibold">Route & Site</th>
-                                    <th className="p-3 font-semibold">OSCE Traps & Rules</th>
+                                    <th className="p-3 font-bold">Vaccine</th>
+                                    <th className="p-3 font-bold">Route / Site</th>
+                                    <th className="p-3 font-bold">Absolute OSCE Traps & Limits (2025 PDF)</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-200">
-                                <tr><td className="p-3 font-bold">BCG</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">Birth</td><td className="p-3">ID (Right Deltoid)</td><td className="p-3">TRAP: Not given to healthy children > 1 year.</td></tr>
-                                <tr><td className="p-3 font-bold">DTP / Hib / Hep B</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">6, 10, 14 wks</td><td className="p-3">IM (Thigh)</td><td className="p-3">Pentavalent. TRAP: DTP Max Age is 7 yrs (switch to Tdap). Hib not needed > 5 yrs.</td></tr>
-                                <tr><td className="p-3 font-bold">OPV & IPV</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">6, 10, 14 wks</td><td className="p-3">Oral / IM (Thigh)</td><td className="p-3">Defer IPV if giving 2+ other IMs today.</td></tr>
-                                <tr><td className="p-3 font-bold">PCV</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">6, 10, 14 wks</td><td className="p-3">IM (Thigh)</td><td className="p-3">Min interval: 4 weeks.</td></tr>
-                                <tr><td className="p-3 font-bold">Measles (AMV) / MMR</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">9m (AMV) / 12m (MMR)</td><td className="p-3">SC (Arm)</td><td className="p-3">TRAP: During an outbreak, AMV can be given at 6 months.</td></tr>
-                                <tr><td className="p-3 font-bold">Td / Tdap</td><td className="p-3 text-emerald-600 font-bold">NIP</td><td className="p-3">7-18 years</td><td className="p-3">IM (Deltoid)</td><td className="p-3">MUST use instead of DTP for >= 7 years.</td></tr>
-                                <tr className="bg-slate-50"><td className="p-3 font-bold">Rotavirus</td><td className="p-3 text-slate-500 font-bold">Routine</td><td className="p-3">6, 10 wks</td><td className="p-3">Oral</td><td className="p-3 font-bold text-red-600">TRAP: Max 15w0d (1st dose). Prior infection is NOT a contraindication.</td></tr>
-                                <tr className="bg-slate-50"><td className="p-3 font-bold">JEV</td><td className="p-3 text-slate-500 font-bold">Routine</td><td className="p-3">9 months</td><td className="p-3">SC (Arm)</td><td className="p-3">Min age strictly 9 months.</td></tr>
-                                <tr className="bg-slate-50"><td className="p-3 font-bold">Varicella / Hep A</td><td className="p-3 text-slate-500 font-bold">Routine</td><td className="p-3">12 months</td><td className="p-3">SC/IM (Arm)</td><td className="p-3">Min age strictly 12 months. Delay 11 mos if post-IVIG.</td></tr>
+                                <tr><td className="p-3 font-semibold">Hep B Birth</td><td className="p-3">IM, Thigh</td><td className="p-3"><strong>PRETERM TRAP:</strong> Birth dose (monovalent HBV to all newborns >= 2kgs within 24 hours of life)[cite: 55]. For infants born &lt; 2 kgs, the 1st dose received at birth is not counted as part of the vaccine series. Additional 3 HBV doses are needed[cite: 64, 65].</td></tr>
+                                <tr><td className="p-3 font-semibold">BCG</td><td className="p-3">ID, Right Deltoid</td><td className="p-3">For healthy infants and children &gt; 2 months who are not given BCG at birth, PPD prior to vaccination is not necessary unless the child is included in "special situations"[cite: 53].</td></tr>
+                                <tr><td className="p-3 font-semibold">Pentavalent / DTP</td><td className="p-3">IM, Thigh</td><td className="p-3"><strong>DTP Max:</strong> 7 years and 0 days[cite: 68]. <strong>Hib Max:</strong> For unvaccinated children aged 5 years or older who are not considered high-risk, catch-up vaccination not required[cite: 73].</td></tr>
+                                <tr><td className="p-3 font-semibold">Rotavirus</td><td className="p-3">Oral</td><td className="p-3"><strong>Max 1st dose:</strong> 14 weeks and 6 days[cite: 98]. <strong>Max Final:</strong> RV1 last dose should not be given beyond 24 weeks of age[cite: 98]. RV5 last dose should not be given beyond 32 weeks of age[cite: 98]. Infants documented to have had rotavirus gastroenteritis before receiving a full course of rotavirus vaccination should still start or complete the 2- or 3-dose schedule[cite: 98].</td></tr>
+                                <tr><td className="p-3 font-semibold">Measles / MMR</td><td className="p-3">SC, Outer Arm</td><td className="p-3">In cases of outbreaks as declared by public health authorities, measles vaccine can be given as early as age 6 months[cite: 102]. The NIP provides MMR at 9 months and 12 months of age[cite: 104].</td></tr>
+                                <tr><td className="p-3 font-semibold">IVIG Delay Rule</td><td className="p-3">-</td><td className="p-3 text-red-600 font-bold">Given IVIG (2 g/kg) → Delay MMR for 11 months after receiving IVIG[cite: 104]. For Animal Bites/Rabies Exposure (RIG) → Delay MMR for 4 months after receiving RIG[cite: 104].</td></tr>
+                                <tr><td className="p-3 font-semibold">Td / Tdap</td><td className="p-3">IM, Deltoid</td><td className="p-3">The NIP provides Td vaccine at Grade 1 and Grade 7[cite: 77]. For unvaccinated children ages 7-18 years... Use Tdap as one of the 5 doses[cite: 75].</td></tr>
+                                <tr><td className="p-3 font-semibold">Rabies PreP</td><td className="p-3">IM/ID, Arm</td><td className="p-3">2-10 years old (due to the increased risk and severity of animal bites in this age group)[cite: 117]. Rabies vaccine should never be given in the gluteal area since absorption is unpredictable[cite: 117].</td></tr>
+                                <tr><td className="p-3 font-semibold">Cholera / Typhoid</td><td className="p-3">PO / IM</td><td className="p-3">Cholera: Recommended for outbreak situations and natural disasters as declared by health authorities[cite: 121]. Typhoid: Minimum age: 2 years of age[cite: 124].</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -99,42 +117,8 @@
             </div>
         );
 
-        // --- View 2: Catch-Up Algorithm Tree ---
-        const CatchUpAlgorithm = () => {
-            const [activeNode, setActiveNode] = useState(1);
-            const nodes = [
-                { id: 1, title: "1. Assess Absolute Age Cutoffs", text: "Identify traps immediately: <15w for Rotavirus 1st dose? >=7 years for DTP (switch to Tdap)? >=9 months for JEV? >=12 months for Varicella & Hep A?" },
-                { id: 2, title: "2. Check Missing Primary Series", text: "Resume, NEVER restart. Bundle DTP, Hib, and Hep B into the Pentavalent vaccine to minimize injections." },
-                { id: 3, title: "3. Check High-Risk Indications", text: "Is there a DOH-declared measles outbreak? (AMV allowed at 6 mos). Did the child receive high-dose IVIG recently? (Delay live vaccines like MMR/Varicella for 11 months)." },
-                { id: 4, title: "4. Enforce Minimum Intervals", text: "Ensure at least 4 weeks (28 days) have passed since the previous dose of a multidose vaccine (DTP, OPV, PCV)." },
-                { id: 5, title: "5. Plan Route, Site & Deferrals", text: "Use Anterolateral Thigh for infant IMs; Deltoid for older children. Route non-urgent IMs as 'Defer to Next Visit' to prevent traumatic multi-stick visits." }
-            ];
-
-            return (
-                <div className="animate-fade-in">
-                    <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-6">Vaccine Decision Algorithm</h2>
-                    <div className="flex flex-col md:flex-row gap-8">
-                        <div className="flex-1 flex flex-col items-center space-y-2">
-                            {nodes.map((node, idx) => (
-                                <React.Fragment key={node.id}>
-                                    <button onClick={() => setActiveNode(node.id)} className={`w-full max-w-sm p-4 rounded-lg text-center font-bold shadow-md transition-all border-2 ${activeNode === node.id ? 'ring-4 ring-blue-300 transform scale-105 bg-white text-slate-800' : 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200'}`}>{node.title}</button>
-                                    {idx < nodes.length - 1 && <div className="h-6 w-1 bg-slate-300"></div>}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                        <div className="flex-1">
-                            <div className="sticky top-10 bg-white p-6 rounded-xl shadow-lg border border-slate-200 min-h-[200px]">
-                                <h3 className="text-xl font-bold mb-4 text-slate-800">{nodes.find(n => n.id === activeNode).title}</h3>
-                                <p className="text-slate-600 leading-relaxed text-lg">{nodes.find(n => n.id === activeNode).text}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        // --- View 3: Anthro & Vitals Simulator ---
-        const AnthroVitalsSimulator = () => {
+        // --- View 2: Anthro Simulator ---
+        const AnthroSimulator = () => {
             const [submitted, setSubmitted] = useState(false);
             const [score, setScore] = useState(0);
             const [feedback, setFeedback] = useState([]);
@@ -142,32 +126,44 @@
             const [selections, setSelections] = useState({ measure: "", hrStat: "", rrStat: "", nutStat: "" });
 
             const cases = {
-                1: { title: "Case A: 18-month-old", prompt: "18-month-old presents with HR 145 bpm and RR 32 cpm. WFH Z-score is -3.2.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Severe Wasting" } },
-                2: { title: "Case B: 4-year-old", prompt: "4-year-old presents with HR 90 bpm and RR 35 cpm. HFA Z-score is -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" } },
-                3: { title: "Case C: 6-month-old", prompt: "6-month-old presents with HR 140 bpm and RR 40 cpm. WFA Z-score is -1.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" } },
-                4: { title: "Case D: 2-year-old", prompt: "2-year-old child (exactly 24 mos) presents with HR 145 bpm and RR 28 cpm. WFH Z-score is -2.1.", rules: { measure: "Standing", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Wasting" } }
+                1: { title: "Case 1: The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Severe Wasting" } },
+                2: { title: "Case 2: The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" } },
+                3: { title: "Case 3: MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM)" } },
+                4: { title: "Case 4: The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" } },
+                5: { title: "Case 5: Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 20. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" } },
+                6: { title: "Case 6: Overweight & Tachycardia", prompt: "10-month-old. HR 200, RR 45. WFH Z-score +2.5.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Overweight" } },
+                7: { title: "Case 7: School-Age Bradycardia", prompt: "8-year-old. HR 60, RR 20. WFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Bradycardia", rrStat: "Normal", nutStat: "Underweight" } },
+                8: { title: "Case 8: Adjustment Rule (+/- 0.7cm)", prompt: "A 2.5-year-old refuses to stand. Measured lying down at 90.0 cm. HR 100, RR 25. WFH Z-score -1.0.", rules: { measure: "Subtract 0.7 cm", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" } }
             };
 
             const evaluateCase = () => {
                 let pts = 100; let fb = []; const activeCase = cases[currentCaseId].rules;
+                
                 if(selections.measure === activeCase.measure) fb.push({type:'ok', msg: `Correct Measurement: ${activeCase.measure}`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong Measurement. <2 years = Recumbent. >=2 years = Standing.`}); }
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong Measurement. Check age (<2y Recumbent, >=2y Standing) or adjustment rules.`}); }
+                
                 if(selections.hrStat === activeCase.hrStat) fb.push({type:'ok', msg: `Correct HR interpretation.`});
                 else { pts -= 25; fb.push({type:'err', msg: `Wrong HR. Expected: ${activeCase.hrStat}.`}); }
+                
                 if(selections.rrStat === activeCase.rrStat) fb.push({type:'ok', msg: `Correct RR interpretation.`});
                 else { pts -= 25; fb.push({type:'err', msg: `Wrong RR. Expected: ${activeCase.rrStat}.`}); }
-                if(selections.nutStat === activeCase.nutStat) fb.push({type:'ok', msg: `Correct Nutritional Diagnosis.`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong Diagnosis. Expected: ${activeCase.nutStat}.`}); }
+                
+                if(selections.nutStat === activeCase.nutStat) fb.push({type:'ok', msg: `Correct Diagnosis: ${activeCase.nutStat}`});
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong Diagnosis. Expected: ${activeCase.nutStat}. Remember SAM criteria.`}); }
+                
+                // Add Reporting Script to feedback
+                fb.push({type: 'info', msg: '🗣️ REPORTING SCRIPT:', rationale: `"Doc, presenting my patient. Because of their age, I utilized ${selections.measure || '[Tool/Adjustment]'}. Vitals show a ${selections.hrStat || '[HR]'} heart rate and ${selections.rrStat || '[RR]'} respiratory rate. Final assessment is ${selections.nutStat || '[Diagnosis]'}.`});
+
                 setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
             };
 
             const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelections({measure:"", hrStat:"", rrStat:"", nutStat:""}); setFeedback([]); };
 
             return (
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6 animate-fade-in pb-10">
                     <div className="flex flex-wrap gap-2 border-b-2 border-indigo-200 pb-2">
                         {Object.keys(cases).map(id => (
-                            <button key={id} onClick={() => loadCase(id)} className={`px-4 py-2 rounded text-sm font-bold transition-colors ${currentCaseId == id ? 'bg-indigo-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>Case {id}</button>
+                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-3 py-1.5 rounded text-sm font-bold transition-colors ${currentCaseId === parseInt(id) ? 'bg-indigo-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>Case {id}</button>
                         ))}
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow border border-slate-200">
@@ -178,29 +174,43 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block font-bold text-slate-700 mb-2">1. Required Length/Height Tool:</label>
-                                    <select disabled={submitted} value={selections.measure} onChange={e=>setSelections({...selections, measure:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select Tool...</option><option value="Recumbent">Recumbent Length Board</option><option value="Standing">Standing Stadiometer</option></select>
+                                    <label className="block font-bold text-slate-700 mb-2">1. Measurement Tool / Rule:</label>
+                                    <select disabled={submitted} value={selections.measure} onChange={e=>setSelections({...selections, measure:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select...</option><option value="Recumbent">Recumbent Length Board</option><option value="Standing">Standing Stadiometer</option><option value="Subtract 0.7 cm">Subtract 0.7 cm from reading</option><option value="Add 0.7 cm">Add 0.7 cm to reading</option></select>
                                 </div>
                                 <div>
                                     <label className="block font-bold text-slate-700 mb-2">2. Nutritional Diagnosis:</label>
-                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select Diagnosis...</option><option value="Normal">Normal</option><option value="Severe Wasting">Severe Wasting (SAM)</option><option value="Wasting">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Severely Underweight">Severely Underweight</option><option value="Underweight">Underweight</option></select>
+                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select...</option><option value="Normal">Normal</option><option value="Severe Wasting">Severe Wasting (SAM)</option><option value="Severe Acute Malnutrition (SAM)">Severe Acute Malnutrition (SAM - Criteria Override)</option><option value="Wasting">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Underweight">Underweight</option><option value="Overweight">Overweight</option><option value="Obese">Obese</option></select>
                                 </div>
                             </div>
                             <div className="space-y-4">
                                 <div>
                                     <label className="block font-bold text-slate-700 mb-2">3. Heart Rate Status:</label>
-                                    <select disabled={submitted} value={selections.hrStat} onChange={e=>setSelections({...selections, hrStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select HR Interpretation...</option><option value="Bradycardia">Bradycardia (Low)</option><option value="Normal">Normal</option><option value="Tachycardia">Tachycardia (High)</option></select>
+                                    <select disabled={submitted} value={selections.hrStat} onChange={e=>setSelections({...selections, hrStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select...</option><option value="Bradycardia">Bradycardia (Low)</option><option value="Normal">Normal</option><option value="Tachycardia">Tachycardia (High)</option></select>
                                 </div>
                                 <div>
                                     <label className="block font-bold text-slate-700 mb-2">4. Respiratory Rate Status:</label>
-                                    <select disabled={submitted} value={selections.rrStat} onChange={e=>setSelections({...selections, rrStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select RR Interpretation...</option><option value="Bradypnea">Bradypnea (Low)</option><option value="Normal">Normal</option><option value="Tachypnea">Tachypnea (High)</option></select>
+                                    <select disabled={submitted} value={selections.rrStat} onChange={e=>setSelections({...selections, rrStat:e.target.value})} className="w-full p-3 border rounded bg-slate-50 font-medium"><option value="">Select...</option><option value="Bradypnea">Bradypnea (Low)</option><option value="Normal">Normal</option><option value="Tachypnea">Tachypnea (High)</option></select>
                                 </div>
                             </div>
                         </div>
-                        {!submitted ? <button onClick={evaluateCase} disabled={!selections.measure || !selections.hrStat || !selections.rrStat || !selections.nutStat} className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow hover:bg-indigo-700 disabled:opacity-50 transition-all text-lg">Submit Vitals & Anthro</button> : 
+                        {!submitted ? <button onClick={evaluateCase} disabled={!selections.measure || !selections.hrStat || !selections.rrStat || !selections.nutStat} className="w-full bg-indigo-600 text-white font-bold py-4 rounded-xl shadow hover:bg-indigo-700 disabled:opacity-50 transition-all text-lg">Submit Anthro Assessment</button> : 
                             <div className="p-6 rounded-xl border-2 border-indigo-200 bg-indigo-50 shadow-inner">
                                 <h3 className="text-2xl font-bold text-slate-800 mb-4">Preceptor Feedback: {score}%</h3>
-                                <ul className="space-y-3">{feedback.map((f, i) => <li key={i} className={`flex items-start p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}><span className="mr-3 font-bold text-lg leading-none mt-0.5">{f.type === 'err' ? '✘' : '✔'}</span><span>{f.msg}</span></li>)}</ul>
+                                <ul className="space-y-3">
+                                    {feedback.map((f, i) => (
+                                        <li key={i} className={`flex flex-col p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+                                            <div className="flex items-start">
+                                                <span className="mr-3 font-bold text-lg leading-none mt-0.5">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : '✔'}</span>
+                                                <span className="font-semibold">{f.msg}</span>
+                                            </div>
+                                            {f.rationale && (
+                                                <div className={`mt-2 ml-7 text-sm opacity-90 border-t pt-2 ${f.type === 'info' ? 'italic font-medium text-blue-800' : 'border-current/20'}`}>
+                                                    {f.rationale}
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
                                 <button onClick={() => loadCase(currentCaseId)} className="mt-6 bg-slate-800 text-white font-bold px-8 py-3 rounded hover:bg-slate-700">Retry Case</button>
                             </div>}
                     </div>
@@ -208,7 +218,7 @@
             );
         };
 
-        // --- View 4: Advanced NIP Vaccine Simulator ---
+        // --- View 4: Advanced Corrected Vaccine Simulator (20 Cases) ---
         const AdvancedSimulator = () => {
             const [submitted, setSubmitted] = useState(false);
             const [score, setScore] = useState(0);
@@ -216,19 +226,29 @@
             const [currentCaseId, setCurrentCaseId] = useState(1);
             const [selectedVaccines, setSelectedVaccines] = useState({});
 
-            const vaccineList = ["BCG", "Hepatitis B", "DTP", "Hib", "OPV", "IPV", "PCV", "Rotavirus", "Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"];
+            const vaccineList = ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"];
 
             const cases = {
-                1: { title: "14 weeks & 5 days old", prompt: "A 14-week and 5-day-old infant presents. Born at home, 0 prior vaccines.", rules: { reqNIP: ["BCG", "DTP", "Hib", "Hepatitis B", "OPV", "PCV"], routine: ["Rotavirus"], defer: ["IPV"], traps: ["Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } },
-                2: { title: "16 weeks old (4 months)", prompt: "A 16-week-old infant presents. 0 prior vaccines.", rules: { reqNIP: ["BCG", "DTP", "Hib", "Hepatitis B", "OPV", "PCV"], routine: [], defer: ["IPV"], traps: ["Rotavirus", "Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } },
-                3: { title: "8.5-month-old", prompt: "An 8.5-month-old presents. Received birth vaccines at hospital, 6w and 10w vaccines at health center. Missed 14w visit.", rules: { reqNIP: ["DTP", "Hib", "Hepatitis B", "OPV", "PCV"], routine: [], defer: ["IPV"], traps: ["BCG", "Rotavirus", "Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } },
-                4: { title: "11 months & 3 weeks", prompt: "An 11-month and 3-week-old child presents. Completed primary series, missed 9-month visit.", rules: { reqNIP: ["Measles (AMV)"], routine: ["JEV"], defer: [], traps: ["BCG", "Rotavirus", "MMR", "DTP", "Hib", "Hepatitis B", "OPV", "PCV", "IPV", "Td / Tdap", "Varicella", "Hepatitis A"] } },
-                5: { title: "5-year-old", prompt: "A 5-year-old presents with 0 prior vaccines.", rules: { reqNIP: ["DTP", "Hepatitis B", "OPV", "MMR"], routine: ["Varicella", "Hepatitis A", "JEV"], defer: ["IPV"], traps: ["BCG", "Hib", "PCV", "Rotavirus", "Measles (AMV)", "Td / Tdap"] } },
-                6: { title: "7-year-old exactly", prompt: "Turned 7 today. 0 prior vaccines.", rules: { reqNIP: ["Td / Tdap", "Hepatitis B", "OPV", "MMR"], routine: ["Varicella", "Hepatitis A", "JEV"], defer: ["IPV"], traps: ["BCG", "DTP", "Hib", "PCV", "Rotavirus", "Measles (AMV)"] } },
-                7: { title: "6 weeks old (Preterm)", prompt: "Born preterm at 34wks. Now 6 weeks chronological age, clinically stable. 0 prior vaccines.", rules: { reqNIP: ["BCG", "DTP", "Hib", "Hepatitis B", "OPV", "PCV"], routine: ["Rotavirus"], defer: [], traps: ["Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } },
-                8: { title: "12-month-old (Post IVIG)", prompt: "Received high-dose IVIG for Kawasaki 2 months ago. Up to date until 9 months. Missed 12m visit.", rules: { reqNIP: [], routine: [], defer: [], traps: ["BCG", "DTP", "Hib", "Hepatitis B", "OPV", "PCV", "IPV", "Rotavirus", "Td / Tdap", "Measles (AMV)", "MMR", "Varicella", "JEV", "Hepatitis A"] } },
-                9: { title: "6-month-old (Outbreak)", prompt: "A 6-month-old presents. 0 prior vaccines. DOH just declared a massive measles outbreak.", rules: { reqNIP: ["BCG", "DTP", "Hib", "Hepatitis B", "OPV", "PCV", "Measles (AMV)"], routine: [], defer: ["IPV"], traps: ["Rotavirus", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } },
-                10: { title: "8 weeks old (Post Infection)", prompt: "An 8-week-old presents. Received birth vaccines at hospital. Had confirmed Rotavirus Gastroenteritis at 6 weeks and recovered. Missed 6w visit.", rules: { reqNIP: ["DTP", "Hib", "Hepatitis B", "OPV", "PCV"], routine: ["Rotavirus"], defer: [], traps: ["BCG", "Measles (AMV)", "MMR", "Td / Tdap", "Varicella", "Hepatitis A", "JEV"] } }
+                1: { title: "1. Preterm <2kg", prompt: "A preterm neonate (32 weeks, 1.8kg) on day 1 of life. Maternal HBsAg is NEGATIVE.", rules: { req: ["BCG"], defer: [], traps: ["Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                2: { title: "2. 14w5d old", prompt: "A 14-week and 5-day-old infant. Received birth vaccines, missed all others.", rules: { req: ["Pentavalent", "OPV", "PCV"], defer: ["IPV"], traps: ["MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                3: { title: "3. 16 weeks old", prompt: "A 16-week-old infant. Received birth vaccines, missed all others.", rules: { req: ["Pentavalent", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                4: { title: "4. 6mo (Outbreak)", prompt: "A 6-month-old infant. Up to date. DOH has declared a local measles outbreak.", rules: { req: ["MMR (9m)"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                5: { title: "5. 26wk RV1 Trap", prompt: "A 26-week-old presents. Clinic only has RV1 in stock.", rules: { req: ["Pentavalent", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                6: { title: "6. 11mo & 3wks", prompt: "An 11-month and 3-week-old child. Missed 9-month visit.", rules: { req: ["MMR (9m)"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Td", "Tdap", "Varicella", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                7: { title: "7. 12mo (Post IVIG)", prompt: "A 12-month-old. Received high-dose IVIG for Kawasaki 2 months ago. Up to date until 9 months.", rules: { req: [], defer: ["MMR (12m)", "Varicella"], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "Td", "Tdap", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                8: { title: "8. 5-year-old", prompt: "A 5-year-old child. NEVER received any vaccines since birth.", rules: { req: ["Pentavalent", "OPV", "MMR (9m)"], defer: ["IPV"], traps: ["BCG", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Td", "Tdap", "HPV", "Typhoid", "Cholera (PO)"] } },
+                9: { title: "9. 7-year-old exactly", prompt: "Turned 7 years old exactly today. NEVER received any vaccines.", rules: { req: ["Td", "Hepatitis B", "OPV", "MMR (9m)"], defer: ["IPV"], traps: ["BCG", "Pentavalent", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "HPV", "Typhoid", "Cholera (PO)"] } },
+                10: { title: "10. 10y Female", prompt: "A 10-year-old female in Grade 4. Received all infant vaccines, nothing since.", rules: { req: ["HPV"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                11: { title: "11. Flood Evacuee (3y)", prompt: "A 3-year-old living in a flooded evacuation center. Up to date on NIP. Parents request protection.", rules: { req: ["Typhoid", "Cholera (PO)"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Rabies PreP"] } },
+                12: { title: "12. 11y Female Catch-up", prompt: "An 11-year-old female in Grade 5. Missed her Grade 4 school-based immunization.", rules: { req: ["HPV"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                13: { title: "13. 8y Animal Risk", prompt: "An 8-year-old living near many stray dogs. Parents want preventative protection. Up to date on NIP.", rules: { req: ["Rabies PreP"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)"] } },
+                14: { title: "14. Live Spacing Trap", prompt: "A 13-month-old child. Received Varicella 2 weeks ago. Now here for NIP vaccines.", rules: { req: [], defer: ["MMR (12m)"], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                15: { title: "15. >2mo without BCG", prompt: "A 3-month-old infant. NEVER received BCG at birth. Completely healthy.", rules: { req: ["BCG", "Pentavalent", "OPV", "PCV"], defer: ["IPV"], traps: ["Hepatitis B", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                16: { title: "16. 15y Catch-up", prompt: "A 15-year-old male adolescent. 0 prior vaccines.", rules: { req: ["Td", "Hepatitis B", "MMR (9m)"], defer: [], traps: ["BCG", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                17: { title: "17. RV5 Final Dose", prompt: "A 30-week-old (7.5m). Had 2 previous doses of RV5. Missed 3rd dose.", rules: { req: ["RV5 (3-dose)"], defer: [], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                18: { title: "18. Post-RIG (Rabies IG)", prompt: "A 10-month-old child. Received Rabies IG 1 month ago. Missed 9m visit.", rules: { req: [], defer: ["MMR (9m)"], traps: ["BCG", "Hepatitis B", "Pentavalent", "OPV", "IPV", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                19: { title: "19. DTP Borderline", prompt: "A 6-year and 11-month-old child. 0 prior vaccines.", rules: { req: ["Pentavalent", "OPV", "MMR (9m)"], defer: ["IPV"], traps: ["BCG", "Hepatitis B", "PCV", "RV1 (2-dose)", "RV5 (3-dose)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } },
+                20: { title: "20. 8w Post Rotavirus", prompt: "An 8-week-old. Had confirmed Rotavirus Gastro at 6w and recovered. Missed 6w vaccines.", rules: { req: ["Pentavalent", "OPV", "PCV"], defer: [], traps: ["BCG", "Hepatitis B", "IPV", "MMR (9m)", "MMR (12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera (PO)", "Rabies PreP"] } }
             };
 
             const handleToggleVaccine = (v) => {
@@ -236,46 +256,80 @@
                     const newSel = {...selectedVaccines}; delete newSel[v]; setSelectedVaccines(newSel);
                 } else setSelectedVaccines({...selectedVaccines, [v]: { route: '', site: '' }});
             };
-            const handleDetailChange = (v, field, value) => setSelectedVaccines({...selectedVaccines, [v]: { ...selectedVaccines[v], [field]: value }});
 
-            const evaluateCase = () => {
-                let pts = 100; let fb = []; const activeCase = cases[currentCaseId].rules;
+            const handleDetailChange = (v, field, value) => {
+                setSelectedVaccines({...selectedVaccines, [v]: { ...selectedVaccines[v], [field]: value }});
+            };
+
+            // Dynamic Script Generator
+            const generateScript = (selections) => {
+                let adminScript = [];
+                let deferScript = [];
                 
-                const hasDTP = selectedVaccines["DTP"]; const hasHib = selectedVaccines["Hib"]; const hasHepB = selectedVaccines["Hepatitis B"];
-                const shouldHavePenta = activeCase.reqNIP.includes("DTP") && activeCase.reqNIP.includes("Hib") && activeCase.reqNIP.includes("Hepatitis B");
-
-                if (hasDTP && hasHib && hasHepB && shouldHavePenta) fb.push({type: 'ok', msg: "💉 PENTAVALENT SYNERGY: Bundled DTP, Hib, and Hep B."});
-
-                // NIP Grading
-                activeCase.reqNIP.forEach(req => {
-                    if (!selectedVaccines[req]) { pts -= 15; fb.push({type: 'err', msg: `Missed required NIP vaccine: ${req}.`}); }
-                    else if (!(req === "DTP" || req === "Hib" || req === "Hepatitis B") || !shouldHavePenta) fb.push({type: 'ok', msg: `Correct NIP selection: ${req}`});
-                });
-
-                // Routine Handling
-                activeCase.routine.forEach(rout => {
-                    if (selectedVaccines[rout]) {
-                        fb.push({type: 'warn', msg: `ROUTINE VACCINE NOTE: You selected ${rout}. While clinically valid, this is NOT part of the NIP. In an NIP-only OSCE, you do not need to provide this.`});
+                Object.keys(selections).forEach(v => {
+                    const route = selections[v].route;
+                    if (route === "Defer") {
+                        deferScript.push(v);
+                    } else if (route === "Oral") {
+                        adminScript.push(`Papainumin po natin si baby ng drops para sa ${v}.`);
+                    } else if (route === "IM" || route === "SC" || route === "ID") {
+                        adminScript.push(`Ituturok po natin ang ${v} sa ${selections[v].site === "Mouth" ? "mali" : selections[v].site}.`);
                     }
                 });
 
-                // Traps (Critical Fails)
+                let finalScript = `"Mommy, magandang araw po. `;
+                if (adminScript.length > 0) finalScript += adminScript.join(" ") + ` Inaasahan po natin na baka mamula at makaramdam ng kaunting lagnat. Pwede po punasan ng maligamgam na tubig at painumin ng paracetamol kung kailangan. `;
+                if (deferScript.length > 0) finalScript += `Dahil sa rules ng spacing o para hindi masyadong masaktan si baby ngayon, ipagpapaliban po muna natin ang ${deferScript.join(", ")}. `;
+                finalScript += `Babalik po tayo sa tamang petsa."`;
+                
+                return finalScript;
+            };
+
+            const evaluateCase = () => {
+                let pts = 100; let fb = []; const activeCase = cases[currentCaseId].rules;
+
+                // Selection Grading
+                activeCase.req.forEach(req => {
+                    if (!selectedVaccines[req]) { 
+                        pts -= 15; fb.push({type: 'err', msg: `Missed required vaccine: ${req}.`, rationale: "Check age eligibility and schedule cutoffs."}); 
+                    } else {
+                        fb.push({type: 'ok', msg: `Correct selection: ${req}`});
+                    }
+                });
+
+                // Routine Handling Check (No penalties, just informative)
+                const isRoutine = (v) => ["RV1 (2-dose)", "RV5 (3-dose)", "Varicella", "JEV", "Tdap"].includes(v);
+                Object.keys(selectedVaccines).forEach(v => {
+                    if (isRoutine(v) && !activeCase.traps.includes(v)) {
+                         fb.push({type: 'info', msg: `Selected Routine Vaccine: ${v}.`, rationale: "This is clinically acceptable, but remember that under strict NIP guidelines, these are out-of-pocket/routine, not provided for free."});
+                    }
+                });
+
+                // Traps
                 activeCase.traps.forEach(trap => {
                     if (selectedVaccines[trap]) {
                         pts -= 25; let msg = `CRITICAL FAIL: Contraindicated -> ${trap}. `;
-                        if(trap === "Rotavirus") msg += "Past max age (15w0d) OR not needed.";
-                        else if(trap === "DTP") msg += "Max age 7 years. Use Td/Tdap.";
-                        else if(trap === "Td / Tdap") msg += "Patient <7 years.";
-                        else if(trap === "Measles (AMV)") msg += "MMR preferred >=12m, or patient <9m (unless outbreak).";
-                        else if(["MMR", "Varicella"].includes(trap) && currentCaseId == 8) msg += "Patient received IVIG 2 months ago. Live vaccines MUST be delayed for 11 months!";
-                        else if(trap === "BCG") {
-                            if (["3", "4", "8", "10"].includes(currentCaseId.toString())) {
-                                msg += "Patient already received this at birth. Do not repeat.";
-                            } else {
-                                msg += "Not given to healthy children > 1 year old.";
-                            }
-                        }
-                        fb.push({type: 'err', msg});
+                        let rat = "";
+                        
+                        if(currentCaseId === 1 && trap === "Hepatitis B") rat = "Strict Rule: Delay Hep B for <2000g preterms with HBsAg(-) mothers.";
+                        else if(currentCaseId === 3 && trap.includes("RV")) rat = "Patient is 16w. Absolute max for 1st Rotavirus dose is 14w6d.";
+                        else if(currentCaseId === 4 && trap === "MMR (9m)") rat = "During an outbreak at 6m, we use an early dose. Wait until 9m for the primary dose.";
+                        else if(currentCaseId === 5 && trap === "RV1 (2-dose)") rat = "Patient is 26w. RV1 maxes out at 24w.";
+                        else if(currentCaseId === 7 && trap === "MMR (12m)") rat = "Live vaccines MUST be delayed for 11 months following high-dose IVIG.";
+                        else if(currentCaseId === 8 && trap === "BCG") rat = "Healthy children >1 year do not receive BCG.";
+                        else if(currentCaseId === 9 && trap === "Pentavalent") rat = "Max age for DTP is exactly 7 years. Must switch to Td.";
+                        else if(currentCaseId === 10 && trap === "Td") rat = "Grade 7 is the typical age for NIP Td. A 10y Grade 4 female just needs HPV if previously updated.";
+                        else if(currentCaseId === 13 && trap === "Rabies PreP") rat = "Rabies PreP is strictly prioritized for the 2-10 year age group due to high risk.";
+                        else if(currentCaseId === 14 && trap === "MMR (12m)") rat = "Live vaccines not administered on the same day MUST be separated by at least 4 weeks (28 days).";
+                        else if(currentCaseId === 15 && trap === "Hepatitis B") rat = "Patient received birth vaccines; Pentavalent contains the needed Hep B components now.";
+                        else if(currentCaseId === 16 && trap === "HPV") rat = "NIP HPV is specifically for females.";
+                        else if(currentCaseId === 17 && trap === "RV1 (2-dose)") rat = "Patient is 30w. RV1 maxes out at 24w. RV5 maxes out at 32w.";
+                        else if(currentCaseId === 18 && trap === "MMR (9m)") rat = "Rabies IG requires a 4-month delay for MMR.";
+                        else if(currentCaseId === 19 && trap.includes("Td")) rat = "Child is strictly < 7 years. Must use DTP.";
+                        else if(currentCaseId === 20 && trap === "BCG") rat = "Patient already received birth vaccines.";
+                        else rat = "Review schedule cutoffs.";
+                        
+                        fb.push({type: 'err', msg, rationale: rat});
                     }
                 });
 
@@ -285,10 +339,10 @@
                         if (selectedVaccines[deferredVaccine].route === "Defer") {
                             pts += 5; fb.push({type: 'ok', msg: `💙 COMPASSIONATE DEFERRAL: Correctly deferred ${deferredVaccine}.`});
                         } else {
-                            pts -= 10; fb.push({type: 'warn', msg: `⚠ PATIENT COMFORT: Administering ${deferredVaccine} today forces an extra stick. Route as "Defer".`});
+                            pts -= 10; fb.push({type: 'warn', msg: `⚠ ADMIN WARNING: Administering ${deferredVaccine} today violates spacing or forces an extra stick. Route as "Defer".`});
                         }
                     } else {
-                        pts -= 5; fb.push({type: 'warn', msg: `Missed identifying ${deferredVaccine}. Select and route as "Defer" to show complete knowledge.`});
+                        pts -= 5; fb.push({type: 'warn', msg: `Missed identifying ${deferredVaccine}. Select and route as "Defer".`});
                     }
                 });
 
@@ -296,15 +350,21 @@
                 Object.keys(selectedVaccines).forEach(v => {
                     if (activeCase.traps.includes(v) || selectedVaccines[v].route === "Defer") return; 
                     const d = selectedVaccines[v];
-                    if (d.route === "" || d.site === "") { pts -= 10; fb.push({type: 'err', msg: `Missing Route or Site for ${v}.`}); return; }
+                    if (d.route === "" || d.site === "") { pts -= 10; fb.push({type: 'err', msg: `Missing Route/Site for ${v}.`}); return; }
+                    
                     const isSC = (d.route === "SC"); const isIM = (d.route === "IM");
                     if(v === "BCG" && (d.route !== "ID" || d.site !== "Right Deltoid")) pts -= 10;
-                    if(["DTP", "Hib", "Hepatitis B", "PCV"].includes(v) && (!isIM || d.site !== "Anterolateral Thigh")) pts -= 10;
-                    if(["Td / Tdap"].includes(v) && (!isIM || d.site !== "Deltoid (Arm)")) pts -= 10;
-                    if(["OPV", "Rotavirus"].includes(v) && d.route !== "Oral") pts -= 10;
-                    if(["Measles (AMV)", "MMR", "Varicella", "JEV"].includes(v) && (!isSC || d.site !== "Outer Upper Arm")) pts -= 10;
-                    if(v === "Hepatitis A" && (!isIM && !isSC)) pts -= 10;
+                    if(["Hepatitis B", "Pentavalent", "PCV", "HPV", "PPSV23", "Typhoid"].includes(v) && !isIM) pts -= 10;
+                    if(["Td", "Tdap"].includes(v) && (!isIM || d.site !== "Deltoid (Arm)")) pts -= 10;
+                    if(["OPV", "RV1 (2-dose)", "RV5 (3-dose)", "Cholera (PO)"].includes(v) && d.route !== "Oral") pts -= 10;
+                    if(["MCV0 (6m Outbreak)", "MMR (9m)", "MMR (12m)", "Varicella", "JEV"].includes(v) && !isSC) pts -= 10;
+                    if(["Rabies PreP"].includes(v) && d.site === "Gluteal") pts -= 15;
                 });
+
+                // Generate Script Feedback
+                if (Object.keys(selectedVaccines).length > 0) {
+                     fb.push({type: 'info', msg: '🗣️ YOUR COUNSELING SCRIPT:', rationale: generateScript(selectedVaccines)});
+                }
 
                 setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
             };
@@ -312,10 +372,10 @@
             const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelectedVaccines({}); setFeedback([]); };
 
             return (
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6 animate-fade-in pb-10">
                     <div className="flex flex-wrap gap-2 border-b-2 border-blue-200 pb-2">
                         {Object.keys(cases).map(id => (
-                            <button key={id} onClick={() => loadCase(id)} className={`px-4 py-2 rounded text-sm font-bold transition-colors ${currentCaseId == id ? 'bg-blue-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>Case {id}</button>
+                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-2 py-1 rounded text-xs font-bold transition-colors ${currentCaseId === parseInt(id) ? 'bg-blue-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>Case {id}</button>
                         ))}
                     </div>
                     <div className="bg-white p-6 rounded-lg shadow border border-slate-200">
@@ -324,10 +384,10 @@
                             <p className="text-lg">"{cases[currentCaseId].prompt}"</p>
                         </div>
                         <div className="mb-6">
-                            <h4 className="font-bold text-slate-700 mb-3">1. Select ALL Vaccines to Address Today (NIP Prioritized):</h4>
-                            <div className="flex flex-wrap gap-3">
+                            <h4 className="font-bold text-slate-700 mb-3">1. Select ALL Vaccines to Address Today:</h4>
+                            <div className="flex flex-wrap gap-2">
                                 {vaccineList.map(v => (
-                                    <button key={v} onClick={() => !submitted && handleToggleVaccine(v)} disabled={submitted} className={`px-4 py-2 rounded border-2 font-bold ${selectedVaccines[v] ? 'bg-blue-100 border-blue-600 text-blue-900' : 'bg-white border-slate-300 text-slate-600 hover:border-blue-300'}`}>{v}</button>
+                                    <button key={v} onClick={() => !submitted && handleToggleVaccine(v)} disabled={submitted} className={`px-3 py-1.5 rounded border-2 text-sm font-bold ${selectedVaccines[v] ? 'bg-blue-100 border-blue-600 text-blue-900 shadow' : 'bg-white border-slate-300 text-slate-600 hover:border-blue-300'}`}>{v}</button>
                                 ))}
                             </div>
                         </div>
@@ -336,24 +396,38 @@
                                 <h4 className="font-bold text-slate-700 mb-3">2. Specify Route & Site:</h4>
                                 <div className="space-y-3">
                                     {Object.keys(selectedVaccines).map(v => (
-                                        <div key={v} className="flex flex-col md:flex-row md:items-center bg-slate-50 p-3 rounded border border-slate-200 gap-4">
-                                            <span className="font-bold w-40 text-blue-900">{v}</span>
-                                            <select disabled={submitted} value={selectedVaccines[v].route} onChange={e => handleDetailChange(v, 'route', e.target.value)} className="p-2 border rounded bg-white flex-1 font-medium">
-                                                <option value="">Select Route...</option><option value="Oral">Oral (Drops)</option><option value="IM">Intramuscular (90°)</option><option value="SC">Subcutaneous (45°)</option><option value="ID">Intradermal (15°)</option><option value="Defer" className="font-bold text-blue-600">Defer to Next Visit</option>
+                                        <div key={v} className="flex flex-col md:flex-row md:items-center bg-slate-50 p-2 rounded border border-slate-200 gap-2">
+                                            <span className="font-bold w-40 text-blue-900 text-sm">{v}</span>
+                                            <select disabled={submitted} value={selectedVaccines[v].route} onChange={e => handleDetailChange(v, 'route', e.target.value)} className="p-1.5 border rounded bg-white flex-1 text-sm font-medium">
+                                                <option value="">Select Route...</option><option value="Oral">Oral (Drops/PO)</option><option value="IM">Intramuscular (90°)</option><option value="SC">Subcutaneous (45°)</option><option value="ID">Intradermal (15°)</option><option value="Defer" className="font-bold text-blue-600">Defer to Next Visit</option>
                                             </select>
-                                            <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-2 border rounded bg-white flex-1 font-medium disabled:opacity-50">
-                                                <option value="">Select Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Outer Upper Arm">Outer Upper Arm</option>
+                                            <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-1.5 border rounded bg-white flex-1 text-sm font-medium disabled:opacity-50">
+                                                <option value="">Select Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Outer Upper Arm">Outer Upper Arm</option><option value="Gluteal">Gluteal (Trap!)</option>
                                             </select>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
-                        {!submitted ? <button onClick={evaluateCase} disabled={Object.keys(selectedVaccines).length === 0} className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 disabled:opacity-50 transition-all text-lg">Evaluate Station</button> : 
+                        {!submitted ? <button onClick={evaluateCase} disabled={Object.keys(selectedVaccines).length === 0} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 disabled:opacity-50 transition-all text-lg">Evaluate Station</button> : 
                             <div className="mt-8 p-6 rounded-xl border-2 border-slate-200 bg-slate-50 shadow-inner">
                                 <h3 className="text-2xl font-bold text-slate-800 mb-4">Feedback: {score >= 100 ? 100 : score}%</h3>
-                                <ul className="space-y-3">{feedback.map((f, i) => <li key={i} className={`flex items-start p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'warn' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}><span className="mr-3 font-bold text-lg leading-none mt-0.5">{f.type === 'err' ? '✘' : f.type === 'warn' ? '⚠' : '✔'}</span><span>{f.msg}</span></li>)}</ul>
-                                <button onClick={() => loadCase(currentCaseId)} className="mt-8 bg-slate-800 text-white font-bold px-8 py-3 rounded hover:bg-slate-700">Retry Case</button>
+                                <ul className="space-y-3">
+                                    {feedback.map((f, i) => (
+                                        <li key={i} className={`flex flex-col p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'warn' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+                                            <div className="flex items-start">
+                                                <span className="mr-3 font-bold text-lg leading-none mt-0.5">{f.type === 'err' ? '✘' : f.type === 'warn' ? '⚠' : f.type === 'info' ? '🗣️' : '✔'}</span>
+                                                <span className="font-semibold">{f.msg}</span>
+                                            </div>
+                                            {f.rationale && (
+                                                <div className={`mt-2 ml-7 text-sm opacity-90 border-t pt-2 ${f.type === 'info' ? 'italic font-medium text-blue-800' : 'border-current/20'}`}>
+                                                    {f.rationale}
+                                                </div>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={() => loadCase(currentCaseId)} className="mt-6 bg-slate-800 text-white font-bold px-8 py-2 rounded hover:bg-slate-700">Retry Case</button>
                             </div>}
                     </div>
                 </div>
@@ -361,26 +435,25 @@
         };
 
         const App = () => {
-            const [view, setView] = useState('sim-vac');
-            const navItems = [{ id: 'ref', label: '1. Master Reference' }, { id: 'tree', label: '2. Decision Algorithm' }, { id: 'sim-anthro', label: '3. Anthro & Vitals Sim' }, { id: 'sim-vac', label: '4. Vaccine Catch-up Sim' }];
+            const [view, setView] = useState('ref');
+            const navItems = [{ id: 'ref', label: '1. Ultimate Cheat Sheet' }, { id: 'sim-anthro', label: '2. Anthro/SAM Sim (8)' }, { id: 'sim-vac', label: '3. Vaccine Sim (20 Cases)' }];
             return (
                 <div className="min-h-screen flex flex-col md:flex-row">
                     <nav className="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 shadow-xl z-10">
                         <div className="p-6">
-                            <h1 className="text-xl font-bold leading-tight text-blue-300">UPCM Pedia OSCE</h1>
+                            <h1 className="text-xl font-bold leading-tight text-emerald-400">UPCM Pedia OSCE</h1>
                             <p className="text-xs text-slate-400 mt-2 uppercase tracking-wider">LU5 Clinical Clerkship</p>
                         </div>
                         <ul className="space-y-1 mt-2">
                             {navItems.map(item => (
-                                <li key={item.id}><button onClick={() => setView(item.id)} className={`w-full text-left px-6 py-4 font-medium transition-colors border-l-4 ${view === item.id ? 'bg-blue-800 border-blue-400 text-white' : 'border-transparent hover:bg-slate-800 text-slate-300'}`}>{item.label}</button></li>
+                                <li key={item.id}><button onClick={() => setView(item.id)} className={`w-full text-left px-6 py-4 font-medium transition-colors border-l-4 ${view === item.id ? 'bg-emerald-800 border-emerald-400 text-white' : 'border-transparent hover:bg-slate-800 text-slate-300'}`}>{item.label}</button></li>
                             ))}
                         </ul>
                     </nav>
-                    <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-100">
                         <div className="max-w-5xl mx-auto">
                             {view === 'ref' && <MasterReference />}
-                            {view === 'tree' && <CatchUpAlgorithm />}
-                            {view === 'sim-anthro' && <AnthroVitalsSimulator />}
+                            {view === 'sim-anthro' && <AnthroSimulator />}
                             {view === 'sim-vac' && <AdvancedSimulator />}
                         </div>
                     </main>
@@ -391,9 +464,5 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-    <style>
-        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
 </body>
 </html>
