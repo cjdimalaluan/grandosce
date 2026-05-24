@@ -212,18 +212,358 @@
   <div class="sec-label">Station Content</div>
 
   <!-- ═══ CONTENT PLACEHOLDER — replace with actual reviewer content ═══ -->
-  <div class="placeholder">
-    <div class="ph-title">Content Coming Soon</div>
-    <p class="ph-sub">Replace this section with your reviewer notes, key concepts, checklists, and sample cases for Family Medicine.</p>
-    <div class="ph-topics">
-      <div class="ph-topic">📝 Key Concepts</div>
-      <div class="ph-topic">🔍 Exam Steps</div>
-      <div class="ph-topic">📋 Checklist Items</div>
-      <div class="ph-topic">⚠️ Common Mistakes</div>
-      <div class="ph-topic">💡 Tips & Tricks</div>
-      <div class="ph-topic">🩺 Sample Cases</div>
-    </div>
-  </div>
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LU5 Family Medicine OSCE Master Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f0fdf4; }
+        ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; }
+        .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Reusable Interactive Script Component ---
+        const InteractiveScript = ({ title, steps, rubric, subtitle }) => {
+            const [activeStep, setActiveStep] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+
+            const shuffleBlanks = (stepIdx) => {
+                const step = steps[stepIdx];
+                const newHidden = new Set();
+                const processText = (text, role) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1 && Math.random() > 0.3) {
+                            newHidden.add(`${stepIdx}-${role}-${i}`);
+                        }
+                    });
+                };
+                processText(step.patient, 'patient');
+                processText(step.preceptor, 'preceptor');
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks(activeStep);
+                else setHiddenWords(new Set());
+            }, [activeStep, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, stepIndex, role) => {
+                if (!text) return null;
+                if (!memorizeMode) {
+                    const parts = text.split(/\{(.*?)\}/g);
+                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-emerald-700">{part}</strong> : <span key={i}>{part}</span>);
+                }
+                const parts = text.split(/\{(.*?)\}/g);
+                return parts.map((part, i) => {
+                    if (i % 2 === 1) {
+                        const wordId = `${stepIndex}-${role}-${i}`;
+                        const isHidden = hiddenWords.has(wordId);
+                        if (isHidden) {
+                            return <span key={wordId} onClick={() => revealWord(wordId)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
+                        } else {
+                            return <span key={wordId} className="font-bold bg-emerald-100 text-emerald-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
+                        }
+                    }
+                    return <span key={i}>{part}</span>;
+                });
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row gap-6 animate-fade-in pb-10">
+                    <div className="flex-1 space-y-4">
+                        <div className="bg-slate-800 text-white p-5 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-2xl font-black text-emerald-400">{title}</h2>
+                                <p className="text-sm text-slate-300 mt-1">{subtitle}</p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
+                                    <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-2 w-4 h-4 accent-emerald-500" />
+                                    Active Recall Mode
+                                </label>
+                                {memorizeMode && (
+                                    <button onClick={() => shuffleBlanks(activeStep)} className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 px-3 rounded shadow">
+                                        🔀 Shuffle Blanks
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {memorizeMode && (
+                            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 text-amber-900 text-sm flex items-start shadow-sm">
+                                <span className="text-xl mr-3">🧠</span>
+                                <div><strong>Randomized Recall Active!</strong> Approx 70% of the keywords have been hidden. Say the line out loud, then click the gray boxes to reveal.</div>
+                            </div>
+                        )}
+
+                        {steps.map((step, idx) => (
+                            <div key={step.id} className={`border-2 rounded-xl transition-all overflow-hidden ${activeStep === idx ? 'border-emerald-500 shadow-md ring-4 ring-emerald-50' : 'border-slate-200 hover:border-emerald-300 cursor-pointer'}`}>
+                                <div className={`p-4 font-bold flex justify-between items-center ${activeStep === idx ? 'bg-emerald-50 text-emerald-900' : 'bg-slate-50 text-slate-700'}`} onClick={() => setActiveStep(idx)}>
+                                    <span>{step.title}</span>
+                                    {activeStep !== idx && <span className="text-xs font-normal text-slate-400">Click to expand</span>}
+                                </div>
+                                {activeStep === idx && (
+                                    <div className="p-5 space-y-5 bg-white">
+                                        {step.patient && (
+                                            <div className="bg-green-50 p-5 rounded-lg border border-green-200 relative mt-2">
+                                                <span className="absolute -top-3 left-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PATIENT (FILIPINO)</span>
+                                                <p className="text-green-900 font-medium leading-relaxed mt-1 text-[15px]">"{renderText(step.patient, idx, 'patient')}"</p>
+                                            </div>
+                                        )}
+                                        {step.preceptor && (
+                                            <div className="bg-blue-50 p-5 rounded-lg border border-blue-200 relative mt-4">
+                                                <span className="absolute -top-3 left-4 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">OSCE CLINICAL RATIONALE</span>
+                                                <p className="text-blue-900 font-medium leading-relaxed mt-1 text-[15px]">{renderText(step.preceptor, idx, 'preceptor')}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="w-full md:w-80 flex-shrink-0">
+                        <div className="sticky top-6 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                            <div className="bg-slate-800 p-4 text-white flex justify-between items-center">
+                                <span className="font-bold">OSCE Checklist</span>
+                            </div>
+                            <div className="p-4 h-[75vh] overflow-y-auto bg-slate-50">
+                                <ul className="space-y-2">
+                                    {rubric.map(item => {
+                                        const isCovered = steps[activeStep].checklist.includes(item.id);
+                                        return (
+                                            <li key={item.id} className={`p-2.5 rounded-lg text-sm flex items-start transition-all duration-300 ${isCovered ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold shadow-sm' : 'text-slate-500 bg-white border border-slate-100'}`}>
+                                                <span className={`mr-2 ${isCovered ? 'text-emerald-600' : 'text-slate-300'}`}>{isCovered ? '✔' : '○'}</span>
+                                                <span className="leading-tight">{item.text}</span>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Data for SPIKES ---
+        const spikesSteps = [
+            {
+                id: "S", title: "S - Setting up the Interview", checklist: [1, 2],
+                patient: "Magandang umaga po. Ako po si Doc [Name]. Kumusta po kayo ngayon? Pasensya na po at medyo madami tayong pag-uusapan, gusto niyo po ba ng may {makasama mula sa inyong pamilya}?",
+                preceptor: "I am establishing rapport. I ensure a {private room}, {silence my pager/phone}, and {sit down} to establish eye contact. I ensure there are {no physical barriers} (like a desk) between me and the patient."
+            },
+            {
+                id: "P", title: "P - Assessing Perception", checklist: [3],
+                patient: "Bago po tayo mag-umpisa, maaari ko po bang malaman kung ano ang {pagkaintindi ninyo} sa dahilan kung bakit kayo na-admit at kinuhanan ng biopsy / tests?",
+                preceptor: "I am using {open-ended questions} to assess the patient's current understanding of their medical condition. This helps me identify any {misconceptions} or denial before delivering the news."
+            },
+            {
+                id: "I", title: "I - Obtaining Invitation", checklist: [4],
+                patient: "Lumabas na po ang resulta ng inyong mga test. Gusto niyo po ba na {pag-usapan natin ang buong detalye} ngayon, o gusto ninyong summary lang muna?",
+                preceptor: "I am asking for the patient's {explicit permission} to share the information, respecting their right to {information autonomy}. Some patients may prefer not to know the full details immediately."
+            },
+            {
+                id: "K", title: "K - Giving Knowledge", checklist: [5, 6],
+                patient: "Ikinalulungkot ko po, ngunit {hindi po maganda} ang balita. Ayon po sa resulta ng biopsy, ang bukol po ninyo ay {kanser}. ... (Pause)",
+                preceptor: "I deliver a {warning shot} to brace the patient. I break the bad news clearly without using {medical jargon}. I give information in {small chunks} and pause frequently to check for understanding."
+            },
+            {
+                id: "E", title: "E - Empathy", checklist: [7, 8],
+                patient: "Naiintindihan ko po na napakabigat ng balitang ito. ... Sige po, {umiyak lang po kayo}, nandito lang po ako para makinig.",
+                preceptor: "I provide {silence} to allow them to process the news. I do NOT say 'I know how you feel'. Instead, I respond with an {empathic statement} acknowledging their feelings and offer a tissue box."
+            },
+            {
+                id: "S2", title: "S - Strategy and Summary", checklist: [9, 10],
+                patient: "Hindi po kayo nag-iisa sa laban na ito. Ang susunod po nating hakbang ay ipapakonsulta kayo sa isang {Oncologist} para sa inyong treatment plan. May mga {katanungan} pa po ba kayo?",
+                preceptor: "I summarize the consultation and formulate a clear {shared follow-up plan}. I check for remaining questions and reassure the patient of my {continued support} and non-abandonment."
+            }
+        ];
+        
+        const spikesRubric = [
+            {id: 1, text: "Ensures privacy, sits down, removes physical barriers"},
+            {id: 2, text: "Offers to have family members present"},
+            {id: 3, text: "Asks open-ended questions about current understanding (Perception)"},
+            {id: 4, text: "Asks permission before giving full results (Invitation)"},
+            {id: 5, text: "Gives a 'warning shot' (Knowledge)"},
+            {id: 6, text: "Explains diagnosis without medical jargon (Knowledge)"},
+            {id: 7, text: "Allows periods of silence for processing (Empathy)"},
+            {id: 8, text: "Responds empathetically to emotional outbursts (Empathy)"},
+            {id: 9, text: "Formulates a clear strategy and follow-up plan (Strategy)"},
+            {id: 10, text: "Reassures non-abandonment and asks for questions"}
+        ];
+
+        // --- Data for Counseling ---
+        const counselSteps = [
+            {
+                id: "A1", title: "Ask (Identify Risk Factor)", checklist: [1],
+                patient: "Sa ating record po, nakita ko na {kayo po ay naninigarilyo}. Gaano kadami po ang nauubos ninyo sa isang araw, at {kailan pa kayo nagsimula}?",
+                preceptor: "I am actively asking to identify tobacco use and computing the {pack-years} to determine the level of addiction."
+            },
+            {
+                id: "A2", title: "Advise (Strong Urge to Quit)", checklist: [2],
+                patient: "Bilang inyong doktor, {mariin ko pong ipinapayo} na itigil na ninyo ang paninigarilyo. Ito po ang pinakamahalagang magagawa ninyo para bumuti ang inyong {baga/puso} at makaiwas sa sakit ang inyong pamilya.",
+                preceptor: "I am delivering a {strong, clear, and personalized} advice to quit, linking the habit directly to their current illness or family's well-being."
+            },
+            {
+                id: "A3", title: "Assess (Readiness)", checklist: [3],
+                patient: "Alam ko pong mahirap, pero {handa na po ba kayong subukang itigil} ang paninigarilyo sa darating na buwan?",
+                preceptor: "I am assessing the patient's {readiness to quit}. If they are not ready, I will use the {5 R's} (Relevance, Risks, Rewards, Roadblocks, Repetition) to motivate them."
+            },
+            {
+                id: "A4", title: "Assist (Create a Plan)", checklist: [4, 5],
+                patient: "Tulungan po natin kayong gumawa ng plano. Mag-set po tayo ng {Quit Date}. Aalamin natin ang inyong mga {triggers} at bibigyan ko po kayo ng reseta (tulad ng Nicotine patch) para hindi kayo masyadong hanapin ng inyong katawan.",
+                preceptor: "I am assisting the patient by setting a {quit date}, identifying behavioral {triggers}, providing social support, and discussing {pharmacotherapy} options if indicated."
+            },
+            {
+                id: "A5", title: "Arrange (Follow-up)", checklist: [6],
+                patient: "Hindi po natatapos ang suporta natin dito. Babalik po kayo makalipas ang {isang linggo} para kumustahin natin ang inyong progress.",
+                preceptor: "I am arranging a definite {follow-up appointment}, ideally within the {first week} of their quit date to prevent relapse."
+            },
+            {
+                id: "E1", title: "EXTRA: Duty of Candor (Angry Relative)", checklist: [7, 8],
+                patient: "Magandang araw po. Naiintindihan ko po na kayo ay {nagagalit} at nababahala. {Humihingi po kami ng pasensya} sa delay ng inyong resulta. Makakaasa po kayo na amin itong {iimbestigahan} sa ospital para hindi na ito maulit.",
+                preceptor: "In the event of a medical error or delay, I must exhibit the {Duty of Candor}. I apologize for the distress caused, assure a {system-wide investigation}, but I must NEVER point fingers or {blame a specific colleague} without a formal review."
+            }
+        ];
+
+        const counselRubric = [
+            {id: 1, text: "ASK: Identifies tobacco use and quantifies (Pack-years)"},
+            {id: 2, text: "ADVISE: Gives strong, personalized advice to quit"},
+            {id: 3, text: "ASSESS: Determines readiness to quit within 30 days"},
+            {id: 4, text: "ASSIST: Helps set a specific Quit Date"},
+            {id: 5, text: "ASSIST: Discusses triggers and offers pharmacotherapy"},
+            {id: 6, text: "ARRANGE: Schedules follow-up within 1 week"},
+            {id: 7, text: "CANDOR: Apologizes sincerely without defensiveness"},
+            {id: 8, text: "CANDOR: Avoids blaming colleagues; offers system investigation"}
+        ];
+
+        // --- View: Biopsychosocial Primer ---
+        const BiopsychosocialPrimer = () => (
+            <div className="space-y-8 animate-fade-in pb-10">
+                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Family Medicine Fundamentals</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">🗣️</span> F-I-F-E (The Illness Experience)</h3>
+                        <p className="text-sm text-slate-700 mb-4">Unlike other specialties that just look for the "Disease", Family Medicine treats the "Illness"—the patient's personal experience of the disease. You MUST ask these questions.</p>
+                        <div className="bg-emerald-50 p-4 rounded border border-emerald-100">
+                            <ul className="space-y-3 text-sm text-emerald-900 font-medium">
+                                <li><strong>F - Feelings:</strong> "Ano po ang pinaka-ikinababahala ninyo sa inyong nararamdaman?"</li>
+                                <li><strong>I - Ideas:</strong> "Sa tingin niyo po, ano ang posibleng dahilan ng inyong sakit?"</li>
+                                <li><strong>F - Function:</strong> "Paano po naaapektuhan ng sakit na ito ang inyong trabaho at pamilya?"</li>
+                                <li><strong>E - Expectations:</strong> "Ano po ang inaasahan ninyo sa ating pag-uusap at gamutan ngayon?"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center"><span className="text-2xl mr-2">🏠</span> Family APGAR</h3>
+                        <p className="text-sm text-slate-700 mb-4">A rapid screening tool to assess family dysfunction. Scoring: Highly functional (8-10), Moderately dysfunctional (4-7), Severely dysfunctional (0-3).</p>
+                        <ul className="space-y-2 text-sm text-slate-700 font-medium">
+                            <li><strong className="text-blue-900">A - Adaptation:</strong> Satisfaction with the help received from family when in trouble.</li>
+                            <li><strong className="text-blue-900">P - Partnership:</strong> Satisfaction with how family communicates and shares problem-solving.</li>
+                            <li><strong className="text-blue-900">G - Growth:</strong> Satisfaction with family's acceptance and support in taking on new paths.</li>
+                            <li><strong className="text-blue-900">A - Affection:</strong> Satisfaction with how family expresses affection and responds to emotion.</li>
+                            <li><strong className="text-blue-900">R - Resolve:</strong> Satisfaction with the amount of time family spends together.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🌳</span> Genogram Rules</h3>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-indigo-900">Minimum requirement:</strong> Must display at least <strong>3 generations</strong>.</li>
+                            <li><strong className="text-indigo-900">The Index Patient:</strong> The patient seeking care must be marked with an <strong>arrow</strong>.</li>
+                            <li><strong className="text-indigo-900">Symbols:</strong> Square = Male. Circle = Female. Diagonal cross (X) = Deceased. Triangle = Pregnancy/Miscarriage. Double line between spouses = Separation/Divorce.</li>
+                            <li><strong className="text-indigo-900">Medical Data:</strong> Beside the symbols, write the current age (or age of death) and significant hereditary/infectious diseases (e.g., T2DM, HTN, TB).</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-rose-700 mb-4 flex items-center"><span className="text-2xl mr-2">⚠️</span> OSCE Absolute Fails</h3>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-rose-900">Standing Up:</strong> Never stand over the patient during a counseling or bad-news session. Always pull up a chair to maintain eye-level communication.</li>
+                            <li><strong className="text-rose-900">False Reassurance:</strong> Do not tell a cancer patient "Gagaling po kayo" if the prognosis is poor. Say: "Gagawin po natin ang lahat ng abot ng makakaya ng medisina."</li>
+                            <li><strong className="text-rose-900">Medical Jargon:</strong> Saying "metastasis", "myocardial infarction", or "exacerbation" will cost you points. Use "kumalat na bukol", "atake sa puso", or "lumala".</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [view, setView] = useState('primer');
+            const tabs = [
+                { id: 'primer', label: '1. FM Primer & Tools', icon: '🩺' },
+                { id: 'spikes', label: '2. SPIKES (Bad News)', icon: '💔' },
+                { id: 'counsel', label: '3. Counseling (5 A\'s)', icon: '🗣️' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row font-sans">
+                    <nav className="w-full md:w-72 bg-slate-900 text-white p-6 shadow-2xl flex-shrink-0 z-10">
+                        <div className="mb-10">
+                            <h1 className="text-3xl font-black text-emerald-400 tracking-tight">FM OSCE</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE</p>
+                        </div>
+                        <ul className="space-y-3">
+                            {tabs.map(tab => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => setView(tab.id)} 
+                                        className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 ${view === tab.id ? 'bg-emerald-600 text-white shadow-lg transform scale-105' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+                                    >
+                                        <span className="mr-3 text-xl">{tab.icon}</span>
+                                        {tab.label}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-50">
+                        <div className="max-w-6xl mx-auto">
+                            {view === 'primer' && <BiopsychosocialPrimer />}
+                            {view === 'spikes' && <InteractiveScript title="SPIKES Protocol" subtitle="Breaking Bad News" steps={spikesSteps} rubric={spikesRubric} />}
+                            {view === 'counsel' && <InteractiveScript title="Preventive Counseling" subtitle="Smoking Cessation (5 A's) & De-escalation" steps={counselSteps} rubric={counselRubric} />}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
   <!-- ═══ END PLACEHOLDER ═══ -->
 
   <div class="mark-row">
