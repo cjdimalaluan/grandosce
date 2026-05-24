@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SURG 250 OSCE Master - Clinical Breast Exam</title>
+    <title>SURG 250 OSCE - Ultimate CBE Trainer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -25,7 +25,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- View 1: The Interactive Script with Random Active Recall ---
+        // --- View 1: The Interactive Script ---
         const OSCECBEScript = () => {
             const [activeStep, setActiveStep] = useState(0);
             const [memorizeMode, setMemorizeMode] = useState(false);
@@ -34,57 +34,59 @@
             const steps = [
                 {
                     id: 1,
-                    title: "Phase 1: Introduction, Consent & The Chaperone Trap",
-                    checklist: [1, 2, 3, 4],
-                    patient: "Magandang umaga/hapon po, Ma’am. Ako po si Doc CJ, isang estudyanteng doktor mula sa UP. Kailangan ko po sanang suriin ang inyong mga [suso at kili-kili] para makasiguro tayong walang bukol. Dahil medyo maselan po ang pagsusuring ito, kukuha po ako ng kasamang [babaeng nurse] dito sa loob ng kwarto para sa inyong kapanatagan. Papayag po ba kayo?",
-                    preceptor: "Good morning, Doctors. I have washed my hands and introduced myself. I am establishing patient identity and gaining consent. Because I am a [male examinee], I am explicitly requesting a [female chaperone] to be present in the room before I proceed. I will ensure patient privacy and ask the patient to disrobe to the waist."
+                    title: "Phase 1: Intro, Tools & The Chaperone",
+                    checklist: [1],
+                    patient: "Magandang umaga/hapon po, Ma’am. Ako po si Doc CJ, isang clinical clerk mula sa UP. Kailangan ko po sanang suriin ang inyong mga {suso at kili-kili}. Dahil medyo maselan po ang pagsusuring ito, kukuha po ako ng kasamang {babaeng nurse o chaperone} dito sa loob ng kwarto para sa inyong kapanatagan. Papayag po ba kayo?",
+                    preceptor: "Good morning, Doctors. I have washed my hands and introduced myself. I am verifying patient identity and gaining consent. Because I am a {male examinee}, I am explicitly requesting a {female chaperone} to be present. I have prepared my {caliper} and {marker}. I will ensure privacy and ask the patient to disrobe to the waist."
                 },
                 {
                     id: 2,
-                    title: "Phase 2: Visual Inspection (The 4 Positions)",
-                    checklist: [5, 6],
-                    patient: "Ma’am, maaari po bang maupo kayo sa gilid ng kama? Una po, ibaba niyo ang inyong mga kamay sa gilid. Pangalawa, paki-[pamewang nang mariin] para tumigas ang kalamnan sa dibdib. Pangatlo, paki-[taas ang dalawang kamay] sa likod ng ulo. At panghuli, maaari po bang [yumuko kayo] nang kaunti paharap?",
-                    preceptor: "With the patient seated, I am inspecting the breasts in four positions: [arms at sides], [hands pressed firmly on hips] to contract the pectoral muscles, [arms raised over the head], and [leaning forward] to check suspensory ligaments. I am looking for [symmetry], contour, skin changes like [peau d'orange] or erythema, and assessing the nipples for [retraction], deviation, or discharge."
+                    title: "Phase 2: Visual Inspection (The 4 Maneuvers)",
+                    checklist: [2, 3, 4, 5, 6, 7],
+                    patient: "Ma’am, maaari po bang maupo kayo sa gilid ng kama? Una po, ibaba niyo ang inyong mga kamay sa gilid. Pangalawa, paki-{pamewang nang mariin} para tumigas ang kalamnan sa dibdib. Pangatlo, paki-{taas ang dalawang kamay} sa likod ng ulo. At panghuli, maaari po bang {yumuko kayo} nang kaunti paharap?",
+                    preceptor: "With the patient seated, I am inspecting in 4 positions to check for {size and symmetry}, any visible {masses}, skin changes like {peau d'orange}, any {nipple retraction} or deviation, and the presence of {rashes or ulcerations}."
                 },
                 {
                     id: 3,
-                    title: "Phase 3: Breast Palpation (The Vertical Strip)",
-                    checklist: [7, 8, 9, 10],
-                    patient: "Ngayon po ay hihiga tayo. Ipapatong ko po itong unan sa likod ng inyong kanang balikat. Paki-taas po ang inyong [kanang kamay] at ilagay sa likod ng ulo. Kakapain ko na po ang inyong dibdib, sabihin niyo po kung may masakit.",
-                    preceptor: "I am placing the patient in a [supine position] with a pillow under the ipsilateral shoulder and the arm tucked behind the head to flatten the breast tissue. Using the [pads of my 2nd, 3rd, and 4th fingers], I am palpating using the [vertical strip] pattern. I will apply [light, medium, and deep] pressure at each point, covering the entire breast from the clavicle down to the inframammary fold, and from the midsternal line to the posterior axillary line. I am also ensuring I palpate the [Tail of Spence]."
+                    title: "Phase 3: Palpation (Ipsilateral Stance & Borders)",
+                    checklist: [8, 9, 10, 11, 12, 13],
+                    patient: "Ngayon po ay hihiga tayo. Ipapatong ko po itong unan sa likod ng inyong kanang balikat. Paki-taas po ang inyong {kanang kamay} at ilagay sa likod ng ulo. Kakapain ko na po ang inyong dibdib.",
+                    preceptor: "I am placing the patient {supine} with the arm raised over 90 degrees to flatten the tissue. Crucially, I am standing on the {ipsilateral side} of the breast being examined to avoid reaching over. Using the pads of my {2nd, 3rd, and 4th fingers} of {two hands}, I am palpating in a {vertical strip} pattern. I will cover the strict anatomical borders: superiorly to the {clavicle}, medially to the {mid-sternum}, laterally to the {mid-axillary line}, and inferiorly to the {inframammary fold}. I will also palpate the {axillary tail of Spence} and gently compress the areola for {nipple discharge}."
                 },
                 {
                     id: 4,
-                    title: "Phase 4: Lymph Node Palpation",
-                    checklist: [11, 12, 13],
+                    title: "Phase 4: Lymph Nodes (The Caudal Sweep)",
+                    checklist: [14, 15],
                     patient: "Ma'am, maaari po ba kayong maupo ulit? Ipatong niyo lang po ang inyong braso sa aking braso para makapag-relax ang inyong kili-kili. Kakapain ko po ang inyong mga kulani.",
-                    preceptor: "I ask the patient to sit. I am [supporting the patient's arm] to fully relax the axillary floor. I am palpating high into the apex for the [central nodes], against the anterior axillary fold for the [pectoral nodes], against the posterior fold for the [subscapular nodes], and against the upper humerus for the [lateral nodes]. I will then palpate the [supraclavicular] and [infraclavicular] lymph node chains."
+                    preceptor: "The patient is seated. I am supporting the patient's arm to fully relax the axillary floor. I am strictly using my {contralateral hand} to examine the axilla. I push upward toward the apex, then gently bring my hand {caudally} while pressing against the chest wall to palpate the central, pectoral, subscapular, and lateral nodes. I will also palpate the {supraclavicular} and {infraclavicular} fossae."
                 },
                 {
                     id: 5,
-                    title: "Phase 5: Conclusion & Reporting",
-                    checklist: [14, 15],
-                    patient: "Tapos na po ang ating pagsusuri. Maaari na po kayong magbihis. Base po sa aking nakapa, wala naman po tayong nakitang kakaibang bukol. Maraming salamat po sa inyong kooperasyon.",
-                    preceptor: "The examination is complete. The patient has been covered and asked to dress. Doc, presenting my findings: Breasts are [symmetric] with no visible skin dimpling, retractions, or peau d'orange. Palpation using the vertical strip method revealed [no palpable masses], tenderness, or nipple discharge. There is [no axillary or supraclavicular lymphadenopathy] noted. The clinical breast exam is normal."
+                    title: "Phase 5: Reporting (The Calliper Format)",
+                    checklist: [16, 17],
+                    patient: "Tapos na po ang ating pagsusuri. Maaari na po kayong magbihis. Base po sa aking nakapa, narito po ang ating mga susunod na hakbang... Maraming salamat po sa inyong kooperasyon.",
+                    preceptor: "The examination is complete. Presenting my findings: In the Left breast, I palpated a mass at {Location/Clock-face}, measuring exactly {Size} cm using my {caliper}, described as {Shape and Consistency}. In the Right breast, {Findings}. There is no nipple discharge and no axillary or supraclavicular lymphadenopathy noted."
                 }
             ];
 
             const rubric = [
-                {id: 1, text: "Perform Hand Hygiene", phase: 1},
-                {id: 2, text: "Introduce self, ID patient, Explain Procedure", phase: 1},
-                {id: 3, text: "EXPLICITLY Request Female Chaperone", phase: 1},
-                {id: 4, text: "Expose chest completely with dignity", phase: 1},
-                {id: 5, text: "Inspect in 4 distinct positions", phase: 2},
-                {id: 6, text: "Verbalize inspection (symmetry, skin, nipple)", phase: 2},
-                {id: 7, text: "Position patient supine, arm behind head", phase: 3},
-                {id: 8, text: "Use pads of 3 middle fingers", phase: 3},
-                {id: 9, text: "Use Vertical Strip pattern (or concentric)", phase: 3},
-                {id: 10, text: "Palpate Light, Medium, and Deep", phase: 3},
-                {id: 11, text: "Palpate Tail of Spence", phase: 3},
-                {id: 12, text: "Support arm to relax axilla (Sitting)", phase: 4},
-                {id: 13, text: "Palpate Axillary & Supraclavicular nodes", phase: 4},
-                {id: 14, text: "Assist patient in dressing", phase: 5},
-                {id: 15, text: "Formal presentation of findings", phase: 5}
+                {id: 1, text: "Intro, ID patient, Request Female Chaperone", phase: 1},
+                {id: 2, text: "INSPECT: Position - explain 4 different maneuvers", phase: 2},
+                {id: 3, text: "INSPECT: Report size and symmetry", phase: 2},
+                {id: 4, text: "INSPECT: Mass (report any visible mass)", phase: 2},
+                {id: 5, text: "INSPECT: Skin changes (peau d' orange)", phase: 2},
+                {id: 6, text: "INSPECT: Nipple retraction", phase: 2},
+                {id: 7, text: "INSPECT: Rashes or ulcerations", phase: 2},
+                {id: 8, text: "PALPATE: Patient supine, arms over head", phase: 3},
+                {id: 9, text: "PALPATE: Systematic exam (vertical strip) using 2 hands", phase: 3},
+                {id: 10, text: "PALPATE: Left breast (use CALIPER) & Describe", phase: 3},
+                {id: 11, text: "PALPATE: Right breast (use CALIPER) & Describe", phase: 3},
+                {id: 12, text: "PALPATE: Tail of Spence explicitly palpated", phase: 3},
+                {id: 13, text: "NIPPLE: Check for discharge bilaterally", phase: 3},
+                {id: 14, text: "AXILLA: Support arm, use contralateral hand, caudal sweep", phase: 4},
+                {id: 15, text: "SUPRACLAVICULAR: Palpate fossae", phase: 4},
+                {id: 16, text: "IMPRESSION: Left Breast (Location, Size, Description)", phase: 5},
+                {id: 17, text: "IMPRESSION: Right Breast (Location, Size, Description)", phase: 5}
             ];
 
             const shuffleBlanks = (stepIdx) => {
@@ -92,12 +94,10 @@
                 const newHidden = new Set();
                 const processText = (text, role) => {
                     if (!text) return;
-                    const parts = text.split(/\[(.*?)\]/g);
+                    const parts = text.split(/\{(.*?)\}/g);
                     parts.forEach((part, i) => {
-                        if (i % 2 === 1) { 
-                            if (Math.random() > 0.3) {
-                                newHidden.add(`${stepIdx}-${role}-${i}`);
-                            }
+                        if (i % 2 === 1 && Math.random() > 0.3) {
+                            newHidden.add(`${stepIdx}-${role}-${i}`);
                         }
                     });
                 };
@@ -122,10 +122,10 @@
             const renderText = (text, stepIndex, role) => {
                 if (!text) return null;
                 if (!memorizeMode) {
-                    const parts = text.split(/\[(.*?)\]/g);
-                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-current">{part}</strong> : <span key={i}>{part}</span>);
+                    const parts = text.split(/\{(.*?)\}/g);
+                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-pink-700">{part}</strong> : <span key={i}>{part}</span>);
                 }
-                const parts = text.split(/\[(.*?)\]/g);
+                const parts = text.split(/\{(.*?)\}/g);
                 return parts.map((part, i) => {
                     if (i % 2 === 1) {
                         const wordId = `${stepIndex}-${role}-${i}`;
@@ -145,7 +145,7 @@
                     <div className="flex-1 space-y-4">
                         <div className="bg-slate-800 text-white p-5 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <h2 className="text-2xl font-black text-pink-400">The CBE OSCE Script</h2>
+                                <h2 className="text-2xl font-black text-pink-400">The CBE Master Script</h2>
                                 <p className="text-sm text-slate-300 mt-1">Verbalize the Filipino text to the patient, and the English text to the preceptor.</p>
                             </div>
                             <div className="flex flex-col gap-2">
@@ -197,8 +197,8 @@
                     <div className="w-full md:w-80 flex-shrink-0">
                         <div className="sticky top-6 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
                             <div className="bg-slate-800 p-4 text-white flex justify-between items-center">
-                                <span className="font-bold">OSCE Checklist</span>
-                                <span className="text-xs bg-emerald-600 px-2 py-1 rounded font-bold shadow-inner">Pass: 11/15</span>
+                                <span className="font-bold">LU5 OSCE Checklist</span>
+                                <span className="text-xs bg-emerald-600 px-2 py-1 rounded font-bold shadow-inner">Pass: 12/17</span>
                             </div>
                             <div className="p-4 h-[75vh] overflow-y-auto bg-slate-50">
                                 <ul className="space-y-2">
@@ -222,43 +222,45 @@
         // --- View 2: High-Yield Theory ---
         const TheoryReviewer = () => (
             <div className="space-y-8 animate-fade-in pb-10">
-                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Preceptor Pimping (Must-Knows)</h2>
+                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Top-Student Preceptor Pearls</h2>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                     <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-red-700 mb-4 flex items-center"><span className="text-2xl mr-2">🚨</span> The Chaperone Trap</h3>
-                        <p className="text-sm text-slate-700 mb-4">Because you are a male clinical clerk performing an intimate exam, you <strong>MUST</strong> explicitly verbalize the request for a female chaperone.</p>
-                        <div className="bg-red-50 p-4 rounded border border-red-100">
-                            <p className="text-sm text-red-900 font-medium italic">"As a male physician, I am requesting a female nurse or chaperone to be present in the room during this breast examination to ensure patient comfort and medico-legal safety."</p>
+                        <h3 className="text-xl font-bold text-red-700 mb-4 flex items-center"><span className="text-2xl mr-2">🚨</span> The Positioning Traps</h3>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-red-900">The Ipsilateral Stance:</strong> NEVER reach over the patient's chest. You must physically move to stand on the side of the breast being examined (ipsilateral side).</li>
+                            <li><strong className="text-red-900">The Contralateral Hand:</strong> For the axillary exam, do NOT use your left hand to examine the left axilla. Use your contralateral hand (right hand for left axilla), pushing up to the apex and sweeping <strong>caudally</strong> against the chest wall.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">📍</span> The Absolute Boundaries</h3>
+                        <p className="text-sm text-slate-700 mb-4">Verbalizing "I am palpating the breast" is insufficient. You must trace and state the exact anatomical borders:</p>
+                        <div className="bg-emerald-50 p-4 rounded border border-emerald-100">
+                            <ul className="space-y-2 text-sm text-emerald-900 font-medium">
+                                <li>• <strong>Superior:</strong> Clavicle</li>
+                                <li>• <strong>Medial:</strong> Mid-sternum</li>
+                                <li>• <strong>Lateral:</strong> Mid-axillary line</li>
+                                <li>• <strong>Inferior:</strong> Inframammary fold ("bra line")</li>
+                            </ul>
                         </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🪡</span> Prior Mastectomy Protocol</h3>
+                        <p className="text-sm text-slate-700 mb-4">If the standardized patient has a mastectomy scar, your examination priorities shift.</p>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-indigo-900">Inspect the Scar & Axilla:</strong> Look for nodularity, masses, or color changes, which are highly worrisome for local recurrence.</li>
+                            <li><strong className="text-indigo-900">Inspect the Arm:</strong> Check for swelling (Lymphedema). This is caused by disruption of lymphatic chains from prior axillary node dissection or sampling.</li>
+                        </ul>
                     </div>
 
                     <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
                         <h3 className="text-xl font-bold text-pink-700 mb-4 flex items-center"><span className="text-2xl mr-2">👀</span> Pathophysiology of Inspection</h3>
                         <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-pink-900">Dimpling:</strong> Caused by tumor invasion and fibrotic shortening of the <strong>Suspensory Ligaments of Cooper</strong>, pulling the skin inward.</li>
-                            <li><strong className="text-pink-900">Peau d'orange:</strong> French for "orange peel." Caused by tumor emboli obstructing the <strong>subdermal lymphatic channels</strong>, causing local lymphedema and prominent skin pores.</li>
-                            <li><strong className="text-pink-900">Nipple Retraction:</strong> Can be normal if long-standing, but new onset suggests a subareolar cancer infiltrating and pulling the mammary ducts.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🤚</span> Palpation Principles</h3>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-indigo-900">Why Vertical Strip?</strong> Studies show the vertical strip (lawnmower) pattern is the most validated method to ensure no breast tissue is missed.</li>
-                            <li><strong className="text-indigo-900">Why Light, Medium, Deep?</strong> Light pressure palpates the subcutaneous tissue. Medium palpates the mid-mammary tissue. Deep palpates down to the pectoral fascia.</li>
-                            <li><strong className="text-indigo-900">The Tail of Spence:</strong> Breast tissue that extends into the upper outer quadrant toward the axilla. It is the most common site for breast cancer.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">🟢</span> Lymph Node Anatomy</h3>
-                        <p className="text-sm text-slate-700 mb-3">You must know where your fingers are pressing during the axillary exam:</p>
-                        <ul className="space-y-2 text-sm text-slate-700">
-                            <li>• <strong>Pectoral (Anterior):</strong> Lower border of pec major.</li>
-                            <li>• <strong>Subscapular (Posterior):</strong> Lateral border of scapula.</li>
-                            <li>• <strong>Lateral:</strong> Along the upper humerus.</li>
-                            <li>• <strong>Central:</strong> High in the axillary apex (where the other 3 groups drain into).</li>
+                            <li><strong className="text-pink-900">Dimpling:</strong> Caused by tumor invasion and fibrotic shortening of the <strong>Suspensory Ligaments of Cooper</strong>.</li>
+                            <li><strong className="text-pink-900">Peau d'orange:</strong> Caused by tumor emboli obstructing the <strong>subdermal lymphatic channels</strong>, causing local lymphedema.</li>
+                            <li><strong className="text-pink-900">Tools of the Trade:</strong> Always mention using the <strong>Caliper</strong> to measure, and the <strong>Marker</strong> to mark the skin overlaying the lesion for future biopsy/surgical mapping.</li>
                         </ul>
                     </div>
                 </div>
@@ -268,12 +270,12 @@
         // --- View 3: Pathology Matrix ---
         const PathologyMatrix = () => (
             <div className="space-y-8 animate-fade-in pb-10">
-                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Breast Mass Differentiation</h2>
+                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Clinical Impression Formulation</h2>
 
                 <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
                     <div className="bg-pink-50 p-5 border-b border-pink-200">
                         <h3 className="font-bold text-pink-900 text-lg">Describing a Mass (The 6 Features)</h3>
-                        <p className="text-sm text-pink-800 mt-2 leading-relaxed">If you palpate a mass during the OSCE, you must describe it using 6 characteristics: <strong>Location</strong> (Clock face/Quadrant & distance from nipple), <strong>Size</strong> (in cm), <strong>Shape</strong> (round, irregular), <strong>Consistency</strong> (soft, rubbery, firm, hard), <strong>Mobility</strong> (mobile, fixed to skin/muscle), and <strong>Tenderness</strong>.</p>
+                        <p className="text-sm text-pink-800 mt-2 leading-relaxed">During the Clinical Impression portion of the rubric, you must describe lesions using these features: <strong>Location</strong> (Clock face/Quadrant & distance from nipple), <strong>Size</strong> (in cm using caliper), <strong>Shape</strong> (round, irregular), <strong>Consistency</strong> (soft, rubbery, firm, hard), <strong>Mobility</strong> (mobile, fixed to skin/muscle), and <strong>Tenderness</strong>.</p>
                     </div>
                     
                     <div className="p-6 overflow-x-auto">
@@ -301,7 +303,7 @@
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-slate-50">
-                                    <td className="p-3 border font-black text-slate-900">Breast Cancer</td>
+                                    <td className="p-3 border font-black text-slate-900">Breast Malignancy</td>
                                     <td className="p-3 border font-medium">30 - 90+ years</td>
                                     <td className="p-3 border">
                                         Usually single. Irregular or stellate shape. <span className="font-bold text-red-700">Hard consistency.</span> Fixed to skin or underlying tissue. Usually painless.
@@ -319,7 +321,7 @@
             const tabs = [
                 { id: 'script', label: '1. CBE Interactive Script', icon: '🩺' },
                 { id: 'theory', label: '2. Preceptor Must-Knows', icon: '🧠' },
-                { id: 'pathology', label: '3. Mass Differentiation', icon: '📊' }
+                { id: 'pathology', label: '3. Clinical Impressions', icon: '📊' }
             ];
 
             return (
