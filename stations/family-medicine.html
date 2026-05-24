@@ -1,223 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Station 01 — Family Medicine | LU5 Grand OSCE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../styles.css" />
-  <style>
-    /* Station-specific overrides */
-    body { font-family: "DM Sans", sans-serif; font-weight: 300; }
-
-    .station-head {
-      background: var(--teal-deep);
-      padding: 48px 48px 56px;
-      position: relative;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 40px;
-      align-items: start;
-    }
-
-    .station-head::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(-55deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px);
-      pointer-events: none;
-    }
-
-    .station-head h1 {
-      color: var(--white);
-    }
-
-    .head-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--teal-light);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .head-eyebrow::before {
-      content: "";
-      display: block;
-      width: 20px;
-      height: 1px;
-      background: var(--teal-light);
-    }
-
-    .head-pills {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: var(--br-md);
-      color: rgba(255,255,255,0.7);
-      background: transparent;
-      transition: all var(--tr-base);
-    }
-
-    .pill:hover {
-      border-color: rgba(255,255,255,0.3);
-      color: var(--white);
-    }
-
-    .head-logo img {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-
-    /* Content area */
-    .content {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 48px 48px 80px;
-    }
-
-    .sec-label {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .sec-label::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--rule);
-    }
-
-    /* Placeholder */
-    .placeholder {
-      background: var(--white);
-      border: 1px dashed rgba(26,140,140,0.25);
-      border-radius: var(--br-lg);
-      padding: 56px 40px;
-      text-align: center;
-    }
-
-    .ph-title {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 400;
-      color: var(--ink);
-      margin-bottom: 10px;
-    }
-
-    .ph-sub {
-      font-size: 13px;
-      color: var(--ink-soft);
-      line-height: 1.6;
-      max-width: 380px;
-      margin: 0 auto;
-    }
-
-    .ph-topics {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 8px;
-      margin-top: 28px;
-      max-width: 520px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .ph-topic {
-      padding: 9px 12px;
-      border: 1px solid var(--rule);
-      border-radius: var(--br-md);
-      font-size: 11px;
-      color: var(--ink-soft);
-      background: var(--off-white);
-    }
-
-    /* Mark done button */
-    .mark-row {
-      text-align: center;
-      margin-top: 32px;
-    }
-
-    /* Station nav */
-    .stn-nav {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--rule);
-      gap: 12px;
-    }
-
-    /* Mobile responsive */
-    @media (max-width: 640px) {
-      .topbar, .station-head, .content {
-        padding-left: 20px;
-        padding-right: 20px;
-      }
-      .station-head {
-        grid-template-columns: 1fr;
-      }
-      .head-logo {
-        display: none;
-      }
-    }
-  </style>
-</head>
-<body>
-
-<div class="topbar">
-  <a href="../index.html">← All Stations</a>
-  <span class="topbar-right">LU5 OSCE · 2026</span>
-</div>
-
-<header class="station-head">
-  <div>
-    <div class="head-eyebrow">Station 01 of 14</div>
-    <h1>Family Medicine</h1>
-    <div class="head-pills">
-      <div class="pill">⏱ 12 minutes</div>
-      <div class="pill">📋 Checklist-based</div>
-    </div>
-  </div>
-  <div class="head-logo">
-    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABQAFADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWm5ybnJ2eoqOkpaanqKmqsrO0tba2uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQAAAAAAAAACAwEEBQYHCAkK/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba2uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==" alt="UPCM Logo" />
-  </div>
-</header>
-
-<main class="content">
-  <div class="sec-label">Station Content</div>
-
-  <!-- ═══ CONTENT PLACEHOLDER — replace with actual reviewer content ═══ -->
- <!DOCTYPE html>
-<html lang="en">
-<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LU5 Family Medicine OSCE Master Trainer</title>
+    <title>FamMed OSCE Master - Ultimate CEA Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -228,8 +14,8 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f0fdf4; }
         ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
-        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; border-bottom: 2px dashed #94a3b8; }
         .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
     </style>
 </head>
@@ -239,35 +25,61 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- Reusable Interactive Script Component ---
-        const InteractiveScript = ({ title, steps, rubric, subtitle }) => {
-            const [activeStep, setActiveStep] = useState(0);
+        // Utility function to render text with hideable keywords using [keyword] syntax
+        const renderRecallText = (text, stepIndex, role, hiddenWords, toggleWord, memorizeMode, highlightColor = "teal") => {
+            if (!text) return null;
+            if (!memorizeMode) {
+                const parts = text.split(/\[(.*?)\]/g);
+                return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className={`text-${highlightColor}-700`}>{part}</strong> : <span key={i}>{part}</span>);
+            }
+            const parts = text.split(/\[(.*?)\]/g);
+            return parts.map((part, i) => {
+                if (i % 2 === 1) {
+                    const wordId = `${stepIndex}-${role}-${i}`;
+                    const isHidden = hiddenWords.has(wordId);
+                    if (isHidden) {
+                        return <span key={wordId} onClick={() => toggleWord(wordId)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
+                    } else {
+                        return <span key={wordId} className={`font-bold bg-${highlightColor}-100 text-${highlightColor}-800 px-1 rounded mx-0.5 shadow-sm`}>{part}</span>;
+                    }
+                }
+                return <span key={i}>{part}</span>;
+            });
+        };
+
+        // --- View 1: CEA Method Master Rubric ---
+        const CEARubric = () => {
             const [memorizeMode, setMemorizeMode] = useState(false);
             const [hiddenWords, setHiddenWords] = useState(new Set());
 
-            const shuffleBlanks = (stepIdx) => {
-                const step = steps[stepIdx];
-                const newHidden = new Set();
-                const processText = (text, role) => {
-                    if (!text) return;
-                    const parts = text.split(/\{(.*?)\}/g);
-                    parts.forEach((part, i) => {
-                        if (i % 2 === 1 && Math.random() > 0.3) {
-                            newHidden.add(`${stepIdx}-${role}-${i}`);
-                        }
-                    });
-                };
-                processText(step.patient, 'patient');
-                processText(step.preceptor, 'preceptor');
-                setHiddenWords(newHidden);
-            };
+            const ceaSteps = [
+                {
+                    phase: "A. CATHARSIS (Identify Misperception)",
+                    points: [
+                        { step: "1. Asked Thoughts", script: "Ano po ang [nasa isip niyo] tungkol sa inyong sakit at gamutan?", pearl: "Open-ended question to draw out the misperception." },
+                        { step: "2. Asked Feelings", script: "Ano po ang [nararamdaman niyo] kapag naiisip niyo ito?", pearl: "Elicit the emotional response (Fear, anxiety, frustration)." },
+                        { step: "3. Reflected/Paraphrased", script: "[Kung tama po ang pagkakaintindi ko], natatakot kayong inumin ang gamot dahil baka masira ang bato ninyo?", pearl: "Validate by echoing their exact concern. DO NOT correct them yet." },
+                        { step: "4. Probed Feelings", script: "Maaari niyo po bang [ikwento pa] kung saan niyo ito narinig o bakit niyo ito nararamdaman?", pearl: "Dig deeper into the root cause of the misperception using SCREEM factors." },
+                        { step: "5. Summarized", script: "[Kaya pala] hindi niyo naiinom ang gamot ay [dahil sa] takot na masira ang kidney at narinig niyo sa kapitbahay. [Tama po ba]?", pearl: "Tie the thoughts and feelings together to transition to Education." }
+                    ]
+                },
+                {
+                    phase: "B. EDUCATION (Correct Misperception)",
+                    points: [
+                        { step: "1. Corrected the Misperception", script: "[Naiintindihan ko po] ang inyong takot. Subalit, gusto ko pong ipaliwanag na [ang hindi pag-inom ng gamot ang mismong sumisira] sa inyong kidney dahil sa patuloy na pagtaas ng presyon/asukal.", pearl: "Address the specific fear directly but gently. Use analogies." }
+                    ]
+                },
+                {
+                    phase: "C. ACTION (Plan of Action)",
+                    points: [
+                        { step: "1. Diagnostics", script: "Para makasiguro tayo sa lagay ng inyong organo, magpapakuha tayo ng [12-Lead ECG], [Urinalysis], at [Serum Creatinine].", pearl: "Must name SPECIFIC tests assessing Target Organ Damage (TOD)." },
+                        { step: "2. Therapeutics", script: "Ipagpapatuloy po natin ang [Amlodipine 5mg OD]. Ito ay ligtas at poprotekta sa inyong puso.", pearl: "Name the drug, dose, and frequency explicitly." },
+                        { step: "3. Non-Pharmacologic", script: "Bukod sa gamot, kailangan din natin bawasan ang [alat sa pagkain] at [mag-ehersisyo ng 30 minuto] kada araw.", pearl: "Be specific: DASH diet, <2g Sodium/day, 150 mins/week exercise." }
+                    ]
+                }
+            ];
 
-            useEffect(() => {
-                if (memorizeMode) shuffleBlanks(activeStep);
-                else setHiddenWords(new Set());
-            }, [activeStep, memorizeMode]);
-
-            const revealWord = (id) => {
+            const toggleWord = (id) => {
                 setHiddenWords(prev => {
                     const next = new Set(prev);
                     next.delete(id);
@@ -275,271 +87,486 @@
                 });
             };
 
-            const renderText = (text, stepIndex, role) => {
-                if (!text) return null;
-                if (!memorizeMode) {
-                    const parts = text.split(/\{(.*?)\}/g);
-                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-emerald-700">{part}</strong> : <span key={i}>{part}</span>);
-                }
-                const parts = text.split(/\{(.*?)\}/g);
-                return parts.map((part, i) => {
-                    if (i % 2 === 1) {
-                        const wordId = `${stepIndex}-${role}-${i}`;
-                        const isHidden = hiddenWords.has(wordId);
-                        if (isHidden) {
-                            return <span key={wordId} onClick={() => revealWord(wordId)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
-                        } else {
-                            return <span key={wordId} className="font-bold bg-emerald-100 text-emerald-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
-                        }
-                    }
-                    return <span key={i}>{part}</span>;
+            const randomize = () => {
+                const newHidden = new Set();
+                ceaSteps.forEach((phase, fIdx) => {
+                    phase.points.forEach((p, pIdx) => {
+                        const text = p.script;
+                        const parts = text.split(/\[(.*?)\]/g);
+                        parts.forEach((part, i) => {
+                            if (i % 2 === 1 && Math.random() > 0.3) {
+                                newHidden.add(`${fIdx}-${pIdx}-${i}`);
+                            }
+                        });
+                    });
                 });
+                setHiddenWords(newHidden);
             };
 
+            useEffect(() => {
+                if (memorizeMode) randomize();
+                else setHiddenWords(new Set());
+            }, [memorizeMode]);
+
             return (
-                <div className="flex flex-col md:flex-row gap-6 animate-fade-in pb-10">
-                    <div className="flex-1 space-y-4">
-                        <div className="bg-slate-800 text-white p-5 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div>
-                                <h2 className="text-2xl font-black text-emerald-400">{title}</h2>
-                                <p className="text-sm text-slate-300 mt-1">{subtitle}</p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
-                                    <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-2 w-4 h-4 accent-emerald-500" />
-                                    Active Recall Mode
-                                </label>
-                                {memorizeMode && (
-                                    <button onClick={() => shuffleBlanks(activeStep)} className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 px-3 rounded shadow">
-                                        🔀 Shuffle Blanks
-                                    </button>
-                                )}
-                            </div>
+                <div className="space-y-8 animate-fade-in pb-10">
+                    <div className="bg-slate-800 text-white p-6 rounded-xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h2 className="text-2xl font-black text-teal-400">The C-E-A Method Rubric</h2>
+                            <p className="text-sm text-slate-300 mt-1">Official LU5 OSCE Guide for Individual NCD Counseling.</p>
                         </div>
-
-                        {memorizeMode && (
-                            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 text-amber-900 text-sm flex items-start shadow-sm">
-                                <span className="text-xl mr-3">🧠</span>
-                                <div><strong>Randomized Recall Active!</strong> Approx 70% of the keywords have been hidden. Say the line out loud, then click the gray boxes to reveal.</div>
-                            </div>
-                        )}
-
-                        {steps.map((step, idx) => (
-                            <div key={step.id} className={`border-2 rounded-xl transition-all overflow-hidden ${activeStep === idx ? 'border-emerald-500 shadow-md ring-4 ring-emerald-50' : 'border-slate-200 hover:border-emerald-300 cursor-pointer'}`}>
-                                <div className={`p-4 font-bold flex justify-between items-center ${activeStep === idx ? 'bg-emerald-50 text-emerald-900' : 'bg-slate-50 text-slate-700'}`} onClick={() => setActiveStep(idx)}>
-                                    <span>{step.title}</span>
-                                    {activeStep !== idx && <span className="text-xs font-normal text-slate-400">Click to expand</span>}
-                                </div>
-                                {activeStep === idx && (
-                                    <div className="p-5 space-y-5 bg-white">
-                                        {step.patient && (
-                                            <div className="bg-green-50 p-5 rounded-lg border border-green-200 relative mt-2">
-                                                <span className="absolute -top-3 left-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PATIENT (FILIPINO)</span>
-                                                <p className="text-green-900 font-medium leading-relaxed mt-1 text-[15px]">"{renderText(step.patient, idx, 'patient')}"</p>
-                                            </div>
-                                        )}
-                                        {step.preceptor && (
-                                            <div className="bg-blue-50 p-5 rounded-lg border border-blue-200 relative mt-4">
-                                                <span className="absolute -top-3 left-4 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">OSCE CLINICAL RATIONALE</span>
-                                                <p className="text-blue-900 font-medium leading-relaxed mt-1 text-[15px]">{renderText(step.preceptor, idx, 'preceptor')}</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
+                                <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-2 w-4 h-4 accent-teal-500" />
+                                Active Recall Mode
+                            </label>
+                            {memorizeMode && (
+                                <button onClick={randomize} className="text-xs bg-teal-600 hover:bg-teal-500 text-white font-bold py-1.5 px-3 rounded shadow">
+                                    🔀 Shuffle Blanks
+                                </button>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="w-full md:w-80 flex-shrink-0">
-                        <div className="sticky top-6 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-                            <div className="bg-slate-800 p-4 text-white flex justify-between items-center">
-                                <span className="font-bold">OSCE Checklist</span>
+                    <div className="space-y-6">
+                        {ceaSteps.map((phase, fIdx) => (
+                            <div key={fIdx} className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
+                                <div className="bg-teal-50 border-b border-teal-200 p-4">
+                                    <h3 className="font-bold text-teal-900 text-lg">{phase.phase}</h3>
+                                </div>
+                                <div className="p-0">
+                                    <table className="min-w-full text-left text-sm">
+                                        <tbody className="divide-y divide-slate-100">
+                                            {phase.points.map((pt, pIdx) => (
+                                                <tr key={pIdx} className="hover:bg-slate-50">
+                                                    <td className="p-4 w-1/3">
+                                                        <strong className="text-slate-800 block text-[15px]">{pt.step}</strong>
+                                                        <span className="text-xs text-orange-600 font-bold mt-1 block">💡 Pearl: {pt.pearl}</span>
+                                                    </td>
+                                                    <td className="p-4 border-l w-2/3">
+                                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Filipino Script:</span>
+                                                        <span className="text-teal-900 font-medium italic text-[16px]">
+                                                            "{renderRecallText(pt.script, `${fIdx}-${pIdx}`, '', hiddenWords, toggleWord, memorizeMode, "teal")}"
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div className="p-4 h-[75vh] overflow-y-auto bg-slate-50">
-                                <ul className="space-y-2">
-                                    {rubric.map(item => {
-                                        const isCovered = steps[activeStep].checklist.includes(item.id);
-                                        return (
-                                            <li key={item.id} className={`p-2.5 rounded-lg text-sm flex items-start transition-all duration-300 ${isCovered ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold shadow-sm' : 'text-slate-500 bg-white border border-slate-100'}`}>
-                                                <span className={`mr-2 ${isCovered ? 'text-emerald-600' : 'text-slate-300'}`}>{isCovered ? '✔' : '○'}</span>
-                                                <span className="leading-tight">{item.text}</span>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             );
         };
 
-        // --- Data for SPIKES ---
-        const spikesSteps = [
-            {
-                id: "S", title: "S - Setting up the Interview", checklist: [1, 2],
-                patient: "Magandang umaga po. Ako po si Doc [Name]. Kumusta po kayo ngayon? Pasensya na po at medyo madami tayong pag-uusapan, gusto niyo po ba ng may {makasama mula sa inyong pamilya}?",
-                preceptor: "I am establishing rapport. I ensure a {private room}, {silence my pager/phone}, and {sit down} to establish eye contact. I ensure there are {no physical barriers} (like a desk) between me and the patient."
-            },
-            {
-                id: "P", title: "P - Assessing Perception", checklist: [3],
-                patient: "Bago po tayo mag-umpisa, maaari ko po bang malaman kung ano ang {pagkaintindi ninyo} sa dahilan kung bakit kayo na-admit at kinuhanan ng biopsy / tests?",
-                preceptor: "I am using {open-ended questions} to assess the patient's current understanding of their medical condition. This helps me identify any {misconceptions} or denial before delivering the news."
-            },
-            {
-                id: "I", title: "I - Obtaining Invitation", checklist: [4],
-                patient: "Lumabas na po ang resulta ng inyong mga test. Gusto niyo po ba na {pag-usapan natin ang buong detalye} ngayon, o gusto ninyong summary lang muna?",
-                preceptor: "I am asking for the patient's {explicit permission} to share the information, respecting their right to {information autonomy}. Some patients may prefer not to know the full details immediately."
-            },
-            {
-                id: "K", title: "K - Giving Knowledge", checklist: [5, 6],
-                patient: "Ikinalulungkot ko po, ngunit {hindi po maganda} ang balita. Ayon po sa resulta ng biopsy, ang bukol po ninyo ay {kanser}. ... (Pause)",
-                preceptor: "I deliver a {warning shot} to brace the patient. I break the bad news clearly without using {medical jargon}. I give information in {small chunks} and pause frequently to check for understanding."
-            },
-            {
-                id: "E", title: "E - Empathy", checklist: [7, 8],
-                patient: "Naiintindihan ko po na napakabigat ng balitang ito. ... Sige po, {umiyak lang po kayo}, nandito lang po ako para makinig.",
-                preceptor: "I provide {silence} to allow them to process the news. I do NOT say 'I know how you feel'. Instead, I respond with an {empathic statement} acknowledging their feelings and offer a tissue box."
-            },
-            {
-                id: "S2", title: "S - Strategy and Summary", checklist: [9, 10],
-                patient: "Hindi po kayo nag-iisa sa laban na ito. Ang susunod po nating hakbang ay ipapakonsulta kayo sa isang {Oncologist} para sa inyong treatment plan. May mga {katanungan} pa po ba kayo?",
-                preceptor: "I summarize the consultation and formulate a clear {shared follow-up plan}. I check for remaining questions and reassure the patient of my {continued support} and non-abandonment."
-            }
-        ];
-        
-        const spikesRubric = [
-            {id: 1, text: "Ensures privacy, sits down, removes physical barriers"},
-            {id: 2, text: "Offers to have family members present"},
-            {id: 3, text: "Asks open-ended questions about current understanding (Perception)"},
-            {id: 4, text: "Asks permission before giving full results (Invitation)"},
-            {id: 5, text: "Gives a 'warning shot' (Knowledge)"},
-            {id: 6, text: "Explains diagnosis without medical jargon (Knowledge)"},
-            {id: 7, text: "Allows periods of silence for processing (Empathy)"},
-            {id: 8, text: "Responds empathetically to emotional outbursts (Empathy)"},
-            {id: 9, text: "Formulates a clear strategy and follow-up plan (Strategy)"},
-            {id: 10, text: "Reassures non-abandonment and asks for questions"}
-        ];
+        // --- View 2: High-Yield Medical Plans (Detailed) ---
+        const MedicalPlanBank = () => {
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
 
-        // --- Data for Counseling ---
-        const counselSteps = [
-            {
-                id: "A1", title: "Ask (Identify Risk Factor)", checklist: [1],
-                patient: "Sa ating record po, nakita ko na {kayo po ay naninigarilyo}. Gaano kadami po ang nauubos ninyo sa isang araw, at {kailan pa kayo nagsimula}?",
-                preceptor: "I am actively asking to identify tobacco use and computing the {pack-years} to determine the level of addiction."
-            },
-            {
-                id: "A2", title: "Advise (Strong Urge to Quit)", checklist: [2],
-                patient: "Bilang inyong doktor, {mariin ko pong ipinapayo} na itigil na ninyo ang paninigarilyo. Ito po ang pinakamahalagang magagawa ninyo para bumuti ang inyong {baga/puso} at makaiwas sa sakit ang inyong pamilya.",
-                preceptor: "I am delivering a {strong, clear, and personalized} advice to quit, linking the habit directly to their current illness or family's well-being."
-            },
-            {
-                id: "A3", title: "Assess (Readiness)", checklist: [3],
-                patient: "Alam ko pong mahirap, pero {handa na po ba kayong subukang itigil} ang paninigarilyo sa darating na buwan?",
-                preceptor: "I am assessing the patient's {readiness to quit}. If they are not ready, I will use the {5 R's} (Relevance, Risks, Rewards, Roadblocks, Repetition) to motivate them."
-            },
-            {
-                id: "A4", title: "Assist (Create a Plan)", checklist: [4, 5],
-                patient: "Tulungan po natin kayong gumawa ng plano. Mag-set po tayo ng {Quit Date}. Aalamin natin ang inyong mga {triggers} at bibigyan ko po kayo ng reseta (tulad ng Nicotine patch) para hindi kayo masyadong hanapin ng inyong katawan.",
-                preceptor: "I am assisting the patient by setting a {quit date}, identifying behavioral {triggers}, providing social support, and discussing {pharmacotherapy} options if indicated."
-            },
-            {
-                id: "A5", title: "Arrange (Follow-up)", checklist: [6],
-                patient: "Hindi po natatapos ang suporta natin dito. Babalik po kayo makalipas ang {isang linggo} para kumustahin natin ang inyong progress.",
-                preceptor: "I am arranging a definite {follow-up appointment}, ideally within the {first week} of their quit date to prevent relapse."
-            },
-            {
-                id: "E1", title: "EXTRA: Duty of Candor (Angry Relative)", checklist: [7, 8],
-                patient: "Magandang araw po. Naiintindihan ko po na kayo ay {nagagalit} at nababahala. {Humihingi po kami ng pasensya} sa delay ng inyong resulta. Makakaasa po kayo na amin itong {iimbestigahan} sa ospital para hindi na ito maulit.",
-                preceptor: "In the event of a medical error or delay, I must exhibit the {Duty of Candor}. I apologize for the distress caused, assure a {system-wide investigation}, but I must NEVER point fingers or {blame a specific colleague} without a formal review."
-            }
-        ];
+            const plans = [
+                {
+                    title: "🩸 Hypertension (Target BP: <130/80)",
+                    color: "red",
+                    dx: "Baseline labs for ASCVD risk & Target Organ Damage: [12-Lead ECG] for LVH/Ischemia, [Urinalysis] for proteinuria, [Serum Creatinine] with eGFR, [Fasting Lipid Profile], and [Fasting Blood Sugar].",
+                    tx: "Prescribe first-line agents: ARB like [Losartan 50mg OD] or CCB like [Amlodipine 5mg OD]. Follow up in [2-4 weeks] to titrate.",
+                    nonpharm: "Adopt the [DASH Diet] (Dietary Approaches to Stop Hypertension), strict Sodium restriction to [< 2g/day] (or <5g NaCl), [150 minutes/week] of moderate aerobic exercise, and smoking cessation using the [5 A's]."
+                },
+                {
+                    title: "🍬 Diabetes Mellitus (Target HbA1c: <7.0%)",
+                    color: "blue",
+                    dx: "Assess glycemic control via [HbA1c]. Assess microvascular complications via [Spot Urine Albumin-to-Creatinine Ratio (UACR)] and [eGFR] for nephropathy, and [Fundoscopy] for retinopathy.",
+                    tx: "First-line is [Metformin 500mg BID]. *Pearl:* Always verify [eGFR > 45 mL/min] before starting Metformin. Add [SGLT2 inhibitors] or [GLP-1 RAs] if patient has established ASCVD or CKD.",
+                    nonpharm: "Implement [Medical Nutrition Therapy] (Pinggang Pinoy/Plate Method), strict [daily foot inspection], and emphasize that medications PREVENT kidney damage, not cause it."
+                },
+                {
+                    title: "🧈 Dyslipidemia / ASCVD Risk",
+                    color: "amber",
+                    dx: "Calculate 10-year ASCVD risk using [Framingham Risk Score]. Request [Fasting Lipid Profile], [ALT/AST] (baseline liver function), and [TSH] (rule out secondary causes).",
+                    tx: "For clinical ASCVD or LDL > 190, start [High-Intensity Statin] such as [Atorvastatin 40-80mg OD] or [Rosuvastatin 20-40mg OD]. Check lipids again in [4-12 weeks].",
+                    nonpharm: "Dietary fat reduction: saturated fats should be [< 5-6% of total calories]. Eliminate [trans fats]. Advise weight loss of [5-10% of body weight]."
+                },
+                {
+                    title: "🎗️ Oncology / Cancer (Use SPIKES)",
+                    color: "purple",
+                    dx: "Establish histological diagnosis via [Biopsy]. Determine clinical stage via [Chest/Abdo/Pelvic CT Scan] or PET scan.",
+                    tx: "Refer immediately to a [Multidisciplinary Tumor Board] (Medical & Surgical Oncology) for definitive surgical, chemo, or radiation planning.",
+                    nonpharm: "Integrate [Palliative Care] early for symptom and pain management. Provide [Psychosocial Support] for the family using the Family APGAR. Discuss [Advanced Directives]."
+                }
+            ];
 
-        const counselRubric = [
-            {id: 1, text: "ASK: Identifies tobacco use and quantifies (Pack-years)"},
-            {id: 2, text: "ADVISE: Gives strong, personalized advice to quit"},
-            {id: 3, text: "ASSESS: Determines readiness to quit within 30 days"},
-            {id: 4, text: "ASSIST: Helps set a specific Quit Date"},
-            {id: 5, text: "ASSIST: Discusses triggers and offers pharmacotherapy"},
-            {id: 6, text: "ARRANGE: Schedules follow-up within 1 week"},
-            {id: 7, text: "CANDOR: Apologizes sincerely without defensiveness"},
-            {id: 8, text: "CANDOR: Avoids blaming colleagues; offers system investigation"}
-        ];
+            const toggleWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
 
-        // --- View: Biopsychosocial Primer ---
-        const BiopsychosocialPrimer = () => (
-            <div className="space-y-8 animate-fade-in pb-10">
-                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Family Medicine Fundamentals</h2>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">🗣️</span> F-I-F-E (The Illness Experience)</h3>
-                        <p className="text-sm text-slate-700 mb-4">Unlike other specialties that just look for the "Disease", Family Medicine treats the "Illness"—the patient's personal experience of the disease. You MUST ask these questions.</p>
-                        <div className="bg-emerald-50 p-4 rounded border border-emerald-100">
-                            <ul className="space-y-3 text-sm text-emerald-900 font-medium">
-                                <li><strong>F - Feelings:</strong> "Ano po ang pinaka-ikinababahala ninyo sa inyong nararamdaman?"</li>
-                                <li><strong>I - Ideas:</strong> "Sa tingin niyo po, ano ang posibleng dahilan ng inyong sakit?"</li>
-                                <li><strong>F - Function:</strong> "Paano po naaapektuhan ng sakit na ito ang inyong trabaho at pamilya?"</li>
-                                <li><strong>E - Expectations:</strong> "Ano po ang inaasahan ninyo sa ating pag-uusap at gamutan ngayon?"</li>
-                            </ul>
+            const randomize = () => {
+                const newHidden = new Set();
+                plans.forEach((plan, pIdx) => {
+                    ['dx', 'tx', 'nonpharm'].forEach(key => {
+                        const parts = plan[key].split(/\[(.*?)\]/g);
+                        parts.forEach((part, i) => {
+                            if (i % 2 === 1 && Math.random() > 0.2) newHidden.add(`${pIdx}-${key}-${i}`);
+                        });
+                    });
+                });
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) randomize();
+                else setHiddenWords(new Set());
+            }, [memorizeMode]);
+
+            return (
+                <div className="space-y-8 animate-fade-in pb-10">
+                    <div className="bg-slate-800 text-white p-6 rounded-xl shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h2 className="text-2xl font-black text-blue-400">Detailed Action Plans</h2>
+                            <p className="text-sm text-slate-300 mt-1">Verbalize highly specific medical data (GDMT) during the "Action" phase.</p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
+                                <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-2 w-4 h-4 accent-blue-500" />
+                                Active Recall Mode
+                            </label>
+                            {memorizeMode && (
+                                <button onClick={randomize} className="text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 px-3 rounded shadow">
+                                    🔀 Shuffle Blanks
+                                </button>
+                            )}
                         </div>
                     </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center"><span className="text-2xl mr-2">🏠</span> Family APGAR</h3>
-                        <p className="text-sm text-slate-700 mb-4">A rapid screening tool to assess family dysfunction. Scoring: Highly functional (8-10), Moderately dysfunctional (4-7), Severely dysfunctional (0-3).</p>
-                        <ul className="space-y-2 text-sm text-slate-700 font-medium">
-                            <li><strong className="text-blue-900">A - Adaptation:</strong> Satisfaction with the help received from family when in trouble.</li>
-                            <li><strong className="text-blue-900">P - Partnership:</strong> Satisfaction with how family communicates and shares problem-solving.</li>
-                            <li><strong className="text-blue-900">G - Growth:</strong> Satisfaction with family's acceptance and support in taking on new paths.</li>
-                            <li><strong className="text-blue-900">A - Affection:</strong> Satisfaction with how family expresses affection and responds to emotion.</li>
-                            <li><strong className="text-blue-900">R - Resolve:</strong> Satisfaction with the amount of time family spends together.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🌳</span> Genogram Rules</h3>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-indigo-900">Minimum requirement:</strong> Must display at least <strong>3 generations</strong>.</li>
-                            <li><strong className="text-indigo-900">The Index Patient:</strong> The patient seeking care must be marked with an <strong>arrow</strong>.</li>
-                            <li><strong className="text-indigo-900">Symbols:</strong> Square = Male. Circle = Female. Diagonal cross (X) = Deceased. Triangle = Pregnancy/Miscarriage. Double line between spouses = Separation/Divorce.</li>
-                            <li><strong className="text-indigo-900">Medical Data:</strong> Beside the symbols, write the current age (or age of death) and significant hereditary/infectious diseases (e.g., T2DM, HTN, TB).</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-rose-700 mb-4 flex items-center"><span className="text-2xl mr-2">⚠️</span> OSCE Absolute Fails</h3>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-rose-900">Standing Up:</strong> Never stand over the patient during a counseling or bad-news session. Always pull up a chair to maintain eye-level communication.</li>
-                            <li><strong className="text-rose-900">False Reassurance:</strong> Do not tell a cancer patient "Gagaling po kayo" if the prognosis is poor. Say: "Gagawin po natin ang lahat ng abot ng makakaya ng medisina."</li>
-                            <li><strong className="text-rose-900">Medical Jargon:</strong> Saying "metastasis", "myocardial infarction", or "exacerbation" will cost you points. Use "kumalat na bukol", "atake sa puso", or "lumala".</li>
-                        </ul>
+                    
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {plans.map((plan, idx) => (
+                            <div key={idx} className={`bg-white rounded-xl shadow-md border-t-4 border-${plan.color}-600 p-6 flex flex-col`}>
+                                <h3 className={`text-xl font-bold text-${plan.color}-800 mb-4`}>{plan.title}</h3>
+                                <div className="space-y-4 flex-1">
+                                    <div>
+                                        <strong className={`text-${plan.color}-900 block border-b border-${plan.color}-100 pb-1 mb-2 text-sm uppercase tracking-wide`}>1. Diagnostics</strong>
+                                        <p className="text-slate-700 leading-relaxed text-[15px]">
+                                            {renderRecallText(plan.dx, idx, 'dx', hiddenWords, toggleWord, memorizeMode, plan.color)}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <strong className={`text-${plan.color}-900 block border-b border-${plan.color}-100 pb-1 mb-2 text-sm uppercase tracking-wide`}>2. Therapeutics</strong>
+                                        <p className="text-slate-700 leading-relaxed text-[15px]">
+                                            {renderRecallText(plan.tx, idx, 'tx', hiddenWords, toggleWord, memorizeMode, plan.color)}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <strong className={`text-${plan.color}-900 block border-b border-${plan.color}-100 pb-1 mb-2 text-sm uppercase tracking-wide`}>3. Non-Pharmacologic</strong>
+                                        <p className="text-slate-700 leading-relaxed text-[15px]">
+                                            {renderRecallText(plan.nonpharm, idx, 'nonpharm', hiddenWords, toggleWord, memorizeMode, plan.color)}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            </div>
-        );
+            );
+        };
+
+        // --- View 3: Interactive CEA Simulator (5 Cases) ---
+        const CEASimulator = () => {
+            const [submitted, setSubmitted] = useState(false);
+            const [score, setScore] = useState(0);
+            const [feedback, setFeedback] = useState([]);
+            const [currentCaseId, setCurrentCaseId] = useState(1);
+            
+            const [selections, setSelections] = useState({
+                catharsis: "", education: "", actionDx: "", actionTx: "", actionNonPharm: ""
+            });
+
+            const cases = {
+                1: { 
+                    title: "Case 1: The Misinformed Hypertensive", 
+                    patient: "A 55-year-old male with BP 170/100. He tells you: 'Doc, tinigil ko na yung Amlodipine ko nung isang buwan pa. Kumakain na lang ako ng bawang at pinya araw-araw kasi nakakababa daw yun ng BP sabi sa Facebook. Wala naman akong nararamdaman eh.'", 
+                    answers: {
+                        catharsis: "Paraphrase: 'Kung tama po ako, inihinto niyo ang gamot dahil naniniwala kayo na sapat na ang bawang at pinya, at dahil wala kayong nararamdamang sakit?'",
+                        education: "Correct: 'Naiintindihan ko po. Ngunit, ang highblood ay kadalasang 'Silent Killer'. Ang bawang ay hindi sapat para palitan ang Amlodipine sa pagprotekta sa inyong puso at utak laban sa stroke.'",
+                        actionDx: "12-Lead ECG, Urinalysis, Serum Creatinine, Fasting Lipid Profile, FBS",
+                        actionTx: "Resume Amlodipine 5mg OD (Target BP < 130/80)",
+                        actionNonPharm: "DASH Diet, Sodium restriction (<2g/day), Aerobic exercise"
+                    },
+                    options: {
+                        catharsis: [
+                            "Probe: 'Bakit naman po kayo naniniwala sa Facebook agad?'",
+                            "Paraphrase: 'Kung tama po ako, inihinto niyo ang gamot dahil naniniwala kayo na sapat na ang bawang at pinya, at dahil wala kayong nararamdamang sakit?'",
+                            "Feelings: 'Nalulungkot po ba kayo na highblood kayo?'"
+                        ],
+                        education: [
+                            "Correct: 'Mali po ang Facebook. Kailangan niyo inumin ang gamot para hindi kayo mamatay sa stroke.'",
+                            "Correct: 'Naiintindihan ko po. Ngunit, ang highblood ay kadalasang 'Silent Killer'. Ang bawang ay hindi sapat para palitan ang Amlodipine sa pagprotekta sa inyong puso at utak laban sa stroke.'",
+                            "Correct: 'Sige po, ipagpatuloy niyo lang ang bawang pero sabayan niyo ng Amlodipine.'"
+                        ],
+                        actionDx: ["CBC and Chest X-Ray", "12-Lead ECG, Urinalysis, Serum Creatinine, Fasting Lipid Profile, FBS", "Ultrasound of Kidneys and Liver Enzymes"],
+                        actionTx: ["Resume Amlodipine 5mg OD (Target BP < 130/80)", "Start Metformin 500mg BID", "Start Aspirin 81mg OD"],
+                        actionNonPharm: ["BRAT Diet, fluid restriction", "DASH Diet, Sodium restriction (<2g/day), Aerobic exercise", "Keto Diet, strict bed rest"]
+                    }
+                },
+                2: { 
+                    title: "Case 2: The Diabetic Fearful of Dialysis", 
+                    patient: "A 60-year-old female with HbA1c of 9.2%. She says: 'Doc, hindi ko iniinom yung Metformin ko. Nakita ko kasi yung kumare ko, nagte-take nun tapos ngayon nagda-dialysis na. Nakakasira ng kidney ang maintenance diba?'", 
+                    answers: {
+                        catharsis: "Summarize: 'Kaya pala hindi niyo naiinom ang Metformin ay dahil may takot kayo na baka masira ang kidney at mag-dialysis tulad ng kumare niyo. Tama po ba?'",
+                        education: "Correct: 'Naiintindihan ko po ang takot niyo. Pero ang totoo, ang mataas na asukal sa dugo ang sumisira sa kidney, hindi ang gamot. Ligtas ang Metformin basta't maayos pa ang eGFR ninyo.'",
+                        actionDx: "HbA1c, Spot UACR, Serum Creatinine (eGFR), Fundoscopy",
+                        actionTx: "Metformin 500mg BID (Verify eGFR > 45 mL/min)",
+                        actionNonPharm: "Medical Nutrition Therapy, Daily foot inspection"
+                    },
+                    options: {
+                        catharsis: [
+                            "Summarize: 'Kaya pala hindi niyo naiinom ang Metformin ay dahil may takot kayo na baka masira ang kidney at mag-dialysis tulad ng kumare niyo. Tama po ba?'",
+                            "Thoughts: 'Sino po ang nagreseta sa kumare niyo?'",
+                            "Probe: 'Kailan pa po nag-dialysis ang kumare niyo?'"
+                        ],
+                        education: [
+                            "Correct: 'Naiintindihan ko po ang takot niyo. Pero ang totoo, ang mataas na asukal sa dugo ang sumisira sa kidney, hindi ang gamot. Ligtas ang Metformin basta't maayos pa ang eGFR ninyo.'",
+                            "Correct: 'Mali po kayo, ang Metformin ang pinakaligtas na gamot sa buong mundo kaya inumin niyo na.'",
+                            "Correct: 'Kung ayaw niyo po ng Metformin, bigyan ko na lang kayo ng Insulin para ligtas ang kidney.'"
+                        ],
+                        actionDx: ["HbA1c, Spot UACR, Serum Creatinine (eGFR), Fundoscopy", "Oral Glucose Tolerance Test, Ultrasound of Kidney", "24-hour urine collection, Liver Biopsy"],
+                        actionTx: ["Amlodipine 5mg OD", "Metformin 500mg BID (Verify eGFR > 45 mL/min)", "Glibenclamide 5mg OD immediately"],
+                        actionNonPharm: ["High carb, low protein diet", "Medical Nutrition Therapy, Daily foot inspection", "Strict fasting for 16 hours a day"]
+                    }
+                },
+                3: {
+                    title: "Case 3: Statin Myopathy Fears",
+                    patient: "A 50-year-old male post-MI. He stopped taking his Rosuvastatin. 'Doc, sumasakit ang mga kalamnan ko sa binti dahil sa gamot na yan. Tsaka hindi na ako kumakain ng baboy, kaya sigurado akong mababa na cholesterol ko.'",
+                    answers: {
+                        catharsis: "Paraphrase: 'Kung tama po ang pagkakaintindi ko, inihinto niyo ang gamot dahil sumasakit ang inyong kalamnan, at pakiramdam niyo ay sapat na ang hindi pagkain ng baboy para bumaba ang cholesterol?'",
+                        education: "Correct: 'Naiintindihan ko po na masakit sa kalamnan, isa itong kilalang side effect. Ngunit dahil inatake na kayo sa puso, ang gamot na ito ay hindi lang pampababa ng cholesterol, pinipigilan din nito ang pamumuo ng bara sa ugat para hindi maulit ang atake.'",
+                        actionDx: "Fasting Lipid Profile, ALT/AST, CK (Creatine Kinase)",
+                        actionTx: "Adjust to Moderate-Intensity Statin or switch to Atorvastatin",
+                        actionNonPharm: "Saturated fats < 5-6% of calories, weight loss of 5-10%"
+                    },
+                    options: {
+                        catharsis: [
+                            "Feelings: 'Galit po ba kayo dahil sumasakit ang binti niyo?'",
+                            "Paraphrase: 'Kung tama po ang pagkakaintindi ko, inihinto niyo ang gamot dahil sumasakit ang inyong kalamnan, at pakiramdam niyo ay sapat na ang hindi pagkain ng baboy para bumaba ang cholesterol?'",
+                            "Probe: 'Ano po ang kinakain niyo araw-araw kung hindi baboy?'"
+                        ],
+                        education: [
+                            "Correct: 'Wala po tayong magagawa sa sakit ng kalamnan, kailangan niyo tiisin para hindi kayo ma-stroke.'",
+                            "Correct: 'Ang cholesterol niyo po ay galing sa stress, hindi sa pagkain ng baboy.'",
+                            "Correct: 'Naiintindihan ko po na masakit sa kalamnan, isa itong kilalang side effect. Ngunit dahil inatake na kayo sa puso, ang gamot na ito ay hindi lang pampababa ng cholesterol, pinipigilan din nito ang pamumuo ng bara sa ugat para hindi maulit ang atake.'"
+                        ],
+                        actionDx: ["Doppler Ultrasound of legs", "Fasting Lipid Profile, ALT/AST, CK (Creatine Kinase)", "Chest X-Ray and Troponin I"],
+                        actionTx: ["Stop all statins permanently", "Adjust to Moderate-Intensity Statin or switch to Atorvastatin", "Add Fenofibrate 160mg OD"],
+                        actionNonPharm: ["Saturated fats < 5-6% of calories, weight loss of 5-10%", "Strict vegan diet immediately", "Stop exercising to avoid muscle pain"]
+                    }
+                },
+                4: {
+                    title: "Case 4: The Vaping COPD Patient",
+                    patient: "A 65-year-old male with chronic cough and dyspnea. He stopped smoking cigarettes but switched to vaping. 'Doc, nag-vape na ako kaya safe na ito. Masarap sa lalamunan at wala nang usok, water vapor na lang.'",
+                    answers: {
+                        catharsis: "Probe: 'Maaari niyo po bang ikwento kung sino ang nagpayo sa inyo na mas ligtas ang vape kaysa sa sigarilyo?'",
+                        education: "Correct: 'Naiintindihan ko po na ginawa niyo ito para umiwas sa sigarilyo. Ngunit, ang vape ay may mga kemikal pa rin na nagiging sanhi ng matinding pamamaga sa inyong baga na nagpapalala ng inyong ubo at hika.'",
+                        actionDx: "Spirometry (Post-bronchodilator FEV1/FVC < 0.70)",
+                        actionTx: "Prescribe LAMA/LABA inhaler (e.g., Tiotropium/Olodaterol)",
+                        actionNonPharm: "5 A's of Smoking/Vaping Cessation, Pneumococcal Vaccine"
+                    },
+                    options: {
+                        catharsis: [
+                            "Probe: 'Maaari niyo po bang ikwento kung sino ang nagpayo sa inyo na mas ligtas ang vape kaysa sa sigarilyo?'",
+                            "Summarize: 'Gusto niyo po bang mamatay nang maaga kaya kayo nag-vape?'",
+                            "Reflect: 'Masarap po ba sa lalamunan ang vape?'"
+                        ],
+                        education: [
+                            "Correct: 'Naiintindihan ko po na ginawa niyo ito para umiwas sa sigarilyo. Ngunit, ang vape ay may mga kemikal pa rin na nagiging sanhi ng matinding pamamaga sa inyong baga na nagpapalala ng inyong ubo at hika.'",
+                            "Correct: 'Ligtas naman po ang vape basta wag lang araw-araw.'",
+                            "Correct: 'Ang water vapor ay nakakalunod ng baga kaya kayo inuubo.'"
+                        ],
+                        actionDx: ["Arterial Blood Gas daily", "Spirometry (Post-bronchodilator FEV1/FVC < 0.70)", "CT Scan of Chest with Contrast"],
+                        actionTx: ["Prescribe LAMA/LABA inhaler (e.g., Tiotropium/Olodaterol)", "Oral Prednisone 40mg daily indefinitely", "Codeine cough syrup PRN"],
+                        actionNonPharm: ["Drink 3L of water daily to wash out vapor", "5 A's of Smoking/Vaping Cessation, Pneumococcal Vaccine", "Avoid cold weather permanently"]
+                    }
+                },
+                5: {
+                    title: "Case 5: Alternative Med in Cancer",
+                    patient: "A 55-year-old female just diagnosed with Stage 2 Breast Cancer. She refuses surgery. 'Doc, iinom na lang ako ng katas ng soursop at malunggay, may kapitbahay ako na gumaling doon. Ayokong magpa-opera kasi mamamatay lang daw ako sa table.'",
+                    answers: {
+                        catharsis: "Feelings: 'Mukhang labis po kayong natatakot sa posibilidad ng operasyon. Ano po ang pinakanakakabahala sa inyo tungkol dito?'",
+                        education: "Correct: 'Naiintindihan ko po ang takot ninyong maoperahan. Subalit, ang kanser po ninyo ay nasa Stage 2 pa lang at mataas ang tsansang gumaling kung maaalis natin ang bukol. Ang herbal na gamot ay walang sapat na ebidensya para puksain ang cancer cells.'",
+                        actionDx: "Metastatic workup (CT Scan Chest/Abdomen), ER/PR/HER2 status",
+                        actionTx: "Refer to Multidisciplinary Tumor Board (Surgery, Oncology)",
+                        actionNonPharm: "Explore Family APGAR for support, Discuss fears openly"
+                    },
+                    options: {
+                        catharsis: [
+                            "Thoughts: 'Saan niyo po mabibili ang soursop?'",
+                            "Feelings: 'Mukhang labis po kayong natatakot sa posibilidad ng operasyon. Ano po ang pinakanakakabahala sa inyo tungkol dito?'",
+                            "Summarize: 'Kaya ayaw niyo magpa-opera kasi mas mura ang malunggay?'"
+                        ],
+                        education: [
+                            "Correct: 'Naiintindihan ko po ang takot ninyong maoperahan. Subalit, ang kanser po ninyo ay nasa Stage 2 pa lang at mataas ang tsansang gumaling kung maaalis natin ang bukol. Ang herbal na gamot ay walang sapat na ebidensya para puksain ang cancer cells.'",
+                            "Correct: 'Sige po, subukan niyo ang malunggay ng 6 months tapos balik kayo.'",
+                            "Correct: 'Mali po ang kapitbahay ninyo, walang nakaka-survive sa soursop.'"
+                        ],
+                        actionDx: ["Metastatic workup (CT Scan Chest/Abdomen), ER/PR/HER2 status", "Full body MRI every month", "Tumor markers (CEA) weekly"],
+                        actionTx: ["Start Doxorubicin immediately", "Schedule Mastectomy tomorrow without consulting patient", "Refer to Multidisciplinary Tumor Board (Surgery, Oncology)"],
+                        actionNonPharm: ["Explore Family APGAR for support, Discuss fears openly", "Tell family to force her to do surgery", "Give up and discharge patient"]
+                    }
+                }
+            };
+
+            const evaluateCase = () => {
+                let pts = 100; let fb = []; const activeCase = cases[currentCaseId].answers;
+                
+                const checks = [
+                    { key: 'catharsis', name: 'Phase A: Catharsis', pass: selections.catharsis === activeCase.catharsis },
+                    { key: 'education', name: 'Phase B: Education', pass: selections.education === activeCase.education },
+                    { key: 'actionDx', name: 'Phase C: Diagnostics', pass: selections.actionDx === activeCase.actionDx },
+                    { key: 'actionTx', name: 'Phase C: Therapeutics', pass: selections.actionTx === activeCase.actionTx },
+                    { key: 'actionNonPharm', name: 'Phase C: Non-Pharm', pass: selections.actionNonPharm === activeCase.actionNonPharm }
+                ];
+
+                checks.forEach(check => {
+                    if (check.pass) {
+                        fb.push({type: 'ok', msg: `${check.name}: Correct.`});
+                    } else {
+                        pts -= 20;
+                        fb.push({type: 'err', msg: `${check.name}: Incorrect.`, rationale: `Expected: ${activeCase[check.key]}`});
+                    }
+                });
+
+                fb.push({type: 'pearl', msg: 'Non-Verbals (Attending Skills)', rationale: "Maintain eye contact, lean forward slightly (SOLER), and do not interrupt. This accounts for the final 2 points on the CEA rubric."});
+
+                setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
+            };
+
+            const loadCase = (id) => { 
+                setSubmitted(false); setCurrentCaseId(id); 
+                setSelections({catharsis: "", education: "", actionDx: "", actionTx: "", actionNonPharm: ""}); 
+                setFeedback([]); 
+            };
+
+            return (
+                <div className="space-y-6 animate-fade-in pb-10">
+                    <div className="flex flex-wrap gap-2 border-b-2 border-teal-200 pb-2">
+                        {Object.keys(cases).map(id => (
+                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-4 py-2 rounded font-bold transition-colors shadow-sm text-sm ${currentCaseId === parseInt(id) ? 'bg-teal-700 text-white' : 'bg-white text-teal-800 hover:bg-teal-100 border border-teal-200'}`}>{cases[id].title.split(':')[0]}</button>
+                        ))}
+                    </div>
+                    <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                        <div className="bg-teal-50 border-l-4 border-teal-600 p-5 rounded-r-lg mb-8 shadow-sm">
+                            <h3 className="font-black text-teal-900 uppercase tracking-wide text-lg mb-2">{cases[currentCaseId].title}</h3>
+                            <p className="text-lg text-slate-800 italic">"{cases[currentCaseId].patient}"</p>
+                        </div>
+                        
+                        <div className="space-y-8 mb-8">
+                            {/* Catharsis */}
+                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-black text-slate-800 mb-3">Step 1: CATHARSIS (Identify Misperception)</h4>
+                                <div className="space-y-2">
+                                    {cases[currentCaseId].options.catharsis.map(opt => (
+                                        <label key={opt} className={`block p-3 border rounded-lg cursor-pointer text-sm transition-colors ${selections.catharsis === opt ? 'bg-teal-100 border-teal-500 font-bold text-teal-900' : 'bg-white hover:bg-slate-100'}`}>
+                                            <input type="radio" checked={selections.catharsis === opt} onChange={() => setSelections({...selections, catharsis: opt})} disabled={submitted} className="mr-2" />{opt}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Education */}
+                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-black text-slate-800 mb-3">Step 2: EDUCATION (Correct Misperception)</h4>
+                                <div className="space-y-2">
+                                    {cases[currentCaseId].options.education.map(opt => (
+                                        <label key={opt} className={`block p-3 border rounded-lg cursor-pointer text-sm transition-colors ${selections.education === opt ? 'bg-teal-100 border-teal-500 font-bold text-teal-900' : 'bg-white hover:bg-slate-100'}`}>
+                                            <input type="radio" checked={selections.education === opt} onChange={() => setSelections({...selections, education: opt})} disabled={submitted} className="mr-2" />{opt}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Action */}
+                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                <h4 className="font-black text-slate-800 mb-3">Step 3: ACTION PLAN</h4>
+                                <div className="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <p className="text-xs font-bold uppercase text-slate-500 mb-2">Diagnostics</p>
+                                        <div className="space-y-2">
+                                            {cases[currentCaseId].options.actionDx.map(opt => (
+                                                <label key={opt} className={`block p-2 border rounded cursor-pointer text-xs ${selections.actionDx === opt ? 'bg-teal-100 border-teal-500 font-bold' : 'bg-white'}`}>
+                                                    <input type="radio" checked={selections.actionDx === opt} onChange={() => setSelections({...selections, actionDx: opt})} disabled={submitted} className="hidden" />{opt}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold uppercase text-slate-500 mb-2">Therapeutics</p>
+                                        <div className="space-y-2">
+                                            {cases[currentCaseId].options.actionTx.map(opt => (
+                                                <label key={opt} className={`block p-2 border rounded cursor-pointer text-xs ${selections.actionTx === opt ? 'bg-teal-100 border-teal-500 font-bold' : 'bg-white'}`}>
+                                                    <input type="radio" checked={selections.actionTx === opt} onChange={() => setSelections({...selections, actionTx: opt})} disabled={submitted} className="hidden" />{opt}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold uppercase text-slate-500 mb-2">Non-Pharmacologic</p>
+                                        <div className="space-y-2">
+                                            {cases[currentCaseId].options.actionNonPharm.map(opt => (
+                                                <label key={opt} className={`block p-2 border rounded cursor-pointer text-xs ${selections.actionNonPharm === opt ? 'bg-teal-100 border-teal-500 font-bold' : 'bg-white'}`}>
+                                                    <input type="radio" checked={selections.actionNonPharm === opt} onChange={() => setSelections({...selections, actionNonPharm: opt})} disabled={submitted} className="hidden" />{opt}
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {!submitted ? <button onClick={evaluateCase} disabled={!selections.catharsis || !selections.education || !selections.actionDx || !selections.actionTx || !selections.actionNonPharm} className="w-full bg-teal-600 text-white font-bold py-4 rounded-xl shadow-md hover:bg-teal-700 disabled:opacity-50 transition-all text-lg uppercase tracking-wide">Submit OSCE Response</button> : 
+                            <div className="p-6 rounded-xl border-2 border-teal-200 bg-slate-50 shadow-inner">
+                                <h3 className="text-2xl font-black text-slate-800 mb-4">OSCE Feedback: {score}%</h3>
+                                <ul className="space-y-3">
+                                    {feedback.map((f, i) => (
+                                        <li key={i} className={`flex flex-col p-4 rounded-lg border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'pearl' ? 'bg-orange-50 border-orange-200 text-orange-900' : 'bg-teal-50 border-teal-200 text-teal-900'}`}>
+                                            <div className="flex items-start">
+                                                <span className="mr-3 font-bold text-xl">{f.type === 'err' ? '✘' : f.type === 'pearl' ? '💡' : '✔'}</span>
+                                                <span className="font-bold text-base">{f.msg}</span>
+                                            </div>
+                                            {f.rationale && <div className={`mt-2 ml-8 text-sm ${f.type === 'pearl' ? 'italic font-medium text-base' : ''}`}>{f.rationale}</div>}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={() => loadCase(currentCaseId)} className="mt-6 bg-slate-800 text-white font-bold px-8 py-3 rounded-lg hover:bg-slate-700 shadow-md">Retry Case</button>
+                            </div>}
+                    </div>
+                </div>
+            );
+        };
 
         const App = () => {
-            const [view, setView] = useState('primer');
+            const [view, setView] = useState('frameworks');
             const tabs = [
-                { id: 'primer', label: '1. FM Primer & Tools', icon: '🩺' },
-                { id: 'spikes', label: '2. SPIKES (Bad News)', icon: '💔' },
-                { id: 'counsel', label: '3. Counseling (5 A\'s)', icon: '🗣️' }
+                { id: 'frameworks', label: '1. CEA Rubric & Scripts', icon: '📋' },
+                { id: 'theory', label: '2. Detailed Action Plans', icon: '🩺' },
+                { id: 'sim', label: '3. CEA Case Simulators (5)', icon: '💬' }
             ];
 
             return (
                 <div className="min-h-screen flex flex-col md:flex-row font-sans">
                     <nav className="w-full md:w-72 bg-slate-900 text-white p-6 shadow-2xl flex-shrink-0 z-10">
                         <div className="mb-10">
-                            <h1 className="text-3xl font-black text-emerald-400 tracking-tight">FM OSCE</h1>
-                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE</p>
+                            <h1 className="text-3xl font-black text-teal-400 tracking-tight">FAM MED</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE Mastery</p>
                         </div>
                         <ul className="space-y-3">
                             {tabs.map(tab => (
                                 <li key={tab.id}>
                                     <button 
                                         onClick={() => setView(tab.id)} 
-                                        className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 ${view === tab.id ? 'bg-emerald-600 text-white shadow-lg transform scale-105' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+                                        className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 ${view === tab.id ? 'bg-teal-600 text-white shadow-lg transform scale-105' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
                                     >
                                         <span className="mr-3 text-xl">{tab.icon}</span>
                                         {tab.label}
@@ -548,11 +575,11 @@
                             ))}
                         </ul>
                     </nav>
-                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-50">
-                        <div className="max-w-6xl mx-auto">
-                            {view === 'primer' && <BiopsychosocialPrimer />}
-                            {view === 'spikes' && <InteractiveScript title="SPIKES Protocol" subtitle="Breaking Bad News" steps={spikesSteps} rubric={spikesRubric} />}
-                            {view === 'counsel' && <InteractiveScript title="Preventive Counseling" subtitle="Smoking Cessation (5 A's) & De-escalation" steps={counselSteps} rubric={counselRubric} />}
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-100">
+                        <div className="max-w-5xl mx-auto">
+                            {view === 'frameworks' && <CEARubric />}
+                            {view === 'theory' && <MedicalPlanBank />}
+                            {view === 'sim' && <CEASimulator />}
                         </div>
                     </main>
                 </div>
@@ -562,40 +589,5 @@
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-</body>
-</html>
-  <!-- ═══ END PLACEHOLDER ═══ -->
-
-  <div class="mark-row">
-    <button class="btn btn-primary" id="markBtn" onclick="toggleDone()">
-      <span id="btn-icon">○</span>
-      <span id="btn-text">Mark as Reviewed</span>
-    </button>
-  </div>
-
-  <div class="stn-nav">
-    <a class="btn btn-secondary" href="../index.html">← All Stations</a>
-    <a class="btn btn-secondary" href="internal-medicine-1.html">IM I →</a>
-  </div>
-</main>
-
-<script>
-  const KEY = "s1";
-  function toggleDone() {
-    const d = JSON.parse(localStorage.getItem("osce_progress") || "{}");
-    d[KEY] = !d[KEY];
-    localStorage.setItem("osce_progress", JSON.stringify(d));
-    renderBtn(d[KEY]);
-  }
-  function renderBtn(done) {
-    const btn = document.getElementById("markBtn");
-    const icon = document.getElementById("btn-icon");
-    const text = document.getElementById("btn-text");
-    if (done) { btn.classList.add("marked"); icon.textContent = "✓"; text.textContent = "Reviewed!"; }
-    else { btn.classList.remove("marked"); icon.textContent = "○"; text.textContent = "Mark as Reviewed"; }
-  }
-  renderBtn((JSON.parse(localStorage.getItem("osce_progress") || "{}")[KEY]));
-</script>
-
 </body>
 </html>
