@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURG 250 OSCE Master - Random Active Recall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f8fafc; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; }
+        .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- View 1: The 18-Point Interactive Script with Random Active Recall ---
+        const OSCE18PointScript = () => {
+            const [activeStep, setActiveStep] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+
+            const steps = [
+                {
+                    id: 1,
+                    title: "Phase 1: Preparation & Antisepsis",
+                    checklist: [1, 2, 3],
+                    patient: "Magandang umaga/hapon po, Ma’am/Sir. Ako po si Doc CJ, isang estudyanteng doktor mula sa UP, at andito po ako para tahiin ang inyong sugat. Maaari po ba malaman ang [pangalan at edad] ninyo? Mayroon po ba kayong [allergy] sa mga gamot o anesthesia? Magsisimula na po tayo.",
+                    preceptor: "Good morning, Doctors. I am checking patient identity and allergies. I have prepared my materials: [clean and sterile gloves], a suture set with [toothed forceps], needle holder, tissue scissors, drapes, [Betadine], and 2% Lidocaine in a 5cc syringe with a [G25 needle]. I am donning [clean gloves]. I am painting the wound and surrounding skin with an [antiseptic solution] in a [circular motion], from the center outward. I will now remove my clean gloves, perform hand hygiene, don my [sterile gloves], and place the [sterile cloth] over the operative field to maintain asepsis."
+                },
+                {
+                    id: 2,
+                    title: "Phase 2: Local Anesthesia",
+                    checklist: [4],
+                    patient: "Ma’am/Sir, lilinisin ko po muna itong sugat ninyo gamit ang Betadine. Baka makaramdam po kayo ng kakaunting [hapdi]. Pagkatapos po, mag-i-inject po ako ng [anesthesia] dito sa sugat ninyo para po wala kayong maramdaman habang tinatahi po natin ito. Okay lang po ba? Sige po, tutusok na po ako.",
+                    preceptor: "I am inserting the entire length of the G25 needle into the [periphery] of the wound, [parallel] to the skin. Crucially, I am [aspirating first] to ensure the needle is not in the [intravascular] compartment. Since no blood was aspirated, I am slowly injecting the [2% Lidocaine] while slowly [retracting the needle]. I will reposition the needle without completely pulling it out to infiltrate the next area. I will wait approximately [1 minute] for it to take effect."
+                },
+                {
+                    id: 3,
+                    title: "Phase 3: Instrument Handling & The Bite",
+                    checklist: [5, 6, 7, 8, 9, 10, 11],
+                    patient: "Susubukan ko po muna kung umepekto na ang pampamanhid. May nararamdaman po ba kayong [matulis o masakit] kapag kinukurot ko ito? ... Dahil wala na po, magsisimula na po tayong manahi.",
+                    preceptor: "I am holding the needle holder with my [dominant hand] using a [tripod grip], resting my index finger on the pivot. I am holding the [toothed forceps] in my [non-dominant hand] using a [pencil grip]. I load the needle at the junction of the [proximal and middle thirds]. I gently lift the edge of the skin with the forceps without [crushing] the tissue. I pierce the skin exactly [perpendicular] at a [90-degree] angle, about [4-5 mm] from the wound edge. I use the [natural curve] of the needle to move through the tissue, exiting [equidistant] on the opposite side to ensure proper skin [eversion]."
+                },
+                {
+                    id: 4,
+                    title: "Phase 4: Knot Tying",
+                    checklist: [12, 13],
+                    patient: null,
+                    preceptor: "I pull the suture through, leaving a [short tail]. I am performing an [instrument tie] for a simple interrupted stitch. I begin with [two throws forward] for a surgeon's knot, pulling the strands [horizontally] in opposite directions to lay it flat. I follow with [one throw backward], and a final [throw forward] to lock it. I am offsetting the knot to the [side of the incision line] so it does not rest directly over the wound. I will cut the suture leaving [5-6 mm] tails. I will space my subsequent knots approximately [5-10 mm apart] to prevent ischemia and tissue [necrosis]."
+                },
+                {
+                    id: 5,
+                    title: "Phase 5: Post-Op Care Instructions",
+                    checklist: [14],
+                    patient: "Tapos na po nating tahiin ang inyong sugat. Tatakpan po natin ito ng malinis na gasa. Upang masiguro na ito ay maghihilom nang walang komplikasyon, mahalagang panatilihing [malinis at tuyo] ang inyong sugat. Iwasang magbabad sa tubig hangga’t hindi pa naaalis ang tahi. Kung makaramdam ng kirot, maaari kayong uminom ng [Paracetamol]. Kung makaranas kayo ng matinding pamamaga, [pagnanana], o lagnat, bumalik po agad sa ospital. Dahil ang inyong sugat ay nasa katawan, bumalik po kayo makalipas ang [7 hanggang 10 araw] para tanggalin ang tahi.",
+                    preceptor: "I am instructing the patient on post-op care. I will advise them on suture removal timings based on anatomy: [3-5 days] for the face, [7-10 days] for the trunk, [10-12 days] for upper extremities, and [12-14 days] for lower extremities."
+                },
+                {
+                    id: 6,
+                    title: "Phase 6: Suture Removal Station",
+                    checklist: [15, 16, 17, 18],
+                    patient: "Ma’am/Sir, tatanggalin na po natin ang inyong tahi ngayon. Lilinisin ko po muna ulit ang paligid ng inyong sugat.",
+                    preceptor: "To remove the sutures, I will prep the wound again with an [antiseptic solution]. I use the forceps to pick up [one end] of the suture by the knot. I slide the scissors around the suture and cut as [close to the skin] as possible, directly [under the knot]. I gently pull the suture [straight up] and out. I ensure that I do not pull the [contaminated] exposed portion of the suture back through the healing sterile [suture tract]."
+                }
+            ];
+
+            const rubric = [
+                {id: 1, text: "Painting of the wound with antiseptic", phase: 1},
+                {id: 2, text: "Putting on sterile gloves", phase: 1},
+                {id: 3, text: "Antisepsis (sterile cloth over operative field)", phase: 1},
+                {id: 4, text: "Infiltration of local anesthesia", phase: 2},
+                {id: 5, text: "Holding of forceps (pencil grip)", phase: 3},
+                {id: 6, text: "Holding needle holder (dominant hand)", phase: 3},
+                {id: 7, text: "Placement of needle on needle holder tip", phase: 3},
+                {id: 8, text: "Lifting edge of skin with forceps", phase: 3},
+                {id: 9, text: "Piercing needle perpendicular (90°) to skin", phase: 3},
+                {id: 10, text: "Using curve of needle to move through skin", phase: 3},
+                {id: 11, text: "Correct distance of suture from wound edges", phase: 3},
+                {id: 12, text: "Instrument knot tying (Surgeon's knot)", phase: 4},
+                {id: 13, text: "Proper spacing between knots", phase: 4},
+                {id: 14, text: "When do you remove sutures?", phase: 5},
+                {id: 15, text: "Preparation of the wound with antiseptic", phase: 6},
+                {id: 16, text: "Using forceps to pick up one end of suture", phase: 6},
+                {id: 17, text: "Sliding scissors and cutting close to skin", phase: 6},
+                {id: 18, text: "Pulling suture to remove (avoid tract contamination)", phase: 6}
+            ];
+
+            // Randomizer Engine
+            const shuffleBlanks = (stepIdx) => {
+                const step = steps[stepIdx];
+                const newHidden = new Set();
+                
+                const processText = (text, role) => {
+                    if (!text) return;
+                    const parts = text.split(/\[(.*?)\]/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1) { // It is a bracketed keyword
+                            // 70% chance to hide this specific word
+                            if (Math.random() > 0.3) {
+                                newHidden.add(`${stepIdx}-${role}-${i}`);
+                            }
+                        }
+                    });
+                };
+                
+                processText(step.patient, 'patient');
+                processText(step.preceptor, 'preceptor');
+                setHiddenWords(newHidden);
+            };
+
+            // Trigger reshuffle when mode toggles or step changes
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks(activeStep);
+                else setHiddenWords(new Set());
+            }, [activeStep, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, stepIndex, role) => {
+                if (!text) return null;
+                if (!memorizeMode) {
+                    // Just render bold words
+                    const parts = text.split(/\[(.*?)\]/g);
+                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-current">{part}</strong> : <span key={i}>{part}</span>);
+                }
+
+                const parts = text.split(/\[(.*?)\]/g);
+                return parts.map((part, i) => {
+                    if (i % 2 === 1) {
+                        const wordId = `${stepIndex}-${role}-${i}`;
+                        const isHidden = hiddenWords.has(wordId);
+                        
+                        if (isHidden) {
+                            return (
+                                <span 
+                                    key={wordId} 
+                                    onClick={() => revealWord(wordId)}
+                                    className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner"
+                                    title="Click to reveal"
+                                >
+                                    {part}
+                                </span>
+                            );
+                        } else {
+                            return (
+                                <span key={wordId} className="font-bold bg-blue-100 text-blue-800 px-1 rounded mx-0.5 shadow-sm">
+                                    {part}
+                                </span>
+                            );
+                        }
+                    }
+                    return <span key={i}>{part}</span>;
+                });
+            };
+
+            return (
+                <div className="flex flex-col md:flex-row gap-6 animate-fade-in pb-10">
+                    {/* Left: The Script */}
+                    <div className="flex-1 space-y-4">
+                        <div className="bg-slate-800 text-white p-5 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-2xl font-black text-blue-400">The "Talk-and-Touch" Script</h2>
+                                <p className="text-sm text-slate-300 mt-1">Verbalize the Filipino text to the patient, and the English text to the preceptor.</p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={memorizeMode} 
+                                        onChange={() => setMemorizeMode(!memorizeMode)}
+                                        className="mr-2 w-4 h-4 accent-blue-500"
+                                    />
+                                    Active Recall Mode
+                                </label>
+                                {memorizeMode && (
+                                    <button 
+                                        onClick={() => shuffleBlanks(activeStep)}
+                                        className="text-xs bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 px-3 rounded shadow"
+                                    >
+                                        🔀 Shuffle Blanks
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {memorizeMode && (
+                            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 text-amber-900 text-sm flex items-start shadow-sm">
+                                <span className="text-xl mr-3">🧠</span>
+                                <div>
+                                    <strong>Randomized Recall Active!</strong> Approx 70% of the clinical keywords have been hidden. Say the line out loud, then click the gray boxes to reveal the answers. Click "Shuffle Blanks" to generate a new random set for this step.
+                                </div>
+                            </div>
+                        )}
+
+                        {steps.map((step, idx) => (
+                            <div 
+                                key={step.id} 
+                                className={`border-2 rounded-xl transition-all overflow-hidden ${activeStep === idx ? 'border-blue-500 shadow-md ring-4 ring-blue-50' : 'border-slate-200 hover:border-blue-300 cursor-pointer'}`}
+                            >
+                                <div 
+                                    className={`p-4 font-bold flex justify-between items-center ${activeStep === idx ? 'bg-blue-50 text-blue-900' : 'bg-slate-50 text-slate-700'}`}
+                                    onClick={() => setActiveStep(idx)}
+                                >
+                                    <span>{step.title}</span>
+                                    {activeStep !== idx && <span className="text-xs font-normal text-slate-400">Click to expand</span>}
+                                </div>
+                                {activeStep === idx && (
+                                    <div className="p-5 space-y-5 bg-white">
+                                        {step.patient && (
+                                            <div className="bg-emerald-50 p-5 rounded-lg border border-emerald-200 relative">
+                                                <span className="absolute -top-3 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PATIENT (FILIPINO)</span>
+                                                <p className="text-emerald-900 font-medium leading-relaxed mt-2 text-[15px]">"{renderText(step.patient, idx, 'patient')}"</p>
+                                            </div>
+                                        )}
+                                        {step.preceptor && (
+                                            <div className="bg-blue-50 p-5 rounded-lg border border-blue-200 relative">
+                                                <span className="absolute -top-3 left-4 bg-blue-700 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PRECEPTOR (ENGLISH)</span>
+                                                <p className="text-blue-900 font-medium leading-relaxed mt-2 text-[15px]">"{renderText(step.preceptor, idx, 'preceptor')}"</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Right: The Tracker */}
+                    <div className="w-full md:w-80 flex-shrink-0">
+                        <div className="sticky top-6 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                            <div className="bg-slate-800 p-4 text-white flex justify-between items-center">
+                                <span className="font-bold">OSCE 18-Point Rubric</span>
+                                <span className="text-xs bg-emerald-600 px-2 py-1 rounded font-bold shadow-inner">Pass: 13/18</span>
+                            </div>
+                            <div className="p-4 h-[75vh] overflow-y-auto bg-slate-50">
+                                <ul className="space-y-2">
+                                    {rubric.map(item => {
+                                        const isCovered = steps[activeStep].checklist.includes(item.id);
+                                        return (
+                                            <li key={item.id} className={`p-2.5 rounded-lg text-sm flex items-start transition-all duration-300 ${isCovered ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold shadow-sm' : 'text-slate-500 bg-white border border-slate-100'}`}>
+                                                <span className={`mr-2 ${isCovered ? 'text-emerald-600' : 'text-slate-300'}`}>{isCovered ? '✔' : '○'}</span>
+                                                <span className="leading-tight">{item.text}</span>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- View 2: High-Yield Theory ---
+        const TheoryReviewer = () => (
+            <div className="space-y-8 animate-fade-in pb-10">
+                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Preceptor Pimping (Must-Knows)</h2>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-red-700 mb-4 flex items-center"><span className="text-2xl mr-2">💉</span> Local Anesthesia Limits</h3>
+                        <p className="text-sm text-slate-700 mb-4">You will fail the station if you do not verbalize <strong>aspiration</strong> before injection. You must also know the toxic limits.</p>
+                        <div className="bg-red-50 p-4 rounded border border-red-100">
+                            <ul className="space-y-2 text-sm text-red-900 font-medium">
+                                <li>• <strong>Lidocaine WITHOUT Epinephrine:</strong> Max safe dose is <span className="font-black text-lg bg-red-200 px-1 rounded">3 to 5 mg/kg</span>.</li>
+                                <li>• Inject using a small needle (G25 or G27) and inject slowly to minimize pain.</li>
+                                <li>• Inject through the wound surface if clean; inject in the periphery (5mm from edge) if grossly contaminated.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-blue-700 mb-4 flex items-center"><span className="text-2xl mr-2">✂️</span> Suture Removal Timings</h3>
+                        <p className="text-sm text-slate-700 mb-4">Never say "remove in 1 to 2 weeks." You must give the exact protocol based on the anatomical region to prevent permanent stitch marks or dehiscence.</p>
+                        <table className="w-full text-sm text-left border-collapse">
+                            <thead>
+                                <tr className="bg-blue-50 text-blue-900"><th className="p-2 border">Anatomical Area</th><th className="p-2 border">Duration</th></tr>
+                            </thead>
+                            <tbody className="divide-y text-slate-700 font-medium">
+                                <tr><td className="p-2 border">Face & Neck</td><td className="p-2 border font-bold text-blue-700">3 - 5 days</td></tr>
+                                <tr><td className="p-2 border">Trunk / Body</td><td className="p-2 border font-bold text-blue-700">7 - 10 days</td></tr>
+                                <tr><td className="p-2 border">Upper Extremities</td><td className="p-2 border font-bold text-blue-700">10 - 12 days</td></tr>
+                                <tr><td className="p-2 border">Lower Extremities</td><td className="p-2 border font-bold text-blue-700">12 - 14 days</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🪡</span> Knot Tying Principles</h3>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-indigo-900">Why alternate directions?</strong> Reversing hand directions for each throw allows the knot to lie flat and prevents creating a series of unstable "half-hitches".</li>
+                            <li><strong className="text-indigo-900">Do more throws equal more strength?</strong> NO. Extra knots do not add strength to a properly tied knot. Too many throws makes the knot bulky and can become a nidus for infection/granuloma.</li>
+                            <li><strong className="text-indigo-900">What is "Memory"?</strong> The ability of a suture material to return to its previous shape after deformation (highly prevalent in Monofilaments, requiring more secure knots).</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
+                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">📐</span> Excision Planning</h3>
+                        <ul className="space-y-3 text-sm text-slate-700">
+                            <li><strong className="text-emerald-900">The 3:1 Ratio:</strong> When designing an excision, the Length-to-Width (L:W) ratio must be 3:1. This prevents extra skin (dog ear formation) at the edges when closing.</li>
+                            <li><strong className="text-emerald-900">RSTL:</strong> Incisions must be placed parallel to Relaxed Skin Tension Lines (RSTL). These are normal lines perpendicular to the action of the underlying muscle.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // --- View 3: Materials Matrix ---
+        const MaterialsMatrix = () => (
+            <div className="space-y-8 animate-fade-in pb-10">
+                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Sutures & Needles Guide</h2>
+
+                <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
+                    <div className="bg-amber-50 p-5 border-b border-amber-200">
+                        <h3 className="font-bold text-amber-900 text-lg">1. The Needle (Reverse Cutting)</h3>
+                        <p className="text-sm text-amber-800 mt-2 leading-relaxed">For skin suturing in the OSCE, you MUST specify a <strong>Reverse Cutting</strong> needle. Why? Because the cutting wedge faces the <em>outside</em> of the wound edge, creating a tract away from the skin edge. This significantly lessens the chances of the suture cutting through the skin margin when pulled tight.</p>
+                    </div>
+                    
+                    <div className="p-6">
+                        <h3 className="font-bold text-slate-800 text-lg mb-4 border-b pb-2">2. Suture Sizing Rules</h3>
+                        <div className="flex flex-col md:flex-row gap-6 mb-8">
+                            <div className="flex-1 bg-slate-50 p-4 rounded-lg border shadow-sm">
+                                <span className="block font-black text-slate-800 mb-2 text-lg">Face & Neck</span>
+                                <p className="text-sm text-slate-600 mb-3">Requires finer sutures to minimize surface scarring.</p>
+                                <div className="text-blue-700 font-bold text-xl bg-blue-50 px-3 py-2 rounded text-center border border-blue-200">Use 5-0 or 6-0</div>
+                            </div>
+                            <div className="flex-1 bg-slate-50 p-4 rounded-lg border shadow-sm">
+                                <span className="block font-black text-slate-800 mb-2 text-lg">Trunk & Extremities</span>
+                                <p className="text-sm text-slate-600 mb-3">Requires higher tensile strength due to tension and movement.</p>
+                                <div className="text-emerald-700 font-bold text-xl bg-emerald-50 px-3 py-2 rounded text-center border border-emerald-200">Use 3-0 or 4-0</div>
+                            </div>
+                        </div>
+
+                        <h3 className="font-bold text-slate-800 text-lg mb-4 border-b pb-2">3. Absorbable Suture Selection</h3>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-left text-sm border-collapse">
+                                <thead>
+                                    <tr className="bg-slate-100 text-slate-800">
+                                        <th className="p-3 border font-bold">Suture Type</th>
+                                        <th className="p-3 border font-bold">Structure</th>
+                                        <th className="p-3 border font-bold">Pros / Cons</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y text-slate-700">
+                                    <tr className="hover:bg-slate-50">
+                                        <td className="p-3 border font-black text-slate-900">Poliglecaprone (Monocryl)</td>
+                                        <td className="p-3 border font-medium">Monofilament</td>
+                                        <td className="p-3 border">
+                                            <span className="text-green-700 font-bold">Pro:</span> Less inflammatory reaction, less prone to infection. Ideal for the face.<br/>
+                                            <span className="text-red-700 font-bold">Con:</span> Less stability (needs more knots due to high memory).
+                                        </td>
+                                    </tr>
+                                    <tr className="hover:bg-slate-50">
+                                        <td className="p-3 border font-black text-slate-900">Polyglactin 910 (Vicryl)</td>
+                                        <td className="p-3 border font-medium">Braided (Multifilament)</td>
+                                        <td className="p-3 border">
+                                            <span className="text-green-700 font-bold">Pro:</span> Better stability, does not loosen on its own. Ideal for high-tension areas (extremities).<br/>
+                                            <span className="text-red-700 font-bold">Con:</span> Braid spaces can serve as a nidus for infection.
+                                        </td>
+                                    </tr>
+                                    <tr className="hover:bg-slate-50">
+                                        <td className="p-3 border font-black text-slate-900">Chromic Catgut</td>
+                                        <td className="p-3 border font-medium">Monofilament</td>
+                                        <td className="p-3 border">
+                                            <span className="text-red-700 font-bold">Con:</span> Dissolved by proteolysis resulting in greater inflammation. Seldom used in plastic surgery due to high reactivity.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [view, setView] = useState('script');
+            const tabs = [
+                { id: 'script', label: '1. Interactive OSCE Script', icon: '📝' },
+                { id: 'theory', label: '2. Preceptor Must-Knows', icon: '🧠' },
+                { id: 'materials', label: '3. Sutures & Needles', icon: '🪡' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row font-sans">
+                    <nav className="w-full md:w-72 bg-slate-900 text-white p-6 shadow-2xl flex-shrink-0 z-10">
+                        <div className="mb-10">
+                            <h1 className="text-3xl font-black text-blue-400 tracking-tight">SURG 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Basic Suturing</p>
+                        </div>
+                        <ul className="space-y-3">
+                            {tabs.map(tab => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => setView(tab.id)} 
+                                        className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 ${view === tab.id ? 'bg-blue-600 text-white shadow-lg transform scale-105' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+                                    >
+                                        <span className="mr-3 text-xl">{tab.icon}</span>
+                                        {tab.label}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-50">
+                        <div className="max-w-6xl mx-auto">
+                            {view === 'script' && <OSCE18PointScript />}
+                            {view === 'theory' && <TheoryReviewer />}
+                            {view === 'materials' && <MaterialsMatrix />}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
