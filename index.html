@@ -1,509 +1,744 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPCM 2028 Pediatrics OSCE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
-        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LU5 Grand OSCE Reviewer — UPCM 2028</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal-deep:   #0c3d3d;
+      --teal-mid:    #0e5252;
+      --teal-bright: #1a8c8c;
+      --teal-light:  #2ab8b8;
+      --teal-pale:   #e6f4f4;
+      --teal-glow:   rgba(42,184,184,0.12);
+      --off-white:   #f2f7f7;
+      --white:       #ffffff;
+      --ink:         #0c2a2a;
+      --ink-mid:     #2a4a4a;
+      --ink-soft:    #5a7878;
+      --rule:        rgba(26,140,140,0.12);
+      --card-bg:     #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--off-white);
+      color: var(--ink);
+      font-family: 'Syne', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: var(--teal-deep);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: 40px;
+      position: relative;
+      z-index: 10;
+    }
+    .topbar span {
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .topbar-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      opacity: 0.6;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.3); }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--teal-deep);
+      position: relative;
+      overflow: hidden;
+      padding: 80px 52px 88px;
+    }
+    .hero-bg-ring {
+      position: absolute;
+      right: -120px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 640px;
+      height: 640px;
+      border-radius: 50%;
+      border: 1px solid rgba(42,184,184,0.08);
+      pointer-events: none;
+    }
+    .hero-bg-ring::before {
+      content: '';
+      position: absolute;
+      inset: 60px;
+      border-radius: 50%;
+      border: 1px solid rgba(42,184,184,0.06);
+    }
+    .hero-bg-ring::after {
+      content: '';
+      position: absolute;
+      inset: 120px;
+      border-radius: 50%;
+      border: 1px solid rgba(42,184,184,0.04);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow-line {
+      width: 28px;
+      height: 1px;
+      background: var(--teal-light);
+      opacity: 0.7;
+    }
+    .hero-eyebrow span {
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      opacity: 0.85;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(52px, 6.5vw, 90px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--teal-light);
+    }
+
+    .hero-sub {
+      margin-top: 24px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.08em;
+      line-height: 2;
+    }
+
+    .hero-pills {
+      display: flex;
+      gap: 8px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid rgba(42,184,184,0.22);
+      border-radius: 2px;
+      color: rgba(255,255,255,0.5);
+      background: rgba(42,184,184,0.05);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .pill:hover {
+      border-color: rgba(42,184,184,0.5);
+      color: var(--teal-light);
+    }
+
+    .hero-logo {
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    .hero-logo-wrap {
+      position: relative;
+      width: 148px;
+      height: 148px;
+    }
+    .hero-logo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(42,184,184,0.15);
+      animation: spin 16s linear infinite;
+    }
+    .hero-logo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      border: 1px dashed rgba(42,184,184,0.07);
+      animation: spin 28s linear infinite reverse;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .hero-logo img {
+      width: 148px;
+      height: 148px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      display: block;
+    }
+
+    /* ── Progress bar ── */
+    .progress-bar {
+      background: var(--teal-mid);
+      padding: 0 52px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .prog-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      white-space: nowrap;
+    }
+    .prog-track {
+      flex: 1;
+      height: 1.5px;
+      background: rgba(255,255,255,0.08);
+    }
+    .prog-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal-bright), var(--teal-light));
+      transition: width 1.2s cubic-bezier(.4,0,.2,1);
+      position: relative;
+    }
+    .prog-fill::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      box-shadow: 0 0 8px var(--teal-light);
+      opacity: 0;
+      transition: opacity 0.5s 1s;
+    }
+    .prog-fill.active::after { opacity: 1; }
+    .prog-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--teal-light);
+      white-space: nowrap;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Main ── */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 52px 96px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .section-rule {
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── Stations grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .card {
+      background: var(--card-bg);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      padding: 24px 26px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s ease;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 26px;
+      right: 26px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--teal-bright), transparent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    }
+    .card:hover { background: var(--teal-glow); }
+    .card:hover::before { transform: scaleX(1); }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .card-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--teal-bright);
+      opacity: 0.6;
+    }
+    .card-arrow {
+      font-size: 11px;
+      color: var(--teal-bright);
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      margin-bottom: 5px;
+    }
+    .card-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      letter-spacing: 0.01em;
+    }
+    .card-footer {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+    }
+    .badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 8.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 2px;
+      background: var(--teal-pale);
+      color: var(--teal-mid);
+      border: 1px solid rgba(14,82,82,0.1);
+      transition: background 0.2s, color 0.2s;
+    }
+    .badge.done {
+      background: #e2f5ec;
+      color: #0e6643;
+      border-color: rgba(14,102,67,0.15);
+    }
+
+    /* Stagger animation */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card { animation: rise 0.5s cubic-bezier(.4,0,.2,1) both; }
+    .card:nth-child(1)  { animation-delay: .04s }
+    .card:nth-child(2)  { animation-delay: .08s }
+    .card:nth-child(3)  { animation-delay: .12s }
+    .card:nth-child(4)  { animation-delay: .16s }
+    .card:nth-child(5)  { animation-delay: .20s }
+    .card:nth-child(6)  { animation-delay: .24s }
+    .card:nth-child(7)  { animation-delay: .28s }
+    .card:nth-child(8)  { animation-delay: .32s }
+    .card:nth-child(9)  { animation-delay: .36s }
+    .card:nth-child(10) { animation-delay: .40s }
+    .card:nth-child(11) { animation-delay: .44s }
+    .card:nth-child(12) { animation-delay: .48s }
+    .card:nth-child(13) { animation-delay: .52s }
+    .card:nth-child(14) { animation-delay: .56s }
+
+    /* ── Rest note ── */
+    .rest-note {
+      margin-top: 12px;
+      padding: 14px 22px;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--white);
+    }
+    .rest-note-icon {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    .rest-note p {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+    .rest-note strong { color: var(--ink-mid); font-weight: 400; }
+
+    /* ── Tips ── */
+    .tips { margin-top: 64px; }
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .tip {
+      padding: 20px 22px;
+      background: var(--white);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: background 0.18s;
+    }
+    .tip:hover { background: var(--teal-glow); }
+    .tip-icon {
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      opacity: 0.75;
+    }
+    .tip-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      letter-spacing: -0.005em;
+    }
+    .tip-body {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-soft);
+      line-height: 1.65;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--teal-deep);
+      text-align: center;
+      padding: 28px;
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      .hero { padding: 56px 24px 64px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+      .hero-logo { display: none; }
+      .topbar, .progress-bar, .main { padding-left: 20px; padding-right: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 52px; }
+    }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
-    <div id="root"></div>
+<body>
 
-    <script type="text/babel">
-        const { useState } = React;
+<!-- Topbar -->
+<div class="topbar">
+  <span>Unibersidad ng Pilipinas · Kolehiyo ng Medisina</span>
+  <div class="topbar-dot"></div>
+  <span>Bente-Otso 2028</span>
+</div>
 
-        // --- View 1: Ultimate Master Cheat Sheet ---
-        const MasterReference = () => (
-            <div className="space-y-10 animate-fade-in pb-10">
-                {/* Reporting Scripts */}
-                <div>
-                    <h2 className="text-2xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-4">OSCE Execution & Preceptor Scripts</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
-                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">1. Consultant Reporting (Anthro & Plan)</h3>
-                            <ul className="text-sm space-y-3 text-slate-800">
-                                <li><strong>Intro & Vitals:</strong> "Good [morning] Doc, presenting my patient, a [Age]-old [Gender]. Vitals show a HR of [X], which is [Normal/Tachy] for age, and a RR of [Y], which is [Normal/Tachypneic]."</li>
-                                <li><strong>Anthro Execution:</strong> "Since the patient is [under/over] 2 years old, I used a [Recumbent Infantometer / Standing Stadiometer]. <span className="italic text-slate-600">(If uncooperative &lt;2y stood up: 'I measured standing and added 0.7cm').</span>"</li>
-                                <li><strong>Diagnosis:</strong> "Based on WHO charts, WFH Z-score is [X], indicating [Diagnosis]. <span className="text-red-700 font-bold">(If MUAC &lt;11.5cm or Edema present: 'However, noting the MUAC of X / Pitting Edema, the final diagnosis is Severe Acute Malnutrition').</span>"</li>
-                                <li><strong>Vaccine Plan:</strong> "The patient is missing [Vaccines]. My plan is to administer [A, B, C] today via [Routes]. I will defer [D] to the next visit to minimize simultaneous IM injections / respect live-vaccine spacing rules."</li>
-                            </ul>
-                        </div>
-                        <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
-                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">2. Patient Counseling & Administration</h3>
-                            <ul className="text-sm space-y-3 text-slate-800">
-                                <li><strong>Intro & Rights:</strong> "Magandang araw po Mommy. Ako po si Dok, titingin kay baby. Ito po ba si [Pangalan], [Edad]? Ngayon po ay bibigyan natin siya ng bakuna laban sa [Sakit]."</li>
-                                <li><strong>Administration (PO):</strong> "Papainumin po natin si baby ng oral drops. Dahan-dahan po natin ipapatak sa gilid ng pisngi para hindi mabulunan."</li>
-                                <li><strong>Administration (IM/SC/ID):</strong> "Ituturok po natin ito sa [kanang hita / braso]. Hawakan po natin nang maigi ang mga binti at braso ni baby para hindi gumalaw."</li>
-                                <li><strong>Deferral / Spacing:</strong> "Dahil sa rules ng pagitan ng mga bakuna (o para hindi masyadong masaktan si baby sa dami ng turok), ipagpapaliban po muna natin ang [Vaccine]. Balik po kayo sa [Petsa]."</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg-ring"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line"></div>
+        <span>LU5 Grand OSCE Reviewer</span>
+      </div>
+      <h1>Clinical<br>Station <em>Primer</em></h1>
+      <p class="hero-sub">
+        14 active stations &nbsp;·&nbsp; June 2–3, 2026<br>
+        Henry Sy Building &nbsp;·&nbsp; 3rd &amp; 5th Floor
+      </p>
+      <div class="hero-pills">
+        <div class="pill">17 Total Stations</div>
+        <div class="pill">12 Min / Station</div>
+        <div class="pill">3 Circuits</div>
+      </div>
+    </div>
+    <div class="hero-logo">
+      <div class="hero-logo-wrap">
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADwAPADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDwv2ooo5r1D4UBRxR0HNA96AF70nbNLSY4oAKPc0daKADrRRSmgBBRQOv+NPMUotzc+U/kq2wybTtDYztz0zgZxQAz1oFbPiLw3qugNZpqMdurXaloxFOsuCCAVbaflYblyD6ite48GppfxJ1Lwlq97IU0wXLXE9pECziGBpvkVyByFxye9LmRoqM27W8vvOQ60laXijTV0bxLqejpMZ1sbuS3WQrtLhGIBx2zjpXSaX4KgvPhPf8AjY3Vwr2k80BiCqULK1qFyeoyJ5P++B70OSWoRpSk3FdP0OJ+tHvXSX3hiODwLZ+JFv2eWZ08y2MOFRHkuI1IfPJzbOSMDhlwTzWLpNhdarqltptjGJLq6lWGFCwUMzHAGTgD6nihNMmVOUWk1uVqSrWp6feabfzWN9A0NzDgOmQcZAIIIyCCCCCDggg1W60yWmtGJRR0oOTQAZoP0o5xR3oAKKKOlAB0o5oxRQAHNFGKKADpR70UZoAKOKO1FAB9aO1HtQaAClpKs6bYz37zpb7CYLeW5fc2PkjXc344HSjYEm9EVu3PAHet7SvDkz+JINK1kzWG62kupQoV5UjSF5sbdw2sVTgMRjcCeK09c0Sztvg/pusrpoW5u7oqb0sxZ+bpWjxnaFAiiPTOSeT0Gnq2o2ekfGTUNR4tUjhuDvuQsivMbJ1B2lcFWcgBSD6HNZud72OuGHSac/L7mR+EbLTNF8f+IdKmsotXewjuBZw3ESE3IhkDSqFbKiRoFlwexBxziue5/wCFUzjdn/idr+P+hvzWnF40h0rxr4i13TrCO9jv7iSW1eZjF5R87zEkIwSRxgpxkHGRXAXPiW1tNP8A7MOoNLbiUTGCIbgZAuwMffbkdaXmzVWa5aavvt+B7N8R4Yx4x8J2+oMtrDLfmSRpzsCwtLb/ALwk9EwG+bpwfSs/xDr2jaj8XL3W21i1S01LS5Ve6JZo45pbBosNtBPDkA4BxXiN14qLsxitHkJwC88pYkDp/nNT6hqd/b6Fa3Z8uKe5YlAE4CDvz+H51nzRS3Op0q0nfltqnq+3odr401C11XxjrWp2TM9rd3800LMpUsjOSCQeRkc4NdboHjTTLH4Ia74KmmlF7qEzzxoIWK7hLaFfmxgZRJv++R6ivIfDtzqF/aySyzbism0YQDsKi8S3mo6eLfyZyu8tnKg9MVTqRaRjDDVY1ZJNXd+/U9U1PUtIm+E+nWSX1q2oxSRRG3EjCZQs967Fk6FNs0RDHuxAPUVm/DBQ3xH8OKc4OpQg4GTjd2rz/UdT1C30ux1GARPFONsgZejj6fQ1XtvFkiMrTWjKVOQ8MhBB9R/+uhVI2aCWEruUZWva2z7HrVhqdrqviXWbuwjuI7X/AIRm4giE6qJCsVisWWCkgE7M4BOM9axdbtraDwfoN7HAizzm+85x1kCSIFz9ASPxrmtD8V2sLymzu0t5J7eS2dZkAzHIu1gM8dD17Vu6jqkF54TsNL+zzC5sZLhklDqY5UmIYjHUMGUDqQQexHNLyMZ3SaqKz1/NF6+8J6mPEeqaLpUUupPpsRmlMahWMYCEsFzzguBgZJ9K57r0r1Dw7rWjj4j+JfEEl1JJpkNrDdebbwGRmEdxZnAUlerLj2681xK2lu3glL0wqt02sfZ/N5yIzAG2+mM804zfUzq0FvHz/AxRR+FbfjXw1qPhPxBNo+peW0qFijxnIkQOyBsdRkoeDzWJ3rRNM5pRcXZ7h39KB+dH4Uc4oEHFFFFABRRxmigAHrRRRQAUcUduKUUABpKKOnFMDRt9LuhZW2pzQEWUl3HACTgyE7j8vqPkYZ9RivS/idoln4Z+KGtaHZRRQ2tp4XuEhVOhUwuVOe5II5PJrmtSlWH4Y+HJWBbZeq4X+8FkuyQP0/MVzvxI8XyeI9fm1vUUSNmUQwxKct5aZ2A+rBSATwOKwd2/I9CCjTjZK8nZ/mXNY8QWdx4I03QY7eZZbdi93NKVCYWS4ZAnfpcNuJxyAB3NcR4n8bXF7dtNLeXGq3e0J59xIWCqBgKD6AdAMCsDxFe3d3s3sUgJ4jB4/H1rIVKylU6RO+jguZJ1nfy6adyxfahfX7ZuZ2ZeyDhR+AqGGPOTinBKtRR4UZFZat3Z3NxhG0VZD9K0+TUNStrGEEvcSrGMe5rf+JLRDxD/AGfAMQ2ESwKB64yf6D8K2/g7YRDV7/Xrof6NpFo87Ej+Ig4/QNXE6jcS3moS3UxzLPI0r/Vjn+taWtEwU+afodp8MrPz9GuWI6XJH/joqr8UbUQrp2B94yf+y10nwdg3+Hrw/wDT2R/44tUvjRDsXSsAcmX+S1XL7h5ca3+28v8AWxheFbX+2fB2s6Qo3XFqBdwDuQOoH5f+PVxxQenBrrfhbqS6b4zsZJSPJnf7NNnptfgZ+jbaq+N9GbQ/Feo6YVwkUxMf+43zL+hx+FS1eNz1FPlm4/M5R48MRVixv72xbNtO6L3Q8qfwp9xHyDiq5Ws9U9Do92cbSV0dVpXiiKTMV5utncbWdGOxxkHB9sgdcjgV18Wpq3h6PSRGCh1AXnnh8jHliPbj9c5ryNlrX8O3l3aBtjF4c4MbdPw9DW0avSR59fAJJyo6eR9W+NBovjD9orw2zrb3ulahYo8207o5VH2ncQR1BK54rxWPSNROhy6uIQ1pb3AtZXDjcsmM8r1xyPmxjJA6kUeA/FH9ja3ba1ZRpM8G5GikJBVXUq2PQ4Y4PTNdHA0s3gTxPe2jotrcakhMLpl44y6tnIOBktEP+AH8NI3ja2xw1eWq25K0tX+COO96BRR61seeHaijv0o70AH1ooH0pKAFHWlpMUe9ABR+FFHagAooqtqd7FYWjTyc44Ve7N2FDdtWOMXJ8q3Lt3fXclrbWst1PNDbBhbQu5KRBm3NtHQZPJ9TWBrEDtfQs+SWjz+tX/B4m1G0e7nO52mb6AcYA9ql8SxCLXLSIj71sSPwY1zSlzeh61CKo1OV6s57VbTdYOwHKYasJUru5LcPEyHowwa4x4ykjIRypIP4Vm0ehSqXVhkSbnAq4q9qZbR8lj9K0dKsZdS1O10+AfvbmVYV+rHGfwppEVJ6nbzIPD/wUiT7t34hut59fIT+mFH/AH1Xmn3pc+9ejfG68ibxJBotqQLXR7VLWNR0DYBb9No/CuAjj+YcVVTe3Yzw/wAPM+up6v8ABZf+KdveP+Xw/wDoC1Q+N4G3SB/tTfyStb4MLjw7ecf8vh/9AWqHxsX5dJ/3pv5LVv4Dx4f8jD7/AMjyqElZeCVJ6H0PY16V8Vo11nw/4c8ZRKM3lt9mu8dpUz1/EOPwFedGPBzjvXpfgUf2/wDDXxF4YPzz2gGo2Y75H3gPxX/x+ohrdHr1/dan2PMZk3IR3qoVrSwCPY1UlTDEYqGjenLoVWSt7S7PbYRkjlhuP41lRxGWVIh1dgo/GuySAJGFA4AwKEh1alkkZ+jW7C7nZMhlQfzrdtb66jtrm0iup4YbkKLmFJCElCtuXcOhw3Iz0NVvC8Im1e+ix9y3Un6lqg8ZLNp9ml1ASjpMv0PXg+1aRlyo8+vFVqnKtGXe1FVdLvYr+0W4iOD0dc/dPpVrjNdKd1dHlSi4Nxe4d6KMUlBIvrR70cUEdKACiig/nQAd6KKKAAkBSzHAHJJPSuG1nUG1K/Z1J8hPliHt6/U1ueML7yLRbONsPP8Ae9k/+v8A41zFsvJrmrTu+VHtZdh+WPtZddj034X22/QA+M/6Q4/lVb4kYtvEulN0XyMH6FyK3fhJFnwuD/08yf0rE+MybdYsAOP9FP8A6GaLWgcsJ82Na9RCv7uuT1uHy9Sk9Hw4rqtPl8+yil/vKD+NZHiODc0MoHQ7T/P/ABpSV0dtOXLKxkRJiMCu/wDgrZQ/8JJc67dgfZdGtHuXJ6biCB+m4/hXDqmcV6LEn9g/Bhv4brxBd49/JX+mF/8AH6qG9+xFaV1bucBq11LqOpXF9cHMtzK0z/VjnH60yCAlxUscReTOOprUsbTcy8Vk9zqirKx6H8HoCugXYx/y9n/0Bao/GaAsulcd5f5LXvn7OXwaluPCVprfiC4MNpfSfaorNFKyPHgBSzfwhsZ45wRyKo/tL/Buex0B/EuiXIn0+wdnmtXQmSKNyo3Bs/Mq9884+lX7SNuU4Y4CssR7e2n/AAD5BlhI/Oum+FOqjRvG+nzyMBBK/wBmmz02Pxz9G2n8KpXdmRn5e9ZpjKScEqex9D2NTF2dztqR5otM0PHmjnQvF2paYFIjjnLRf9c2+Zf0OPwrnLlMENXqHxTj/tnw94d8XxjL3Nv9luiB0lTP9Q/6V5xNGSpFXNamNGd0rhoMJl1JCRkIC3+FdZtGysTwzDhZZcckhR9BWtqUvkWE0ufuocfXtSitAqvmlYl+GWLrXNYkxkGNcfTfipvijb7NA3Y/5eE/rTPgsmdQ1Mf9O6f+hmtb4twhfDG7/p5j/rTt7hxTnbHJeh5Vo+oNpl+shz5L/LKvt6/UV3KFWUMpBBGQR0PvXnlynSum8HX3nWrWUp+eEZT3X/6xoozs+VnVmOHUoe1jutzeFFA7/wBKK6TxRM9qXOKKQ0ALx6UdTR+FXNEtIL/WLSyur+HT7eaYJLdTfchTu59cDPHfp3oGk27I69PhlrFzp2mS6fqGn3N/qFmt5Hp0jNbzOjLv/dPIBFPheSEcleQRwa5HWdJ1PRb17HWNOu9PuU5aK6haNgPXBHI9+ld94d0vxdY6a8vw98eWWr6VLKYXsBd+SsrMpJjezuwquSpOVXdkE1xPxd8R+IJdOXSNb0+DSH0sPBFYQQvCsUkpUu2x2baSAvyrhQBwBk5xU2ehUw0Gkkmm7en3nleqXRvtSmuP4ScJ7KOBTrVeT9KrRLwPSr1qvWufd3PZklCPKtkewfCBP+KSB/6epf6Vz/xpX/idWHH/AC6n/wBDNdN8IV/4pEH/AKepf6Vz/wAZkzrdhn/n1P8A6Ga3fwHz1F/7e/mYXhmUtZNFnPlsR+B5qzqsHmWz8cjkVn+HD5d2Y8YDr+o/ya6GSHeuCOtStj05K0jndOsZb6+gs4BmWeRYkA9WOK7j4vyR/wBu2mh2h/0XSLRLdQOm8gE/ptqf4Q6TGfE8up3Q/wBG0qB7hyegOCF/qfwrFvRLqep3F9N/rLmVpWz23HOPw6U9okxXNU9DJsrMkgYrv/hX4XXxD450TRpUQw3N2izhnCAxg5cZPcqCAOpPSrngb4beLfEwjfR9Au5oH4FxIvlQn6O2AfwzXRXng268F3kE3jHVbHwtslDQPLJ58zspBDxRRbmYAgfMcD3rE7UrK72PpD4ufFvwz8LV0/T7yyu7y7uYy0NpZqg8uJfl3MWICrngDvg+lP8AhX8TvC/xa0rVLK2srm3khTy7yxvQuWikBGQVJDKeQfQ/hXjep/C8/GrxVqni/Tfibol/BI6pHHBbyO9vGqgKjIzKY+dxwRySTS6R8Ox8DvFVl4n1T4n6LYwvDLBJDLbSCW4RkIAWNSxcB9jfVaOSHLvqP2+I9rdx9z5feeL/ABB8Mt4f8VaropKsLO6eJCrh8pnKnI77SM++e9cRe2hBJ2/SvbNO8CX3i52l8G39j4niaQ+bLbzCKSNjzulil2umTk5wQexNcz44+H3ijwxIw1vQ7u1iDbfP2b4SfTzFyv4E0CaurrYyvBsJ1v4f+IPDRG6a3Av7MHrkfeA/Ef8Aj1edPHxn1r0T4f3B0fxhZXD8RSP5Evpsfjn6HafwrI8baAdJ8WX2nKuI1mJi/wBxvmH6HH4Vs9YpnFblm13MrSrfybRBj3P1PNVfFEpWzSLu7/oP8itxYdqjiub8SHzLwIOka4/E80nsVDWZ0fwTX/iZan/17p/6Ga3Pi+o/4RPPP/H1H/7NWR8F0xqepf8AXun/AKHW58X1P/CJf9vUWP8Ax6qXwHmVn/t69UeK3S9Kbpd0bHUYbkfdVsP7qeDVi6XhaoyLWGzPoYpTjyvZnqmhaPquu3y2Oi6ddajcsNwjt4i7bf7xx0HucCux0z4YXt1ZXskut6at1aQSSvb2oe8SEohYi4niBhgzjHzOTkgYrjPhRr+twWosNGtLTUZ9SVLGSzurQXCTsrgx/ISAWBwQDkc8giu9l8N+OfFd5HaeK9ekTToZFhgjidbiBpiu7yLS2tj5ckoHJVAAmPnZa6XN+iPFp4emrppyd7eX3nmoOQGGeeeaXr3rX8Y6KPDvia+0YXS3QtmUeaFCk5RWwygkKw3YZcnDAjJxWR2rVO+pwyi4tpga6P4eaLpWu6+bHWdRi0+18lmEr30Fsd+QBgzYVup+XIJ7Hiuc71raBY+Hr5J11zxC2jsu3yc6ZJdJJ1zuMZyuOOxzn2pS2Koq81pc9L8T/AYQab9v07xdpV/alC5862lZVGO8kAlj6d8ivAviHqF1f3MUl3dPczzMZZZXbJcgBQfyr0a08MaRCl1d6J8Q9AZ7e1muClubq1uJAiFtiq8aZJxjG7v3rynxU27V1TtHEo/PJrnk3yu7PVoxi60eWNlq97mbDHmtC0iHP0qtbp0rUso8mskd9R6HrHwkT/ikQP8Ap6k/pWF8X4t2s2PH/Lqf/QzXU/CePHhMD/p6k/pWN8Voc6zZcZ/0Y/8AoZrd/AeBQX+2t+pw+mxeXcxyAdGH5V18cG5R3rP8O6JqOsX6WOk6fc3105AWK3iLt+Q6fU19F/Dz9nfXr6KK48W3aaRAQC1tAVluG+p5RP8Ax6suZLc9n2Upv3UeaWVjJpvw7ljt4ne+166EUccaFndF6gAcngHp/epnhfw3HB4ghs7+1j1TWHbbaeH7eTzJZpT937QU4ghHV9xDEAgAZyPtLQvBfhrRdMjsLPSoDGkHkF5VDuyEYILHnBHUDANQiDwJ8PtPluUt9C8N2shy7RxR24kP0ABY+wzUyqJnRTwco6tmX4K8FJ4VsJtd1aefxB4lNuzT3TAkLgZ8i2i+7DFxtCqBnjOa474QfBaOz1BvG3xCP9s+KrxzcNHcN5sdmWOQvPDuvTPRcYUcZO/p/wAY/D2va6+g+HFmmu5oJfsV1cx+XBLOqkomCQxBx1wOmO9S/CP4veHfHNklpcSxaR4jizHd6VcSBZFkXhvLzjeuc9OR3AqE5WZs40XKKfy/ruWPFvwl8La3qh1zTjeeG9e7ano032eZv98D5XB77h+NSeDvhT4U8PaidZuI7rXtdf8A1mq6vMbm4J/2S3CD2UCu8zRmp5mbexhe9jw/4o/BsW2uQfED4bodM8QWMy3E1lbt5cd6oYF1UDhWYZBH3WzyAea7L4h+BF8QwPrvh64bSfEQh+SRgfIvVx/qLuH7ssZB2ncNy5yDxiqHxX+MGh+EFXSNIaHXPFN06wWemW8m7EjHaplK/cXJHH3j2HcN1X40+GdD8VT+H9YS5X7MFjnvoI/MhE2PnXaPmAU8ZGecjtVNysjGMaKlJJ/8P/mfK+ueGo7vWbi10aE2WoqxE+gXL7L20kH3ljDY8+MHO1kJYrjIzyZ/iDYvqWn6L4hkhaO4aE212rqQyyrn7wPIOQ9fYyweAPiFZw3zWug+JIYuY3kijnMR/EEqfY4qx4t8F+G/FOjf2Xq2nI8KgCN4zskjx0KsOePyq1US0MZ4OUndM+ApbfCciuNv4vNuJJMfeYmvqj4k/s+eINNhmuvCcw1q2wSLdysdwo9s4V/wwfavnbX9D1HRr97HVdOurC6U/wCpuYmjf8iOarmT2MPZyg9UXvg7Ds1PUeP+WCf+h1tfFtM+Euf+fqL/ANmqr8Jotup6jxjMC/8AoVanxZjz4Ux/09Rf+zVrH4Dxay/25PzR4jdx9Kz5k68Vt3sXTjtWXOvWsGe/TehtfD6/ubC6kmtLiS3ubaRLmGWM4aNlP3h9CBXrXiPwr4w1C8juvGPiHRbPbCogk1LWbeFEiYBgIoYzlUIIOFQZzXi3hRtusFD0eJh/I17j4e8D+GbvRLLWtT8QySy3cIklCX+n2wiOSvls9xOJCyhQD+7wOMZFaxaUUzgr03KtKKvrZ72OL1vTdN0uaG303X9O1hdhMkljFKsUbZ+6DIi7vXIGKz67Px/pXgzTtLtG8P6mk9+bgpLAmrxagPK2Z3s0USLGQ2BtBbOc8YrjOa3g7o8yvBwm0wrf0O78IWujt/bei6vqmoPcNtFrqK2qRwhFwctG+5ixbjjAA9awKltWjjuYpJovNiWRWdP7yggkfiMim1dEU5crvb7zptak+HE0WoxaPaeKbaWOMtYTXlzDLHM4ZcK6LEGTILHOeMD1rybxDzrk3sFH6Cu31aayn1a8msIjb2klxI1vCxG5Iy5KKeTyFwO/SuJ8QDGtze6qf0FY1VaJ6WBmpV3olo9vVDLVeRXaeBvCWteJ71rHR7ZJrw27XFvbPII5LpVOGEO7AkYcnAOcA+lcda9a92+Fv7QnjDwdocGiSaVo2s2VnF5dj58XkyW3/AkHzDnnIyfWsNeh6fut+8z2/wCE3wCm0/w3YnXtXmhaVfPntEtwkkTsATGW3MODkZA5rf1H4FfDyHUk1nxRqVzcWsC7UiurpbeHGc/Ow2lvzFeU6Z8YviN4w0t7ubW4NHiaZ0EOmWwQgDH8blm79q8s+KzzXOuWj395eX8jQFmku52lYncf7x4quWbWrOSNbBxrtQjeWup9cj4ofBXwJZHTtJ1fR4Uj4+z6RAZixHqYwQT7k1jxftFaRqk1zH4c8M6pdx20Rkknu5Et0UeuMsfXsK+OVkCjauAPQV3WlyjR/hpcXZOLjWLjyY/Xy1zn+TfnRGkupvUx0krRVjvfFP7QnxA1O2eLTxpmhxuDhraMyzAf7z8A/Ra8ru9WvdUvjf6pfXOoXbHLT3Mpkc/ien4VmzT5U81WglPmY5601FIiVeUt2djpF9Nb3ENxbTNFNE6yRyJwUZTkEfQjNX/j7p1hqEmkeP8AToliGviRdQgUfLDfxbRIR6BwQ4/E965vTJMkf416P8QYEP7MOkTsBv8A+EnfacdAYpAf5U46SRlWXPRku2pS+FPxA+H/AINuLXWL68+IWrX8EZKafNLGbOOUjG4fvPmIBOCQMZzjNV/iv458A+Lp73VtKvviDpt7cjedM82MWJlIwW/1h2g9TgHJycc15DRW3sle55/16pycllY9W+AtjaaJpms/ES6jV59LZbLR4mTKNeyoT5h9fLTLfj64rG1O6Z5Xd5Gd2JZnY5LE8kn3J5ru/C8KL+yrFMoAJ8TyM3HU7Cv8gK8x1KQgkZ6VjLWTPRpLkpRXz+8LPVb3TL9b/TL65sLxPuz20pjcfivUexr2L4f/ALQXjHT5bey1+C11+2ZlQytiC4XPGdwGxvxA+teAyzHzAPerkE5CHDY96Timaxryjsz67uf2jPCWnX72OuaJ4g0+ZcZ/cJKuCOvyvnH4VqR/E/4MePLMabqesaNOknH2bV4fJwfbzQBn6Gvlb4hSf2noWieJE+9LF9luSOzrn+oauFldWQqwDD3pSpJbF08dJr3kfbNh8Cfh2b6TVvD895a29ym0x2t2JYSM5ypYMR+eK5P4vfAWS58H6lNourXd1LbKbi3sxaCSWZlBxGCGHJzjOPwNfPnwhuLu11O9fTtRv9OdIlZWs7loud3oDg16dq/xi+I/g/S0u4Nct9XiWZU8nUrVXJBz/GhVu3rQozUdGYTrYOVflnG0u54H418Jax4euXtNRt1FxBCkl5HC3m/Yi5+WOcqNqSdDtJ/iA68VxdyvXivdPin8f/GfjPw/PoP2DR9G028TF9HaQ+Y1yc5JLP8AdGQDwM/7VeG3XOTU69Tq91P3WJ4f41uD33D/AMdNdjbx2zXcRuFAjMi+YwA3BcjJz9M1x+gjOtwe24/oa9X0Of4fG10467beKUuYCReiwSCSK5HmEjBeRWQ7Cq8Dtmt6TtE8zHRc6ys1t19TB1aOzi1a9i02ZprFLmRbaU9XiDkI3QdVweg61VHWuh1oeB00eUaFd+IbvUXuI9n2+xjt44ogH38pK+9iSmOBjB9a57FbRdzzakeWX+QV1/w+1/wxotpfrrmktdXUskbW840uC+2oAwZNkzqqEkqd+G6YxXIdq0NC1KDSrtrm40XTNXBjKrDfmXykbIO/EbqWIwRgnHNKSuiqE+SaenzO71X4h6Ze6ddaPpXhq7uHvYHt41nt9PgQFlIDiK2tg5ZfvLiTqB1rw3xMuNVRx0eIH8sivZvDnin4hX2qCDwnYaVpckK+e6abo1tbpHGP4pZXUlUxwS7gHPWvLfiDpd5pV+LS/tzBdW0jQzRkg7TgEYIyCO4IOCCCKxlG0Wj06VTmrRlfutrIxLetO0bHX0rKt24rQtm6/Ss0dVRnr/wtf/ilRz/y8yf0rE+KUn/E7shn/l2P/oZrU+Frf8UqP+vmT+lYfxTb/ieWX/Xsf/QzW7+E8Km/9sl8zCtlkuLiO3hGZJWCIP8AaJwK7D4pXSWuoadoNsf3OlWqocdC7AEn64A/OqPwpskuvFaXc4AttPia6kJ6DAwP15/Cuf1u+k1PVbrUJPvXMrS49ATwPwGBRtE7b3n6FsOWXNNgz5ufxqKzJaMAnOOKtW6/vRioNuhuaSuSMV7Z4z8E6xrH7L+kXNlcqpsLifVpLMj5p4vnGVP95VJbHcZ9q8e0S3eaWOGIZkkYIg9WJwP1Ir3bxF43sdL/AGgvA3giF420rQ7f+y7zP3HnuIgmD2O3EY+rMKl3vobQ5HBqez0+8+U/fqKCR1JwOprrvjB4Sk8EfETVvD5RltopvNsyf4oH+aM/gPl+qmrnwI8Hnxt8TtK0iSIvYxP9qvuMgQxkEg/7x2r/AMCrp5ly8x4yoydT2fW9j2Cy8G6x4d/ZbdNSmWSS41GHU/syjm0SQKArH+8QVYjtuxXhmrLgmve/DfjW38WfFD4m+CJZFktteEo0ph90zWsXl4H+8sYYf7leGaqhOSRgnnFc0b3dz2ZuHKuTZafcczNnzqfvKpyfxpZ1/en2qtenEZHc8VRl0Ov8GyHWvBuveHyd00ai+tQfUdQPxA/76rhzJxxWz8PdTOk+LbC5dsRNJ5Muemx+P54P4VX8b6adI8U6hY7Ssayl4v8Acb5h/PH4Vb1RgnaTRtfCiT/iaaiP+mCf+hVr/FN/+KWHP/LzH/WsH4UMP7V1H/r3T/0Ktf4pt/xSuc8/ao/60kvdOKo/9sXyPLbtiQKzLnvV66cbRzWdcNxWMj3qT0LXhhN2rlz0jjY/yFery+I7mx07TrPV/AHh2eG3tEhilvrO5hmmTlg5lSRM53Z6HjGK858B6fdajfNb2cDz3V1KlvBGgyzuTwB7kkV7f4Q+OWs6HYiwn8KaJfWcaCLEMs0W0Yx9x2kizx/cArSKfKrI460ouvLmlbZbX8zz/X9V0fUoIRpvhW10WVWJke31CedJBjgBZSdvPOQTWP2rp/iP4lsfFOsQX2n6b/Z8aw7XiNrbRNvLEnmBVDjGMFgD1rmO1bR2PNr253Zp+mgVpeGNXl0HxFp+tQ28Vy9lOswil4V8ds4OD6HBwcHtWaaPaqauZxk4tNHpQ1z4heMro3nhzSJ7ewgk86eWU/aY5JAuwS3lzc/JKyrwu/Cp/CqnmuM+Kfh3WrexTVdX1S01eTUzJMt5b3XniSWMrvUuAAxG5RlcrzgHggb1x8SNWk0jTbKPSdJ+0WFtHbxXd0r3flhFCq0VvKTBC2ACWCElsnIzXL6zq2q61fNfa1ql7qV0Rt826mMjBf7ozwq+wwKxjB9tD0KteCSfM3LfyPP7cjitC17/AEqte25tL+SED5c7k/3T0qxad/pWSVnY9CclKPMup6z8LTjwt/28yf0rF+KX/Icse3+jH/0M1s/C0/8AFL/9vMn9KyfiVE8/iHToolLSPBtQepLkCtvsngU/98l8y9pI/sb4WX979241icW0Z7+WMg/pv/SuLI3N0rtPihJHaT6Z4dgb91pdoobHeRgMn8gD+NcaoyR3py7HbDa5YtOOK0IB+8U+lUIeDnPStCAZArNnRTd0dr4KuRY+INMvSARb3cMpB6YVwf6Vl/Gu3l0z4y+KkildJU1eWeN88qWYSKfwLD8qm0clogVPOKu/tHDzvifLqWMDUtNsbz6lrdAT+amqj8RlX/g+jX6nqnxt0mX4tfCzwj8QvDlm11qoKWV5bwrlyZGCFf8AgE36OT0pvwss5fhH8B/EvjjVoGtdd1NmtLKGRdsispaONcHkZfe5/wBlQa4P9nj4vf8ACtpdTsdVhubzRruJp44YcFo7lR8u3PADgBSexCn1qv8AtEfFf/hZOs2MOmJcW2h2MQeKGYYZ52X53YD+7nYPox/iqOWV+Tob+3o8v1i/v2tbz2uY/wCzzbC6+NHhgPI4WC6a5dwecRRPISfrt5+tM15zNNLOQF8x2fAGByc/1q/+z0vl+LtY1I8f2d4dv7hT6MUEa/rJWbrXyRsOmBirl8RhQX7lebf6HNSj5mNZ17gkCtGfHNZ84y2alGs3Yqd8ZxkdR2rtfiFjV/Deg+KFAMkkP2W6I/56Lnr+Ib9K4xxzmu18Fj+2fBuveHD80yIL21H+0OoH4gf99VpHsYT0szO+FX/IW1Dt+4T/ANCrX+Kn/Ircf8/Uf9ayfhZ/yFNQI/590/8AQq1fimf+KXHT/j5j/rS+ycU/98XyPKLroKz5z1q/dngVWs7f7XfRw4O0nLf7o61i9XY96m1GPMz0T4UeFtX1SCW50u/TS302JbyW9ZpV8gs4CEGJWdTn+LGFAJJArvNcvfiRp+jM/izw9p3izQZWSb7dNarNHJ8pCSC8tSrfdZsMzHqfevM7G6u7C7ivNPu7qyuojmKe2maKRPoykEV19t8TvEoW6fUItP1PUJrOS0XU5YjFdqjxlMO8RUTqFY4WVWGcHtWsoPojz6Vem0+ZtN/Nfccxr1/FqesXF7b6db6bDIR5VpASUhUKFCgnljgZLHkkknrVHp1NIBjAA9hS1skefJ8zuAoo6UUCDpRQOtA54oAzPEFr5tuLiMfPF1x3Xv8Al1rLtG4/CunODwRnPGK568tTZ3RAB8p+UP8AT8KxqR1uelg614+zfyPUfhc3/FM4/wCniT+laTWUd38RdLnmwILO0e5kJ6Daxx+vP4Vh/DKUDw9gn/l4f+lbHiy9Sx0W8nQ4uLuJbRT3Ckkn9N1VHY4OX/apfM4bXL99U1i71Byc3MzSAegz8o/ICoIxUQ5b26VNH71J3bInhXJwauWp7Hmq0I5q1bjEhGfeiRVJ62Ok8PN/D6HpW78e4PO0fwHrPG6fRXs2PqbeZlH6OK53Qm23YA/iGK6n4uRyy/CfwhcOp2W+qahbqT3DLE/8w1KO6KrL3Jryv+KPJeaD0opBXQeUesfBK3SHwL4/1djtk+zWenxn182Ys36Riub8QHovqc11nwzgki+CGt3Sqdlx4it4WYekduzfzYVx+ttuumHZRiueT1Z61Je7BeX6swbrgY9aozDn8KvT8yAdcdapz9aaIqvWxUcZNbPgLVP7J8V2N0zYiaTyZvTY/H6HB/CsiSoD6Z68cUXsybXVj0DQtO/sjx7r9mBiMKrxf7jNkfzx+FV/ik2fDWM/8vMf9a2dMuU1NLTXMjzprFYJ/d0bn9c/nXO/FCXPh8DP/LxH/Wqexw2bxS+R5leNwOa0/D1r5UDXLj55fu+y1TtLU3tyqkful5c+3pXQgAAAAAAdBU043dz0MZW5Y+zXzCjtRz0oFbHmBQaBxR2oAKKOM0UwDNLSfWjvSAPaorqBLiExv36H0PrUtL2otcabi7o1/AbSWmmG3k4YTv07jjmo/iBdu95ZW+f3axtJj/aJx/IfrVG0uHtpN6HjuvrVXxZdrcX1q6tkCAj6fMaykuVHTR/eVebqQxHIzVqLrWfA/SrsT8YpI6ZouQjkVcj4dT+FUoCNw5q9HgoTjpzTexnB2kjZ007JEf8AukGvQfj/ACf2f8Kfh5oYAElwtzqcw7/NgIfyc/lXndl8ygdyMV6H+0nGureDvh54vthtt5tLOnSRg/LHJFg4H1O8f8BFZx+JI66q/cTa7fqjxCjtS80ldJ4h7n8F5v7R+A3jfSmwTpl/baig74cBW/SM15zqJ3O7HqTmvQPgVCNJ+EHxD8TXGSl3FDpNuhPyu7ZyfqPMX8jXnt+cA9q5n8TPcpL9zBvt+rMiT7xbNU5evFXZeEHvVCc4Y1otjkm7yZXkNVZDjnvU8rcVSncDOKlmkVc634f6i3lXlk3KoRMntu4I/MA0zx6Xu9LSCIZZp0/Ac81h+DrxILq9Z2x+6UD/AL6q3eXD3MhduB2HpTiuZHLW/d1ubqU7WBLaARp25J9T61L+FGBQa2tY5nJyd2FFFHU0CCj6UUHpQACigUtACGiig0AFFFFAAD71HcQRzptkX6EdQal9K7v4J21nd69rCX8MM9vHo087wyruWUxvG4THqSoFKTsjSjFzmknZnl0sMtscn50/vD+tTwSjHWuosfD8lz4JuPEK3kebeby3tjGcsgEQZw3T708Y29TkntiufudPKEEK0LMocBlIDA8gj2PqKz5ex2Kvsqi+ZNBKMj1rStZBnB71gAyw/fXA9RyKuWtwAQc5pXK5b6o6fTpMYHXFetWEaeKP2bvFOiMN934euU1a1HUhD9/HtgS/nXiVndYfg9a9a/Z51u3h8d/2PesDY65ZzadOp6HeuV/UEfjWUtNTvpR51yvqrHiVGRjJPSrGvWE2ja5faPcZ82yuZLd/fYxXP44Bqz4N0p/EPizSdCTOb67jgYjspb5j+C5NdXMrXPCVKTly9T3HxdCvhf4EeBvCwXy7nUFfWb1e5LjKZ/BwP+AV5DqMgPAA54r0T9oTxBDqXxJvre2IFppkUdhAoPCiNfmH/fTEfhXlN3c5kyT0Ga5Y66nu1ko+6umg26kHPOazZpPmPPWi5uRzzVL97MfkXj1PArW5wcqWrEnmGOtQxwS3JyPlTu5/p61ftdOZ2YlHnZFLsFUkKo5JPsPU8V1Oo+FLix+Htp4tluE8q+mEVtEq9gZ1YsexDQdBnhh9KOX+Yl1nqqa+ZzFrBFBHtiX6nuT71LXafGWwg0/xfbw20SRRnR9PO1FCjcLdUc4HcsjE++a4utYu60OOtGUajUndimko6d6KZmFFHaj60AFB60UDr3oAKBRQaACiiigAFL+VJRQAfjWv4T1+78N6t9vtIopQ6eVNFJwJIyykrnqudo5rIooaurMqMnB3R2nh+e2Hwp1u1NzAJopOYmlVXIeSyCFVJy2fKk6A4284yKctpBqPjnwTp95D59vc2WlQyxkkb1bAK5HIyDjiuJwu4EgZXocdK29I8Qz22u6BqN9EtymjSw7BEipK8UbhghboSBkAnoODWbi1qjpjWjJJS8vzLWi+GbjxDq2p21vFHpM1tIgFpNvYRl5dmws3zDafUE8Yrnv7PlbTo9S+zsLaSUwrKOhkChiv1wwP4133wi1XS9K8SamovoRDdLDFA9/GqtIvnAk4JIVwBnIPGODXNSbh8K7QjgjWZsex+yQ0X1synTXIpRdnr+ZhNHLbyFX3IynBV1IIrR0fVrnS9StL+3J861mSZDnurA/0r0XxHqKar8ZZ75reKQQaF5sSXESyqJF03ztxVgVb947NyDXA+N7aCz8a67aWkSRW8GpXEUUajCoiysFA9gOKlRjLoaSq1aKupXSdtif4talYeIPHl/rmjF2t70RysHTYVk2gOMH3Gc+9TfBzWbDwx43h17WBJ5dpBK0AjTeWlZdq/TgtzXRSeD9LHwIg8aC2f7c941q0vmtgMLgKPl6cocfhmsfxfpWj2PhDQbmzg8vUJo4nuGM7MZhJbpLuKnhQGJUbcDA5yeaFytcvyBurGftWl3+853UdSub+9uLyckzTytK5z1ZiWP6mqkFvcXc6wwpJNLI21I4kLMx9AByTXYfBnSrLW/HkWmX9tFcQz2F8Aki7hvFtJsb6htpB9RXU67Y2ukfGeOwiY6fBb+GwkkltHhoyNJfe4UEZbduPUEnvRaMXYanWqwU27Jux5tpHhjU9StNRu7S0Ro9NQvcmWVUZcK7FQrEFm2xyHaAThTVi10yygh8P6jqdyRY3926XIUbTFFHKiuc/7rE9OMV0vw1Rm8GeKZVV3jjjYvIVOFB0++UFj2ySBz3IHesP+09Oi0nwqkyR3osLu4lvLQ9WjM8bbDnj5lVhVXd7Iy5I8qnJ79/U2r+G3tPGniuztdOXTVttDuoJLePIQSJEiuVyzEozAsDk5DA96teKPEGmz/AXwz4W+0QtqFvfSXflqcuIne6Vt2OmDsODz84PSuT8R6/JqGvXl/p4ntIZ7VLLa7K0jwLEkWHwMZZUGcdOgNYnGSccnk0KF7NiniFHmjHrdfia/i3xDfeJtZfUr5IozgxwxRjiOPe7hc9WwXPJ9qyKKBWiSSsjlnJzblLcKPxo/GloJE/GjmjPej8KAAUd6KB9aACijqaO9AAKWkooAWk7+tFHNMA+lLSUZ9KQBR7Uv1pPagAIyMMAR34pxeQw+QZZDFuLeXuO3cRgnHTOMDPtTfpS/wA6AvY2NO8RXtv4hGs3cUd/I0DW00bExCSIweQVBUfKdmMEDqM81S1vUJdW1q/1WeNIpb25kuHRCdql3LEDPOBnFU/pS980kknct1JSjyv1OzHjiP8A4VOfAn2G4yblLjz967N6zu/Tr918fUVU8TeJ7XVfCOiaNBBepNYhPPMu3ygUgSEeXgknds3HIGOnPWuWoHqaSgr3NHiZyjZ9rG14J8R3PhTxFDrlnbRXM8MciIkrFVy6lcnHPGc471b1rxrreqeMX8VlbO21FovKwsIli2mMxkFJMhsqxBzxzXN0nWm4q9yVWmo8qel7khnnKTJ58ixzMGljRiqOQSQSowpwScccZ4qOjijmmZtt7i9s0lLxikpiA9aPeig/nSAOaKPaigAoo5ooAOpo7+lB+lHagD//2Q==" alt="UPCM Class of 2028" />
+      </div>
+    </div>
+  </div>
+</section>
 
-                {/* Specific Side Effects */}
-                <div>
-                    <h2 className="text-2xl font-bold text-amber-900 border-b-2 border-amber-200 pb-2 mb-4">Vaccine-Specific Side Effects (Must Verbalize)</h2>
-                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-800">
-                            <div><strong>BCG:</strong> "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Normal po ito at mag-iiwan ng peklat. Huwag pipisain, kakamutin, o lalagyan ng alcohol/betadine."</div>
-                            <div><strong>Pentavalent & PCV:</strong> "Maaaring magkalagnat, mamula, at sumakit ang hita ni baby. Pwede pong punasan ng maligamgam na tubig at painumin ng paracetamol kung kailangan."</div>
-                            <div><strong>Measles (MCV) / MMR:</strong> "Ang lagnat o banayad na pantal (mild rash) ay maaaring lumabas pagkalipas pa ng 5 hanggang 12 araw. Sa MMR, baka mamaga rin nang bahagya ang pisngi (glands)."</div>
-                            <div><strong>Rotavirus (RV):</strong> "Baka maging iritable o bahagyang magbago ang dumi ni baby. <span className="text-red-600 font-bold">RED FLAG:</span> Kung umiiyak nang matindi dahil sa sakit ng tiyan at ang dumi ay mukhang 'strawberry jelly', dalhin agad sa ER (Intussusception)."</div>
-                            <div><strong>OPV / IPV:</strong> "Walang malalang side effect ang OPV bukod sa pagiging iritable. Sa IPV, maaaring mangawit ang hita."</div>
-                            <div><strong>Td / HPV (School Age):</strong> "Maaaring mangawit ang braso. Ang mga teenager ay madalas mahilo o himatayin (syncope) sa takot, kaya pauupuin muna natin siya ng 15 minuto pagkatapos turukan."</div>
-                        </div>
-                    </div>
-                </div>
+<!-- Progress -->
+<div class="progress-bar">
+  <span class="prog-label">Study Progress</span>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+  <span class="prog-count" id="prog-count">0 / 14</span>
+</div>
 
-                {/* Comprehensive Anthro Values */}
-                <div>
-                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Complete Anthropometric & Vital Cutoffs</h2>
-                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">WHO Z-Score (WFH)</h3>
-                                <ul className="text-sm text-slate-700 space-y-1">
-                                    <li><span className="font-bold text-red-600">&gt; +3:</span> Obese</li>
-                                    <li><span className="font-bold text-orange-600">&gt; +2:</span> Overweight</li>
-                                    <li><span className="font-bold text-green-700">+1 to -2:</span> Normal</li>
-                                    <li><span className="font-bold text-amber-600">&lt; -2:</span> Wasted (MAM)</li>
-                                    <li><span className="font-bold text-red-600">&lt; -3:</span> Severely Wasted (SAM)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">MUAC (6 to 59 months)</h3>
-                                <ul className="text-sm space-y-2">
-                                    <li><span className="inline-block w-3 h-3 bg-green-500 mr-2 rounded-full"></span><strong>&ge; 12.5 cm:</strong> Normal</li>
-                                    <li><span className="inline-block w-3 h-3 bg-yellow-400 mr-2 rounded-full"></span><strong>11.5 to &lt; 12.5 cm:</strong> MAM</li>
-                                    <li><span className="inline-block w-3 h-3 bg-red-600 mr-2 rounded-full"></span><strong>&lt; 11.5 cm:</strong> SAM (Immediate admission criteria)</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">Pediatric Vitals (HR | RR)</h3>
-                                <ul className="text-sm text-slate-700 space-y-1">
-                                    <li><strong>Neonate:</strong> 100-205 | 40-60</li>
-                                    <li><strong>Infant:</strong> 100-190 | 30-53</li>
-                                    <li><strong>Toddler:</strong> 98-140 | 22-37</li>
-                                    <li><strong>Preschool:</strong> 80-120 | 20-28</li>
-                                    <li><strong>School Age:</strong> 75-118 | 18-25</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!-- Main -->
+<main class="main">
 
-                {/* COMPREHENSIVE VACCINE MATRIX */}
-                <div>
-                    <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-4">Complete 2025 Vaccine Reference Matrix</h2>
-                    <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6 text-sm text-blue-900">
-                        <strong>NIP vs. Routine:</strong> NIP prioritizes BCG, monovalent Hep B, Pentavalent, OPV, IPV, PCV, and MMR/MR. School-based NIP includes Td, MR, and HPV. Routine/Out-of-pocket vaccines include Rotavirus, Varicella, JEV, Hep A.
-                    </div>
-                    <div className="overflow-x-auto shadow rounded border border-slate-200">
-                        <table className="min-w-full text-left text-sm bg-white">
-                            <thead className="bg-blue-50 text-blue-900 border-b-2 border-blue-200">
-                                <tr>
-                                    <th className="p-3 font-bold w-1/5">Vaccine</th>
-                                    <th className="p-3 font-bold w-1/5">Route / Site</th>
-                                    <th className="p-3 font-bold">OSCE Traps, Cutoffs & Preceptor Pearls</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-200">
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">BCG</td>
-                                    <td className="p-3">ID, Right Deltoid</td>
-                                    <td className="p-3"><strong>Trap:</strong> Max age is &lt; 1 year for healthy children. PPD prior to vaccination is NOT necessary for healthy infants &lt; 1 year old.</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Hep B Birth</td>
-                                    <td className="p-3">IM, Thigh</td>
-                                    <td className="p-3"><strong>PRETERM TRAP:</strong> If &lt; 2000g AND maternal HBsAg(-), DELAY to 1 month or discharge. <span className="text-slate-500 italic">(Pearl: Immature immune systems fail to mount adequate anti-HBs titers).</span></td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Pentavalent (DTP/Hib/HepB)</td>
-                                    <td className="p-3">IM, Thigh</td>
-                                    <td className="p-3"><strong>DTP Max:</strong> &lt; 7 years (7y0d is cutoff). <strong>Hib Max:</strong> Not needed for healthy >5 yrs. <span className="text-slate-500 italic">(Pearl: Whole-cell pertussis (wP) causes high local reactogenicity in older children).</span></td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Polio (OPV / IPV)</td>
-                                    <td className="p-3">OPV: Oral<br/>IPV: IM, Thigh</td>
-                                    <td className="p-3">OPV at 6, 10, 14w. IPV at 14w and 9m. <strong>Trap:</strong> Ensure OPV is routed as Oral. Defer IPV if the infant is already receiving multiple IM injections to prevent distress.</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">PCV / PPSV23</td>
-                                    <td className="p-3">IM, Thigh / Arm</td>
-                                    <td className="p-3">NIP follows 3+0. Routine follows 3+1. <strong>Trap:</strong> Healthy >5y do not need PCV catch-up. High-risk patients (e.g., Sickle Cell) &ge;2y who finished PCV get PPSV23.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Rotavirus</td>
-                                    <td className="p-3">Oral</td>
-                                    <td className="p-3"><strong>Max 1st dose:</strong> 14w6d. <strong>Max Final:</strong> RV1 is 24w; RV5 is 32w. Prior infection is NOT a contraindication. <span className="text-slate-500 italic">(Pearl: Strict cutoffs minimize background intussusception risk).</span></td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Measles (MCV) / MMR</td>
-                                    <td className="p-3">SC, Outer Arm</td>
-                                    <td className="p-3">MCV1 strictly at 9m. MCV2 at 12m. <strong>Outbreak Trap:</strong> MCV0 given at 6m doesn't count towards primary series because maternal IgG antibodies blunt viral replication.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Varicella & Hep A</td>
-                                    <td className="p-3">SC / IM, Arm</td>
-                                    <td className="p-3">Strictly indicated at &ge; 12 months. Giving at 9 months or 11 months is a critical error.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">JEV</td>
-                                    <td className="p-3">SC, Outer Arm</td>
-                                    <td className="p-3">Strictly indicated at &ge; 9 months. Administer alongside MCV1.</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-red-700">Live Spacing / IVIG</td>
-                                    <td className="p-3">-</td>
-                                    <td className="p-3 font-bold text-red-600">Non-simultaneous parenteral live vaccines MUST be spaced by 28 days. Delay live vaccines for 11 months post-IVIG (Kawasaki) and 4 months post-RIG (Rabies).</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Td / Tdap</td>
-                                    <td className="p-3">IM, Deltoid</td>
-                                    <td className="p-3">Use instead of DTP for children &ge; 7 years. NIP gives Td school-based boosters at Grade 1 and Grade 7.</td>
-                                </tr>
-                                <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">HPV</td>
-                                    <td className="p-3">IM, Deltoid</td>
-                                    <td className="p-3">NIP target is Grade 4 females (9-14 years). 2 doses. Must wait 15 minutes post-vaccination due to syncope risk.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Typhoid & Cholera</td>
-                                    <td className="p-3">Typhoid: IM<br/>Cholera: Oral</td>
-                                    <td className="p-3">Given during disaster/flood settings. <strong>Trap:</strong> Minimum age for Typhoid is 2 years. Minimum age for Cholera is 12 months.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Rabies PreP</td>
-                                    <td className="p-3">IM / ID, Arm</td>
-                                    <td className="p-3">Pre-exposure prophylaxis for 2-10 years old due to high bite risk. <strong>Trap:</strong> Never give in gluteal area (unpredictable absorption).</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        );
+  <div class="section-header">
+    <span class="section-label">Clinical Stations</span>
+    <div class="section-rule"></div>
+  </div>
 
-        // --- View 2: Anthro Simulator (8 Cases) ---
-        const AnthroSimulator = () => {
-            const [submitted, setSubmitted] = useState(false);
-            const [score, setScore] = useState(0);
-            const [feedback, setFeedback] = useState([]);
-            const [currentCaseId, setCurrentCaseId] = useState(1);
-            const [selections, setSelections] = useState({ measure: "", hrStat: "", rrStat: "", nutStat: "" });
+  <div class="grid" id="stations-grid">
 
-            const cases = {
-                1: { title: "1. The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Wasting (SAM)" }, pearl: "Infants (1m-1y) HR up to 190. Toddlers (1-2y) HR up to 140. A HR of 145 in an 18mo is slightly tachycardic, but WFH <-3 is classic SAM." },
-                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschoolers (3-5y) normal RR is 20-28. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
-                3: { title: "3. MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM)" }, pearl: "Regardless of a MAM WFH Z-score, a MUAC < 11.5cm is an independent, immediate diagnostic criterion for SAM." },
-                4: { title: "4. The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" }, pearl: "WFH > +2 is Overweight. WFH > +3 is Obese. Standing height is strictly used for >= 2 years." },
-                5: { title: "5. Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 18. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" }, pearl: "Toddler normal RR is 22-37. RR 18 is bradypneic. HFA < -3 defines Severe Stunting." },
-                6: { title: "6. Overweight & Tachycardia", prompt: "10-month-old. HR 200, RR 45. WFH Z-score +2.5.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Overweight" }, pearl: "Infant max HR is 190. 200 is tachycardic. WFH between +2 and +3 is Overweight." },
-                7: { title: "7. School-Age Bradycardia", prompt: "8-year-old. HR 55, RR 20. WFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Bradycardia", rrStat: "Normal", nutStat: "Underweight" }, pearl: "School-age normal HR is 75-118. HR 55 is bradycardic. WFA < -2 is Underweight." },
-                8: { title: "8. Adjustment Rule (+/- 0.7cm)", prompt: "A 2.5-year-old refuses to stand. Measured lying down at 90.0 cm. HR 100, RR 25. WFH Z-score -1.0.", rules: { measure: "Subtract 0.7 cm", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" }, pearl: "Because gravity compresses the spine when standing, recumbent length is naturally ~0.7cm longer. You must subtract 0.7cm if a child >=2y is measured lying down." }
-            };
+    <a class="card" href="stations/family-medicine.html" data-key="s1">
+      <div class="card-top"><span class="card-num">01</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Family Medicine</div>
+      <div class="card-desc">Primary care · preventive medicine · patient-centered approach</div>
+      <div class="card-footer"><span class="badge" id="b1">Not started</span></div>
+    </a>
 
-            const evaluateCase = () => {
-                let pts = 100; let fb = []; const activeCase = cases[currentCaseId].rules;
-                
-                if(selections.measure === activeCase.measure) fb.push({type:'ok', msg: `Measurement: ${activeCase.measure}`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong Measurement`, rationale: `Expected: ${activeCase.measure}.`}); }
-                
-                if(selections.hrStat === activeCase.hrStat) fb.push({type:'ok', msg: `HR: ${activeCase.hrStat}`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong HR`, rationale: `Expected: ${activeCase.hrStat}.`}); }
-                
-                if(selections.rrStat === activeCase.rrStat) fb.push({type:'ok', msg: `RR: ${activeCase.rrStat}`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong RR`, rationale: `Expected: ${activeCase.rrStat}.`}); }
-                
-                if(selections.nutStat === activeCase.nutStat) fb.push({type:'ok', msg: `Diagnosis: ${activeCase.nutStat}`});
-                else { pts -= 25; fb.push({type:'err', msg: `Wrong Diagnosis`, rationale: `Expected: ${activeCase.nutStat}.`}); }
-                
-                fb.push({type: 'info', msg: '🗣️ OSCE REPORTING SCRIPT:', rationale: `"Good morning Doc, presenting my patient. Vitals show a ${selections.hrStat || '[HR]'} heart rate and ${selections.rrStat || '[RR]'} respiratory rate. Because of their age/cooperation, I utilized the ${selections.measure || '[Tool/Adjustment]'}. Based on the parameters, the final assessment is ${selections.nutStat || '[Diagnosis]'}.`});
-                fb.push({type: 'pearl', msg: 'Clinical Pearl', rationale: cases[currentCaseId].pearl});
+    <a class="card" href="stations/internal-medicine-1.html" data-key="s2">
+      <div class="card-top"><span class="card-num">02</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Internal Medicine I</div>
+      <div class="card-desc">History taking · physical examination · adult medicine</div>
+      <div class="card-footer"><span class="badge" id="b2">Not started</span></div>
+    </a>
 
-                setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
-            };
+    <a class="card" href="stations/internal-medicine-2.html" data-key="s3">
+      <div class="card-top"><span class="card-num">03</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Internal Medicine II</div>
+      <div class="card-desc">Procedural skills · interpretation · clinical management</div>
+      <div class="card-footer"><span class="badge" id="b3">Not started</span></div>
+    </a>
 
-            const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelections({measure:"", hrStat:"", rrStat:"", nutStat:""}); setFeedback([]); };
+    <a class="card" href="stations/pediatrics-1.html" data-key="s4">
+      <div class="card-top"><span class="card-num">04</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Pediatrics I</div>
+      <div class="card-desc">Growth &amp; development · well-child care · pediatric history</div>
+      <div class="card-footer"><span class="badge" id="b4">Not started</span></div>
+    </a>
 
-            return (
-                <div className="space-y-6 animate-fade-in pb-10">
-                    <div className="flex flex-wrap gap-2 border-b-2 border-indigo-200 pb-2">
-                        {Object.keys(cases).map(id => (
-                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-2 py-1 rounded text-xs font-bold transition-colors ${currentCaseId === parseInt(id) ? 'bg-indigo-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>Case {id}</button>
-                        ))}
-                    </div>
-                    <div className="bg-white p-6 rounded shadow border border-slate-200">
-                        <div className="bg-indigo-50 border-l-4 border-indigo-600 p-4 rounded mb-6">
-                            <h3 className="font-bold text-indigo-800 uppercase tracking-wide text-sm mb-1">{cases[currentCaseId].title}</h3>
-                            <p className="text-lg text-slate-800">"{cases[currentCaseId].prompt}"</p>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">1. Measurement Tool / Rule:</label>
-                                    <select disabled={submitted} value={selections.measure} onChange={e=>setSelections({...selections, measure:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Recumbent">Recumbent Length</option><option value="Standing">Standing Stadiometer</option><option value="Subtract 0.7 cm">Subtract 0.7 cm</option><option value="Add 0.7 cm">Add 0.7 cm</option></select>
-                                </div>
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">2. Nutritional Diagnosis:</label>
-                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Normal">Normal</option><option value="Severe Wasting (SAM)">Severe Wasting (SAM)</option><option value="Severe Acute Malnutrition (SAM)">Severe Acute Malnutrition (SAM - Override)</option><option value="Wasting (MAM)">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Underweight">Underweight</option><option value="Overweight">Overweight</option><option value="Obese">Obese</option></select>
-                                </div>
-                            </div>
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">3. Heart Rate Status:</label>
-                                    <select disabled={submitted} value={selections.hrStat} onChange={e=>setSelections({...selections, hrStat:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Bradycardia">Bradycardia</option><option value="Normal">Normal</option><option value="Tachycardia">Tachycardia</option></select>
-                                </div>
-                                <div>
-                                    <label className="block font-bold text-slate-700 mb-2">4. Respiratory Rate Status:</label>
-                                    <select disabled={submitted} value={selections.rrStat} onChange={e=>setSelections({...selections, rrStat:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Bradypnea">Bradypnea</option><option value="Normal">Normal</option><option value="Tachypnea">Tachypnea</option></select>
-                                </div>
-                            </div>
-                        </div>
-                        {!submitted ? <button onClick={evaluateCase} disabled={!selections.measure || !selections.hrStat || !selections.rrStat || !selections.nutStat} className="w-full bg-indigo-600 text-white font-bold py-3 rounded shadow hover:bg-indigo-700 disabled:opacity-50 transition-all">Submit Anthro Assessment</button> : 
-                            <div className="p-6 rounded border-2 border-indigo-200 bg-indigo-50">
-                                <h3 className="text-xl font-bold text-slate-800 mb-4">Feedback: {score}%</h3>
-                                <ul className="space-y-3">
-                                    {feedback.map((f, i) => (
-                                        <li key={i} className={`flex flex-col p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-indigo-100 border-indigo-300 text-indigo-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
-                                            <div className="flex items-start">
-                                                <span className="mr-2 font-bold">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : f.type === 'pearl' ? '💡' : '✔'}</span>
-                                                <span className="font-semibold">{f.msg}</span>
-                                            </div>
-                                            {f.rationale && <div className={`mt-1 ml-6 text-sm opacity-90 ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium' : ''}`}>{f.rationale}</div>}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button onClick={() => loadCase(currentCaseId)} className="mt-6 bg-slate-800 text-white font-bold px-8 py-2 rounded hover:bg-slate-700">Retry Case</button>
-                            </div>}
-                    </div>
-                </div>
-            );
-        };
+    <a class="card" href="stations/pediatrics-2.html" data-key="s5">
+      <div class="card-top"><span class="card-num">05</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Pediatrics II</div>
+      <div class="card-desc">Acute illness · immunization · pediatric procedures</div>
+      <div class="card-footer"><span class="badge" id="b5">Not started</span></div>
+    </a>
 
-        // --- View 3: Advanced Vaccine Simulator (20 Cases) ---
-        const AdvancedSimulator = () => {
-            const [submitted, setSubmitted] = useState(false);
-            const [score, setScore] = useState(0);
-            const [feedback, setFeedback] = useState([]);
-            const [currentCaseId, setCurrentCaseId] = useState(1);
-            const [selectedVaccines, setSelectedVaccines] = useState({});
+    <a class="card" href="stations/obgyn-1.html" data-key="s6">
+      <div class="card-top"><span class="card-num">06</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Obstetrics &amp; Gynecology I</div>
+      <div class="card-desc">Antenatal care · Leopold's maneuver · fetal assessment</div>
+      <div class="card-footer"><span class="badge" id="b6">Not started</span></div>
+    </a>
 
-            const vaccineList = ["BCG", "Hep B", "Penta", "OPV", "IPV", "PCV", "RV1", "RV5", "MCV0", "MCV1(9m)", "MCV2(12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera", "Rabies PreP"];
+    <a class="card" href="stations/obgyn-2.html" data-key="s7">
+      <div class="card-top"><span class="card-num">07</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Obstetrics &amp; Gynecology II</div>
+      <div class="card-desc">Gynecologic exam · women's health · reproductive medicine</div>
+      <div class="card-footer"><span class="badge" id="b7">Not started</span></div>
+    </a>
 
-            const cases = {
-                1: { title: "1. Preterm <2kg", prompt: "32wks, 1.8kg, Day 1. Maternal HBsAg NEGATIVE.", req: ["BCG"], defer: [], traps: ["Hep B"], ratReq: "Give BCG.", ratTrap: "Preterm <2000g with HBsAg(-) mom: delay Hep B to 1 month or discharge.", pearl: "Immature immune systems in very low birth weight preterms fail to mount adequate anti-HBs titers." },
-                2: { title: "2. 14w5d old", prompt: "14w5d. Received birth vaccines, missed all others.", req: ["Penta", "OPV", "PCV"], defer: ["IPV", "RV1"], traps: ["MCV1(9m)", "Td"], ratReq: "Initiate primary series.", ratTrap: "Too young for MCV/Td.", pearl: "14w5d is the absolute last day you can give the 1st dose of Rotavirus. Do not miss it." },
-                3: { title: "3. 16 weeks old", prompt: "16-week-old. Received birth vaccines, missed all others.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Initiate primary series.", ratTrap: "Strict contraindication: >14w6d for 1st dose.", pearl: "Initiating Rotavirus >14w6d significantly increases the background risk of intussusception." },
-                4: { title: "4. 6mo (Outbreak)", prompt: "6mo infant. UTD to 14w. DOH declared local measles outbreak.", req: ["MCV0"], defer: [], traps: ["MCV1(9m)"], ratReq: "MCV0 is indicated at 6m during outbreaks.", ratTrap: "MCV1 is strictly at 9m.", pearl: "MCV0 does not count toward the primary series because maternal IgG antibodies can blunt the viral replication of the vaccine." },
-                5: { title: "5. 26wk RV1 Trap", prompt: "26-week-old. Clinic only has RV1 in stock.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Catch-up primary.", ratTrap: "RV1 max final age is 24w.", pearl: "RV1 (Rotarix) is a 2-dose series maxing at 24w. RV5 (RotaTeq) is a 3-dose series maxing at 32w." },
-                6: { title: "6. 11mo & 3wks", prompt: "11m3w old. Missed 9m visit.", req: ["MCV1(9m)"], defer: [], traps: ["MCV2(12m)", "Varicella"], ratReq: "Catch-up MCV1.", ratTrap: "Live vaccines like MCV2 cannot be given prior to the 1st birthday.", pearl: "Non-simultaneous live vaccines must be spaced by exactly 28 days." },
-                7: { title: "7. 12mo Post-IVIG", prompt: "12mo. High-dose IVIG 2mo ago. UTD until 9m.", req: [], defer: ["MCV2(12m)", "Varicella"], traps: ["MCV1(9m)", "JEV"], ratReq: "None required today.", ratTrap: "Patient already had MCV1.", pearl: "High-dose IVIG contains passive antibodies that neutralize live attenuated vaccines. Delay 11 months." },
-                8: { title: "8. 5-year-old", prompt: "5y child. 0 prior vaccines.", req: ["Penta", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["BCG", "Hib", "PCV", "Td"], ratReq: "Catch-up DTP, OPV, MCV.", ratTrap: "BCG max <1y. Hib/PCV not needed for healthy >5y. Td is for >=7y.", pearl: "Healthy children >5y naturally acquire immunity to Hib and Pneumococcus." },
-                9: { title: "9. 7-year-old", prompt: "Turned 7 years exactly today. 0 prior vaccines.", req: ["Td", "Hep B", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["Penta", "DTP"], ratReq: "Initiate Td, HepB, OPV, MCV.", ratTrap: "Max age for DTP is < 7 years.", pearl: "Whole-cell pertussis (wP) in Pentavalent causes severe local reactogenicity in older children." },
-                10: { title: "10. 10y Female", prompt: "10y female in Grade 4. UTD to 12m.", req: ["HPV"], defer: [], traps: ["Td", "Penta"], ratReq: "HPV NIP for Grade 4 females.", ratTrap: "Td school booster is Grade 1 and Grade 7.", pearl: "HPV is given in 2 doses prior to sexual debut for maximum cervical cancer prevention." },
-                11: { title: "11. 3y Evacuee", prompt: "3y in flooded evacuation center. UTD on NIP.", req: ["Typhoid", "Cholera"], defer: [], traps: ["Penta"], ratReq: "Waterborne protection.", ratTrap: "UTD.", pearl: "Typhoid minimum age is 2y (IM). Cholera minimum age is 1y (PO)." },
-                12: { title: "12. 11y Female", prompt: "11y female Grade 5. Missed Grade 4 school-based vax.", req: ["HPV"], defer: [], traps: ["Td"], ratReq: "Catch-up Grade 4 HPV.", ratTrap: "Td is Grade 1 and Grade 7.", pearl: "Catch-up HPV is crucial for females who miss the Grade 4 cohort." },
-                13: { title: "13. 16w (Surgery)", prompt: "16w old. Pediatric surgical condition onset at 3w. 0 prior.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Initiate primary.", ratTrap: "Age >14w6d. Absolute contraindication.", pearl: "Even if age-eligible, previous intussusception or uncorrected congenital GI tract malformations are absolute contraindications for Rotavirus." },
-                14: { title: "14. Live Spacing", prompt: "13mo. Received Varicella 2 weeks ago.", req: [], defer: ["MCV2(12m)"], traps: ["MCV2(12m)"], ratReq: "None today.", ratTrap: "Cannot give live vaccine today.", pearl: "If two parenteral live vaccines are not administered simultaneously, they must be separated by at least 4 weeks (28 days) to avoid viral interference." },
-                15: { title: "15. 3mo no BCG", prompt: "3mo infant. NEVER received BCG. Healthy.", req: ["BCG", "Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["Hep B"], ratReq: "BCG can be given.", ratTrap: "Hep B is in Penta.", pearl: "BCG can be given without prior PPD testing for healthy asymptomatic infants < 1 year old." },
-                16: { title: "16. 15y Catch-up", prompt: "15y male. 0 prior vaccines.", req: ["Td", "Hep B", "MCV1(9m)"], defer: [], traps: ["Penta", "HPV"], ratReq: "Td, HepB, MCV catchup.", ratTrap: "Penta age out. HPV NIP is strictly for females.", pearl: "Adolescent catch-up prioritizes Td, Hepatitis B (3 doses), and MR/MMR." },
-                17: { title: "17. RV5 Final", prompt: "30w old (7.5m). Had 2 prior doses of RV5. Missed 3rd.", req: ["RV5"], defer: [], traps: ["RV1"], ratReq: "Give 3rd dose.", ratTrap: "RV1 max is 24w.", pearl: "RV5 max final age is 32 weeks. 30w is acceptable." },
-                18: { title: "18. Post-RIG", prompt: "10mo. Rabies IG 1 month ago. Missed 9m visit.", req: [], defer: ["MCV1(9m)"], traps: ["MCV1(9m)"], ratReq: "Delay MCV.", ratTrap: "RIG interference.", pearl: "Unlike IVIG (11 months), Rabies Immunoglobulin (RIG) only requires a 4-month delay for live vaccines." },
-                19: { title: "19. DTP Limit", prompt: "6y and 11mo old child. 0 prior.", req: ["Penta", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["Td", "Tdap"], ratReq: "DTP is still valid.", ratTrap: "Not yet 7.", pearl: "DTP can be given up to 6 years and 364 days old." },
-                20: { title: "20. Post-RV Gastro", prompt: "8w old. Rotavirus Gastro at 6w, recovered. Missed 6w visit.", req: ["Penta", "OPV", "PCV", "RV1"], defer: [], traps: ["Hep B"], ratReq: "Give all 6w vaccines.", ratTrap: "Hep B in Penta.", pearl: "Prior rotavirus infection does not confer complete immunity to all serotypes. Complete the vaccine series." }
-            };
+    <a class="card" href="stations/surgery-1.html" data-key="s8">
+      <div class="card-top"><span class="card-num">08</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Surgery I</div>
+      <div class="card-desc">Pre-op assessment · wound care · sterile technique</div>
+      <div class="card-footer"><span class="badge" id="b8">Not started</span></div>
+    </a>
 
-            const specificSideEffects = {
-                "BCG": "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Normal po ito at mag-iiwan ng peklat. Huwag pipisain, kakamutin, o lalagyan ng alcohol/betadine.",
-                "Penta": "Sa Pentavalent, asahan po natin na baka lagnatin si baby at sumakit o mamaga ang hita.",
-                "PCV": "Sa PCV, maaari rin pong magkalagnat at mamula ang tinurukan.",
-                "MCV0": "Sa bakuna sa tigdas, maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 5-12 araw.",
-                "MCV1(9m)": "Sa bakuna sa tigdas, maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 5-12 araw.",
-                "MCV2(12m)": "Sa MMR, maaaring magkalagnat, mamaga ang pisngi (glands), o magkapantal pagkalipas ng 1-2 linggo.",
-                "RV1": "Sa Rotavirus drops, baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak dahil sa sakit ng tiyan, dalhin agad sa ER).",
-                "RV5": "Sa Rotavirus drops, baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak, dalhin agad sa ER).",
-                "OPV": "Sa Polio drops, wala po tayong masyadong inaasahang side effect, pero baka maging iritable nang bahagya.",
-                "IPV": "Sa IPV, maaaring sumakit at mamula ang tinurukan.",
-                "Td": "Sa Td, maaaring mangawit ang braso. Paminsan-minsan ay nakakahilo ito sa mga bata kaya pauupuin muna natin siya ng 15 minuto.",
-                "HPV": "Sa HPV, bukod sa ngawit sa braso, maaari ring mahilo o himatayin (syncope) ang teenager kaya magpapahinga muna siya ng 15 minuto pagkatapos turukan."
-            };
+    <a class="card" href="stations/surgery-2.html" data-key="s9">
+      <div class="card-top"><span class="card-num">09</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Surgery II</div>
+      <div class="card-desc">Acute abdomen · trauma · post-op care · surgical reasoning</div>
+      <div class="card-footer"><span class="badge" id="b9">Not started</span></div>
+    </a>
 
-            const toggle = (v) => {
-                if (selectedVaccines[v]) {
-                    const newSel = {...selectedVaccines}; delete newSel[v]; setSelectedVaccines(newSel);
-                } else setSelectedVaccines({...selectedVaccines, [v]: { route: '', site: '' }});
-            };
+    <a class="card" href="stations/orl.html" data-key="s10">
+      <div class="card-top"><span class="card-num">10</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">ORL</div>
+      <div class="card-desc">Ear, nose &amp; throat exam · otoscopy · rhinoscopy</div>
+      <div class="card-footer"><span class="badge" id="b10">Not started</span></div>
+    </a>
 
-            const handleDetailChange = (v, field, value) => {
-                setSelectedVaccines({...selectedVaccines, [v]: { ...selectedVaccines[v], [field]: value }});
-            };
+    <a class="card" href="stations/psychiatry.html" data-key="s11">
+      <div class="card-top"><span class="card-num">11</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Psychiatry</div>
+      <div class="card-desc">Mental status exam · psychiatric history · communication</div>
+      <div class="card-footer"><span class="badge" id="b11">Not started</span></div>
+    </a>
 
-            const generateCounselingScript = (selections) => {
-                let adminIM = []; let adminPO = []; let deferScript = []; let seScript = [];
-                
-                Object.keys(selections).forEach(v => {
-                    const route = selections[v].route;
-                    if (route === "Defer") deferScript.push(v);
-                    else if (route === "Oral") adminPO.push(v);
-                    else if (route === "IM" || route === "SC" || route === "ID") adminIM.push(`${v} sa ${selections[v].site === "Mouth" ? "mali" : selections[v].site}`);
-                    
-                    if (route !== "Defer" && specificSideEffects[v]) {
-                        if (!seScript.includes(specificSideEffects[v])) seScript.push(specificSideEffects[v]);
-                    }
-                });
+    <a class="card" href="stations/msk.html" data-key="s12">
+      <div class="card-top"><span class="card-num">12</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">MSK — Rehab / Ortho / Rheum</div>
+      <div class="card-desc">Musculoskeletal exam · joint assessment · rehabilitation</div>
+      <div class="card-footer"><span class="badge" id="b12">Not started</span></div>
+    </a>
 
-                let finalScript = `"Magandang araw po Mommy. Ako po si Dok, titingin kay baby ngayon. `;
-                if (adminPO.length > 0) finalScript += `Papainumin po natin si baby ng drops para sa ${adminPO.join(", ")}. `;
-                if (adminIM.length > 0) finalScript += `Ituturok po natin ang ${adminIM.join(" at ")}. `;
-                if (seScript.length > 0) finalScript += `\n\nMga Inaasahan (Side Effects):\n` + seScript.join(" ") + ` Pwede po punasan ng maligamgam na tubig at painumin ng paracetamol kung lagnatin. `;
-                if (deferScript.length > 0) finalScript += `\n\nDahil sa rules ng spacing o para hindi masyadong masaktan si baby ngayon, ipagpapaliban po muna natin ang ${deferScript.join(", ")}. Babalik po kayo sa tamang petsa."`;
-                
-                return finalScript;
-            };
+    <a class="card" href="stations/neurology.html" data-key="s13">
+      <div class="card-top"><span class="card-num">13</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Neurology</div>
+      <div class="card-desc">Cranial nerves · motor/sensory/reflex · neurological exam</div>
+      <div class="card-footer"><span class="badge" id="b13">Not started</span></div>
+    </a>
 
-            const evaluateCase = () => {
-                let pts = 100; let fb = []; const activeCase = cases[currentCaseId];
+    <a class="card" href="stations/ophthalmology.html" data-key="s14">
+      <div class="card-top"><span class="card-num">14</span><span class="card-arrow">↗</span></div>
+      <div class="card-title">Ophthalmology</div>
+      <div class="card-desc">Visual acuity · fundoscopy · external eye exam · emergencies</div>
+      <div class="card-footer"><span class="badge" id="b14">Not started</span></div>
+    </a>
 
-                const hasDTP = selectedVaccines["Penta"] || (selectedVaccines["DTP"] && selectedVaccines["Hib"] && selectedVaccines["Hepatitis B"]);
-                if (hasDTP && activeCase.req.includes("Penta")) {
-                    fb.push({type: 'ok', msg: "💉 PENTAVALENT SYNERGY: Correctly bundled DTP, Hib, Hep B.", rat: "Minimizes patient distress."});
-                }
+  </div>
 
-                activeCase.req.forEach(req => {
-                    if (!selectedVaccines[req]) { pts -= 15; fb.push({type: 'err', msg: `Missed: ${req}.`, rat: activeCase.ratReq}); }
-                    else if (req !== "Penta") { fb.push({type: 'ok', msg: `Correct: ${req}`}); }
-                });
+  <div class="rest-note">
+    <span class="rest-note-icon">💤</span>
+    <p><strong>+ 3 Rest Stations</strong> — Built into the circuit rotation. No preparation needed.</p>
+  </div>
 
-                activeCase.traps.forEach(trap => {
-                    if (selectedVaccines[trap]) {
-                        pts -= 25; fb.push({type: 'err', msg: `Contraindicated: ${trap}.`, rat: activeCase.ratTrap});
-                    }
-                });
+  <!-- Tips -->
+  <div class="tips">
+    <div class="section-header">
+      <span class="section-label">Day-of Reminders</span>
+      <div class="section-rule"></div>
+    </div>
+    <div class="tips-grid">
+      <div class="tip">
+        <span class="tip-icon">📋</span>
+        <div>
+          <div class="tip-title">Bring Essentials</div>
+          <div class="tip-body">Clipboard, pen, penlight. Arrive 30+ minutes early.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">📖</span>
+        <div>
+          <div class="tip-title">Read Carefully</div>
+          <div class="tip-body">Read each station's instructions before starting.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">🔄</span>
+        <div>
+          <div class="tip-title">Reset Every Station</div>
+          <div class="tip-body">Each is independent. Let go of what came before.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">🎯</span>
+        <div>
+          <div class="tip-title">Safe Practice</div>
+          <div class="tip-body">Examiners want safe, effective practice — not perfection.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">🧘</span>
+        <div>
+          <div class="tip-title">Stay Calm</div>
+          <div class="tip-body">Everyone finds some stations challenging. You're ready.</div>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="tip-icon">⏳</span>
+        <div>
+          <div class="tip-title">Wait for Announcement</div>
+          <div class="tip-body">Stay on site until remediation info is given.</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-                activeCase.defer.forEach(d => {
-                    if (selectedVaccines[d] && selectedVaccines[d].route === "Defer") {
-                        pts += 5; fb.push({type: 'ok', msg: `Deferred: ${d}.`});
-                    } else if (selectedVaccines[d]) {
-                        pts -= 10; fb.push({type: 'warn', msg: `Administered ${d} today.`, rat: "Violates spacing or forces extra stick. Route as 'Defer'."});
-                    } else {
-                        pts -= 5; fb.push({type: 'warn', msg: `Missed identifying ${d}.`, rat: "Select and route as 'Defer' to verbalize plan."});
-                    }
-                });
+</main>
 
-                Object.keys(selectedVaccines).forEach(v => {
-                    if (activeCase.traps.includes(v) || selectedVaccines[v].route === "Defer") return; 
-                    const d = selectedVaccines[v];
-                    if (d.route === "" || d.site === "") { pts -= 10; fb.push({type: 'err', msg: `Missing Route/Site for ${v}.`}); return; }
-                    
-                    const isSC = (d.route === "SC"); const isIM = (d.route === "IM");
-                    if(v === "BCG" && (d.route !== "ID" || d.site !== "Right Deltoid")) pts -= 10;
-                    if(["Hepatitis B", "Penta", "PCV", "HPV", "Typhoid", "Rabies PreP"].includes(v) && !isIM) pts -= 10;
-                    if(["Td", "Tdap"].includes(v) && (!isIM || d.site !== "Deltoid (Arm)")) pts -= 10;
-                    if(["OPV", "RV1", "RV5", "Cholera"].includes(v) && d.route !== "Oral") pts -= 10;
-                    if(["MCV0", "MCV1(9m)", "MCV2(12m)", "Varicella", "JEV"].includes(v) && !isSC) pts -= 10;
-                });
+<footer>
+  Unibersidad ng Pilipinas · Kolehiyo ng Medisina · Bente-Otso 2028 &nbsp;·&nbsp; For study purposes only
+</footer>
 
-                if (Object.keys(selectedVaccines).length > 0) {
-                     fb.push({type: 'info', msg: '🗣️ OSCE COUNSELING SCRIPT (Verbalize to Mother):', rat: generateCounselingScript(selectedVaccines)});
-                }
-                
-                fb.push({type: 'pearl', msg: 'Clinical Pearl', rat: activeCase.pearl});
+<script>
+  const TOTAL = 14;
+  const keys = Array.from({length: TOTAL}, (_, i) => 's' + (i+1));
 
-                setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
-            };
+  function getProgress() {
+    try { return JSON.parse(localStorage.getItem('osce_progress') || '{}'); }
+    catch(e) { return {}; }
+  }
 
-            const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelectedVaccines({}); setFeedback([]); };
+  function render() {
+    const data = getProgress();
+    const done = keys.filter(k => data[k]).length;
+    document.getElementById('prog-count').textContent = done + ' / ' + TOTAL;
+    const fill = document.getElementById('prog-fill');
+    fill.style.width = ((done / TOTAL) * 100) + '%';
+    if (done > 0) fill.classList.add('active');
+    keys.forEach((k, i) => {
+      const b = document.getElementById('b' + (i+1));
+      if (!b) return;
+      if (data[k]) { b.textContent = 'Reviewed'; b.classList.add('done'); }
+      else { b.textContent = 'Not started'; b.classList.remove('done'); }
+    });
+  }
 
-            return (
-                <div className="space-y-6 animate-fade-in pb-10">
-                    <div className="flex flex-wrap gap-2 border-b-2 border-blue-200 pb-2">
-                        {Object.keys(cases).map(id => (
-                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-2 py-1 rounded text-xs font-bold transition-colors ${currentCaseId === parseInt(id) ? 'bg-blue-900 text-white' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>{id}</button>
-                        ))}
-                    </div>
-                    <div className="bg-white p-6 rounded shadow border border-slate-200">
-                        <div className="bg-slate-800 text-white p-4 rounded mb-6 shadow-inner border-l-4 border-blue-400">
-                            <h3 className="font-bold uppercase tracking-wide text-sm text-blue-300 mb-1">{cases[currentCaseId].title}</h3>
-                            <p className="text-lg">"{cases[currentCaseId].prompt}"</p>
-                        </div>
-                        <div className="mb-6">
-                            <h4 className="font-bold text-slate-700 mb-3">1. Select ALL Vaccines to Address Today:</h4>
-                            <div className="flex flex-wrap gap-2">
-                                {vaccineList.map(v => (
-                                    <button key={v} onClick={() => !submitted && toggle(v)} disabled={submitted} className={`px-2 py-1 rounded border text-sm font-bold ${selectedVaccines[v] ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'}`}>{v}</button>
-                                ))}
-                            </div>
-                        </div>
-                        {Object.keys(selectedVaccines).length > 0 && (
-                            <div className="mb-6 space-y-2">
-                                {Object.keys(selectedVaccines).map(v => (
-                                    <div key={v} className="flex gap-2 bg-slate-50 p-2 rounded border">
-                                        <span className="font-bold w-24 text-sm pt-1">{v}</span>
-                                        <select disabled={submitted} value={selectedVaccines[v].route} onChange={e => handleDetailChange(v, 'route', e.target.value)} className="p-1 border rounded text-sm"><option value="">Route</option><option value="Oral">Oral</option><option value="IM">IM</option><option value="SC">SC</option><option value="ID">ID</option><option value="Defer">Defer</option></select>
-                                        <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-1 border rounded text-sm disabled:opacity-50"><option value="">Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Outer Upper Arm">Outer Upper Arm</option></select>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {!submitted ? <button onClick={evaluateCase} disabled={Object.keys(selectedVaccines).length === 0} className="w-full bg-blue-600 text-white font-bold py-2 rounded shadow hover:bg-blue-700 disabled:opacity-50">Evaluate Station</button> : 
-                            <div className="p-4 rounded border-2 border-slate-200 bg-slate-50">
-                                <h3 className="text-xl font-bold text-slate-800 mb-3">Feedback: {score}%</h3>
-                                <ul className="space-y-2">
-                                    {feedback.map((f, i) => (
-                                        <li key={i} className={`p-2 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-indigo-100 border-indigo-300 text-indigo-900' : f.type === 'warn' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
-                                            <div className="flex items-start">
-                                                <span className="mr-2 font-bold">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : f.type === 'pearl' ? '💡' : f.type === 'warn' ? '⚠' : '✔'}</span>
-                                                <span className="font-semibold">{f.msg}</span>
-                                            </div>
-                                            {f.rat && <div className={`mt-1 ml-6 text-sm ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium' : ''} whitespace-pre-line`}>{f.rat}</div>}
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button onClick={() => loadCase(currentCaseId)} className="mt-4 bg-slate-800 text-white font-bold px-6 py-2 rounded hover:bg-slate-700">Retry Case</button>
-                            </div>}
-                    </div>
-                </div>
-            );
-        };
+  render();
+  window.addEventListener('load', render);
+</script>
 
-        const App = () => {
-            const [view, setView] = useState('ref');
-            return (
-                <div className="min-h-screen flex flex-col md:flex-row">
-                    <nav className="w-full md:w-64 bg-slate-900 text-white p-6 shadow-xl">
-                        <h1 className="text-xl font-bold text-emerald-400">UPCM Pedia OSCE</h1>
-                        <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider mb-6">LU5 Master Trainer</p>
-                        <ul className="space-y-2">
-                            <li><button onClick={() => setView('ref')} className={`w-full text-left p-2 rounded font-bold ${view === 'ref' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>1. Ultimate Cheat Sheet</button></li>
-                            <li><button onClick={() => setView('sim-anthro')} className={`w-full text-left p-2 rounded font-bold ${view === 'sim-anthro' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>2. Anthro/SAM Sim (8)</button></li>
-                            <li><button onClick={() => setView('sim-vac')} className={`w-full text-left p-2 rounded font-bold ${view === 'sim-vac' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>3. Vaccine Sim (20 Cases)</button></li>
-                        </ul>
-                    </nav>
-                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-100">
-                        <div className="max-w-5xl mx-auto">
-                            {view === 'ref' && <MasterReference />}
-                            {view === 'sim-anthro' && <AnthroSimulator />}
-                            {view === 'sim-vac' && <AdvancedSimulator />}
-                        </div>
-                    </main>
-                </div>
-            );
-        };
-
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
 </body>
 </html>
