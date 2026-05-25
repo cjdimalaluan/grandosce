@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORL OSCE Master - Stepwise Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f5f3ff; }
+        ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b5cf6; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; border-bottom: 2px dashed #8b5cf6; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #a78bfa; color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const pagesData = [
+            {
+                id: 'prep',
+                title: "0. Intro & Preparation",
+                icon: "🩺",
+                checklist: [
+                    "Introduce as ICC and ask for permission to proceed",
+                    "Hand hygiene (40-60s) & don gloves",
+                    "Head mirror on DOMINANT eye, light focused on palm (close opposite eye)",
+                    "Patient upright, leaning forward. DO NOT straddle.",
+                    "Move mirror/light/patient's head, NOT your own body"
+                ],
+                patient: "Magandang umaga/hapon, ako po si ICC {Pangalan} isang estudyanteng-doktor ng UP College of Medicine. Bago po tayo mag simula, {anong gusto niyong itawag ko sainyo}? Nandito po ako para suriin ang inyong {ulo, leeg, tenga, ilong, at lalamunan}. Gagamit po ako ng mga instrumento kaya baka may pagkakataon na hindi po kayo maging komportable. Sabihin niyo lang po kung may masakit. Pwede na po ba tayo mag simula?",
+                steps: [
+                    "I am performing proper hand washing technique for {40-60 seconds} and wearing my gloves.",
+                    "I wear the head mirror on my {dominant eye} and adjust to the light source.",
+                    "I {close my opposite eye} to check if the light focuses appropriately on my palm.",
+                    "I ensure the patient is sitting upright and leaning slightly forward. I {will not straddle} the patient.",
+                    "Throughout the exam, I will move the mirror angle, the light source, and the patient's head, but {not my own body}."
+                ],
+                reporting: "Doc, I have properly introduced myself, secured consent, and established the optimal ergonomic and sterile setup for the examination.",
+                pearl: "The preceptor evaluates your baseline mechanics here. Failing to close the opposite eye to check focal length or straddling the patient's legs are automatic technique deductions."
+            },
+            {
+                id: 'part1',
+                title: "1. Otoscopy",
+                icon: "👂",
+                checklist: [
+                    "Inspect auricle & check tragal tenderness",
+                    "Pull auricle UP and BACK",
+                    "Select the LARGEST possible speculum",
+                    "Insert speculum only near the tip/opening (avoid degloving)"
+                ],
+                patient: "Sisimulan ko po ang pagsusuri sa inyong mga tenga. Kakapain ko po muna ang labas ng tenga ninyo. May masakit po ba pag pinipindot ko ito?",
+                steps: [
+                    "I am inspecting the external auricle and palpating for {tragal tenderness} and mastoid tenderness.",
+                    "To straighten the canal, I pull the auricle {upward and backward}.",
+                    "I will select the {largest possible} ear speculum that fits to prevent puncturing the eardrum.",
+                    "I insert the speculum {only near the tip/opening}. I will not insert the entire length to avoid a {degloving injury} to the external ear canal."
+                ],
+                reporting: "Upon inspection, the bilateral auricles are normal in gross appearance with {no tragal or mastoid tenderness}. On otoscopy, the external auditory canal is patent with {no discharge or erythema}. The tympanic membrane is {intact and pearly white}, with a good {cone of light} at the anteroinferior quadrant. No bulging or retractions noted.",
+                pearl: "Always verbalize 'Largest possible speculum' and 'Avoid degloving.' The skin in the bony canal is extremely thin; inserting too deeply causes immense pain."
+            },
+            {
+                id: 'part2',
+                title: "2. Anterior Rhinoscopy",
+                icon: "👃",
+                checklist: [
+                    "Inspect external nose",
+                    "Stabilize non-dominant index finger on patient's nose",
+                    "Open speculum in a SUPEROINFERIOR direction",
+                    "DO NOT touch the nasal septum (Kiesselbach's plexus)"
+                ],
+                patient: "Ngayon po, susuriin ko ang loob ng inyong ilong. Gagamit po ako ng maliit na instrumento para ibuka ito nang bahagya. Huminga lang po kayo nang normal sa inyong bibig.",
+                steps: [
+                    "I am inspecting the external nose for symmetry and lesions.",
+                    "I insert the closed nasal speculum held in my {non-dominant hand}, resting my {index finger} on the patient's nose for stability.",
+                    "I open the speculum in a {superoinferior} (vertical) direction.",
+                    "I take extreme care {not to touch the nasal septum} to avoid irritating {Kiesselbach's plexus}, which is highly sensitive and prone to bleeding.",
+                    "I systematically inspect the nasal mucosa, septum, and the {inferior and middle turbinates}."
+                ],
+                reporting: "The external nose is symmetric with no deformities. On anterior rhinoscopy, the nasal septum is {midline}. The nasal mucosa is {pink and moist}. The inferior and middle turbinates are {not congested or hypertrophied}. There are {no polyps, masses, or abnormal discharges} noted.",
+                pearl: "Opening superoinferiorly prevents accidental lateral pressure on the sensitive turbinates and medial pressure on the vascular septum."
+            },
+            {
+                id: 'part3',
+                title: "3. Posterior Rhinoscopy",
+                icon: "🪞",
+                checklist: [
+                    "Depress anterior 2/3 of tongue",
+                    "Warm the post-nasal mirror & test on wrist",
+                    "Insert behind uvula pointing UPWARD",
+                    "Avoid touching posterior pharyngeal wall (gag reflex)"
+                ],
+                patient: "Ibubuka po natin ang bibig. Ididiin ko nang bahagya ang inyong dila at may ilalagay akong maliit na salamin sa likod ng lalamunan. Huwag po kayong mag-alala, huminga lang po nang malalim sa bibig.",
+                steps: [
+                    "I use a tongue depressor in my {non-dominant hand} to firmly press the {anterior 2/3} of the tongue.",
+                    "I {warm the post-nasal mirror} over a lamp/water and test the temperature on my wrist.",
+                    "I insert the mirror behind the uvula, pointing {upward}, carefully avoiding the {posterior pharyngeal wall} to prevent the {gag reflex}.",
+                    "I angle the mirror to inspect the nasopharynx, {choanae}, {Eustachian tube orifices}, and the {Fossa of Rosenmüller}."
+                ],
+                reporting: "On posterior rhinoscopy, the {choanae} are widely patent. The posterior edge of the nasal septum is midline. The {Eustachian tube orifices} are clear. The {Fossa of Rosenmüller} shows no masses or asymmetry. The adenoids are {not enlarged}.",
+                pearl: "The Fossa of Rosenmüller (pharyngeal recess) is the most common site of origin for Nasopharyngeal Carcinoma (NPC). You must explicitly mention inspecting and reporting on it."
+            },
+            {
+                id: 'part4',
+                title: "4. Indirect Laryngoscopy",
+                icon: "🗣️",
+                checklist: [
+                    "Grasp protruded tongue with sterile gauze",
+                    "Warm laryngeal mirror & test on wrist",
+                    "Press mirror gently UPWARD against soft palate",
+                    "Instruct patient to phonate 'Eeee' (moves epiglottis anteriorly)"
+                ],
+                patient: "Ilalabas po natin nang buo ang inyong dila at hahawakan ko gamit ang malinis na gasa. May ilalagay po ulit akong salamin, pataas naman. Sabihin niyo po ang letrang 'Eeeeee' nang mataas habang sumisinghap.",
+                steps: [
+                    "I ask the patient to protrude their tongue and I grasp it with {sterile gauze} using my non-dominant hand.",
+                    "I {warm the laryngeal mirror} and test the temperature on my wrist.",
+                    "I insert the mirror, pressing gently {upward} against the {soft palate}.",
+                    "I instruct the patient to phonate a high-pitched {'Eeeee'}. This moves the {epiglottis anteriorly} to expose the larynx.",
+                    "I inspect the base of the tongue, {vallecula}, epiglottis, arytenoids, and the {true and false vocal cords}."
+                ],
+                reporting: "On indirect laryngoscopy, the base of the tongue and {vallecula} are clear. The epiglottis is normal in shape. The {true vocal cords} are pearly white, with {symmetric and fully mobile} adduction upon phonation. The false vocal cords and arytenoids appear normal with {no masses or pooling of secretions}.",
+                pearl: "Phonating a high-pitched 'Eeeee' achieves two goals: it pulls the epiglottis forward to uncover the glottis, and it adducts the true vocal cords, allowing you to assess CN X motor function."
+            },
+            {
+                id: 'part5',
+                title: "5. Oral Cavity",
+                icon: "👅",
+                checklist: [
+                    "Inspect buccal mucosa and Stensen's duct",
+                    "Inspect hard & soft palate, tonsils, posterior pharyngeal wall",
+                    "Inspect dorsal, ventral, and lateral tongue",
+                    "Inspect floor of mouth (Wharton's duct)"
+                ],
+                patient: "Paki-nganga po nang malaki. Ipakita ang inyong mga ngipin. Ngayon po, ilabas ang dila, itaas sa ngala-ngala, at igilid sa kaliwa't kanan para makita ko ang buong loob ng inyong bibig.",
+                steps: [
+                    "Using two tongue depressors and an adequate light source, I inspect the lips and buccal mucosa, identifying {Stensen's duct} (parotid gland).",
+                    "I check the {gums and dentition}, followed by the {hard and soft palate}.",
+                    "I ask the patient to move the tongue upward and laterally to inspect the {dorsal, ventral, and lateral surfaces}.",
+                    "I inspect the {floor of the mouth} and identify {Wharton's duct} (submandibular gland).",
+                    "I depress the tongue to inspect the {tonsillar pillars}, tonsils, and {posterior pharyngeal wall}."
+                ],
+                reporting: "The oral cavity shows pink and moist buccal mucosa. Dentition is intact with healthy gingiva. {Stensen's and Wharton's ducts} are patent. The tongue is centrally located with {no lesions on the lateral borders or ventral surface}. The floor of the mouth is clear. Tonsils are {Grade +1 bilaterally}. The posterior pharyngeal wall is {pink with no cobblestoning or exudates}.",
+                pearl: "The lateral borders of the tongue and the floor of the mouth are high-risk 'horseshoe' areas for squamous cell carcinomas. You must dictate that the patient moved their tongue to expose these."
+            },
+            {
+                id: 'part6',
+                title: "6. Head & Neck Mapping",
+                icon: "🦒",
+                checklist: [
+                    "Inspect anterior neck in extension (Swallow vs Protrusion)",
+                    "Palpate LNs using 'Piano fingers'",
+                    "DO NOT palpate bilateral carotids simultaneously",
+                    "Systematically map Levels I-VII using strict anatomical landmarks",
+                    "Sanitize hands and dispose of gloves/gauze"
+                ],
+                patient: "Huling bahagi na po. Maaari po bang tumingala kayo nang kaunti? Paki-{lunok} po... Ngayon naman po, maaari po bang {ilabas ninyo ang inyong dila}? Kakapain ko na rin po ang inyong leeg at mga kulani. Maraming salamat po! Tapos na po ang ating pagsusuri.",
+                steps: [
+                    "I inspect the anterior neck in {extension}. I palpate the thyroid gland below the {thyroid cartilage}. If a mass is present, movement with {deglutition} = thyroid mass; movement with {tongue protrusion} = thyroglossal duct cyst.",
+                    "For lymph nodes, I use '{piano fingers}' or concentric circles. I strictly {do not palpate} the bilateral {carotid bodies} simultaneously.",
+                    "I map systematically: below the mandible {IA & IB}, down the anterior SCM {II, III, IV}, posterior to SCM {V}, midline {VI}, below manubrium {VII}, and the {supraclavicular} area.",
+                    "I note key landmarks: {Omohyoid} separates IA and IB; {Spinal Accessory Nerve} separates IIA and IIB; {Hyoid} separates II and III (and I from VI); {Cricoid Cartilage} separates III/IV and VA/VB.",
+                    "If there is any palpable node in Level I or II, I will immediately inspect for {oral, gum, and tongue ulcers}."
+                ],
+                reporting: "The trachea is midline. The thyroid gland is {non-palpable and not enlarged}. There are no anterior neck masses. On palpation, there is {no cervical lymphadenopathy} noted across Levels I through VII and the supraclavicular fossae bilaterally. The physical examination is complete.",
+                pearl: "This section is extremely detail-oriented. The preceptor is checking if you know the exact cartilaginous (Hyoid/Cricoid) and neural (SAN) borders separating the cervical lymph node levels."
+            }
+        ];
+
+        const ORLApp = () => {
+            const [activeIndex, setActiveIndex] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+
+            const activePage = pagesData[activeIndex];
+
+            const shuffleBlanks = () => {
+                const newHidden = new Set();
+                const processText = (text, role) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        // 80% chance to hide the bracketed keyword
+                        if (i % 2 === 1 && Math.random() > 0.2) {
+                            newHidden.add(`${activeIndex}-${role}-${i}`);
+                        }
+                    });
+                };
+                
+                processText(activePage.patient, 'patient');
+                processText(activePage.reporting, 'reporting');
+                activePage.steps.forEach((step, idx) => processText(step, `step-${idx}`));
+                
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) {
+                    shuffleBlanks();
+                } else {
+                    setHiddenWords(new Set());
+                }
+            }, [activeIndex, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, rolePrefix) => {
+                if (!text) return null;
+                if (!memorizeMode) {
+                    const parts = text.split(/\{(.*?)\}/g);
+                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-violet-700">{part}</strong> : <span key={i}>{part}</span>);
+                }
+                const parts = text.split(/\{(.*?)\}/g);
+                return parts.map((part, i) => {
+                    if (i % 2 === 1) {
+                        const wordId = `${activeIndex}-${rolePrefix}-${i}`;
+                        if (hiddenWords.has(wordId)) {
+                            return (
+                                <span 
+                                    key={wordId} 
+                                    onClick={() => revealWord(wordId)} 
+                                    className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" 
+                                    title="Click to reveal">
+                                    {part}
+                                </span>
+                            );
+                        } else {
+                            return (
+                                <span key={wordId} className="font-bold bg-violet-100 text-violet-800 px-1 rounded mx-0.5 shadow-sm">
+                                    {part}
+                                </span>
+                            );
+                        }
+                    }
+                    return <span key={i}>{part}</span>;
+                });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row font-sans bg-slate-100">
+                    {/* Sidebar Navigation */}
+                    <nav className="w-full md:w-72 bg-slate-900 text-white shadow-2xl flex-shrink-0 z-10 flex flex-col">
+                        <div className="p-6 pb-2">
+                            <h1 className="text-3xl font-black text-violet-400 tracking-tight">ORL 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Stepwise PE Mastery</p>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                            {pagesData.map((page, idx) => (
+                                <button 
+                                    key={page.id}
+                                    onClick={() => setActiveIndex(idx)} 
+                                    className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${activeIndex === idx ? 'bg-violet-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
+                                >
+                                    <span className="mr-3 text-xl">{page.icon}</span>
+                                    <span className="leading-tight">{page.title}</span>
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-6 bg-slate-950 mt-auto">
+                            <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center justify-center bg-slate-800 hover:bg-slate-700 px-4 py-3 rounded-lg transition-colors border border-slate-700">
+                                <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-3 w-5 h-5 accent-violet-500" />
+                                Active Recall Mode
+                            </label>
+                        </div>
+                    </nav>
+
+                    {/* Main Content Area */}
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                        <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                            
+                            {/* Header Section */}
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-violet-200 pb-4 gap-4">
+                                <div>
+                                    <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                        <span className="text-violet-600 mr-3">{activePage.icon}</span>
+                                        {activePage.title}
+                                    </h2>
+                                </div>
+                                {memorizeMode && (
+                                    <button onClick={shuffleBlanks} className="bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                                        <span className="mr-2">🔀</span> Shuffle Blanks
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Active Recall Warning */}
+                            {memorizeMode && (
+                                <div className="bg-amber-50 border-l-4 border-amber-400 p-4 text-amber-900 text-sm flex items-start shadow-sm rounded-r-lg">
+                                    <span className="text-xl mr-3">🧠</span>
+                                    <div><strong>Randomized Recall Active!</strong> Key anatomical and clinical terms are hidden. Say the line out loud, then click the gray boxes to reveal the answer.</div>
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                                
+                                {/* Left/Center Column: The Stepwise Execution */}
+                                <div className="xl:col-span-2 space-y-6">
+                                    
+                                    {/* 1. Patient Script */}
+                                    <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="bg-emerald-600 text-white p-3 font-bold flex items-center">
+                                            <span className="text-xl mr-2">🗣️</span> 1. PATIENT COUNSELING (FILIPINO)
+                                        </div>
+                                        <div className="p-6 bg-emerald-50">
+                                            <p className="text-emerald-950 font-medium leading-relaxed text-[16px]">
+                                                "{renderText(activePage.patient, 'patient')}"
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* 2. Stepwise Execution */}
+                                    <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="bg-slate-800 text-white p-3 font-bold flex items-center">
+                                            <span className="text-xl mr-2">🛠️</span> 2. STEPWISE EXECUTION (TO PRECEPTOR)
+                                        </div>
+                                        <div className="p-6 bg-white">
+                                            <ul className="space-y-4">
+                                                {activePage.steps.map((step, idx) => (
+                                                    <li key={idx} className="flex items-start">
+                                                        <span className="bg-slate-200 text-slate-700 font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">{idx + 1}</span>
+                                                        <p className="text-slate-800 font-medium leading-relaxed text-[16px]">
+                                                            {renderText(step, `step-${idx}`)}
+                                                        </p>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    {/* 3. Formal Reporting */}
+                                    <div className="bg-white rounded-xl shadow-lg border-2 border-violet-500 overflow-hidden transform transition-all">
+                                        <div className="bg-violet-600 text-white p-3 font-bold flex items-center">
+                                            <span className="text-xl mr-2">📋</span> 3. REPORTING OF FINDINGS
+                                        </div>
+                                        <div className="p-6 bg-violet-50">
+                                            <p className="text-violet-950 font-bold leading-relaxed text-[16px] italic">
+                                                "{renderText(activePage.reporting, 'reporting')}"
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column: Target Checklist & Pearls */}
+                                <div className="space-y-6">
+                                    <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden sticky top-6">
+                                        <div className="bg-slate-800 text-white p-3 font-bold flex items-center justify-between">
+                                            <div className="flex items-center"><span className="text-xl mr-2">🎯</span> Target Checklist</div>
+                                        </div>
+                                        <div className="p-4 bg-slate-50">
+                                            <ul className="space-y-3">
+                                                {activePage.checklist.map((item, i) => (
+                                                    <li key={i} className="flex items-start text-sm text-slate-700 font-medium bg-white p-3 rounded border border-slate-200 shadow-sm">
+                                                        <span className="text-violet-600 mr-2 font-bold">✔</span>
+                                                        {item}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        
+                                        <div className="border-t-4 border-amber-500">
+                                            <div className="p-5 bg-amber-50">
+                                                <h4 className="font-black text-amber-900 flex items-center mb-2">
+                                                    <span className="text-xl mr-2">💡</span> Preceptor Pearl
+                                                </h4>
+                                                <p className="text-sm text-amber-800 leading-relaxed font-medium">
+                                                    {activePage.pearl}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            {/* Navigation Buttons */}
+                            <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                <button 
+                                    onClick={() => setActiveIndex(Math.max(0, activeIndex - 1))}
+                                    disabled={activeIndex === 0}
+                                    className="px-6 py-3 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                >
+                                    &larr; Previous Section
+                                </button>
+                                <button 
+                                    onClick={() => setActiveIndex(Math.min(pagesData.length - 1, activeIndex + 1))}
+                                    disabled={activeIndex === pagesData.length - 1}
+                                    className="px-6 py-3 rounded-lg font-bold text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
+                                >
+                                    Next Section &rarr;
+                                </button>
+                            </div>
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ORLApp />);
+    </script>
+</body>
+</html>
