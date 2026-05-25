@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IM OSCE Master - Internal Medicine Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #eff6ff; }
+        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; border-bottom: 2px dashed #2563eb; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const pagesData = [
+            {
+                id: 'hx',
+                title: "1. PWI: History & Problem List",
+                icon: "🗣️",
+                checklist: [
+                    "Introduce self and elicit Chief Complaint",
+                    "HPI using OPQRST (Onset, Palliating/Provoking, Quality, Radiation, Severity, Timing)",
+                    "Establish pertinent POSITIVES (ruling in disease)",
+                    "Establish pertinent NEGATIVES (ruling out differentials)",
+                    "Formulate a comprehensive Problem List"
+                ],
+                patient: "Magandang araw po. Ako po si Doc {Pangalan}, isang clinical clerk. Ano po ang {pangunahing dahilan} ng inyong pagbisita ngayon? Kailan pa po ito {nagsimula}? Mayroon po bang nagpapabuti o nagpapalala sa inyong nararamdaman? May kasama po ba itong {lagnat, ubo, o hirap sa paghinga}?",
+                preceptor: "Doc, my active Problem List for this patient includes: 1. {Acute Cough} for 5 days. 2. {Fever} (Tmax 38.5C). 3. {Dyspnea} (respiratory rate of 24). 4. A history of {Smoking} (10 pack-years). 5. Known {Hypertension}, currently controlled.",
+                pearl: "OSCE Trap: The Problem List is NOT your diagnosis. It is a list of active symptoms, abnormal signs, lab abnormalities, and significant risk factors (like smoking or diabetes) that need to be addressed."
+            },
+            {
+                id: 'ddx',
+                title: "2. PWI: DDx & Clinical Reasoning",
+                icon: "🧠",
+                checklist: [
+                    "Generate a logical primary diagnosis",
+                    "Identify 2-3 important differential diagnoses",
+                    "Defend diagnosis using sufficiency of basis (pertinent +/-)",
+                    "Demonstrate intellectual honesty if prodded by examiner"
+                ],
+                patient: "(After history taking, present directly to the preceptor.)",
+                preceptor: "Based on the history and physical examination, my primary working diagnosis is {Community-Acquired Pneumonia}. The pertinent positives supporting this are {productive cough, high-grade fever, and localized crackles}. The pertinent negatives that make my differentials less likely are {absence of wheezing} (making Asthma less likely) and {absence of chronic weight loss or night sweats} (making PTB less likely). My secondary differentials include {Acute Bronchitis} and {COPD Exacerbation}.",
+                pearl: "The 25-Point Clinical Reasoning Rubric explicitly grades you on 'Sufficiency of Basis'. You MUST verbally highlight the Pertinent Positives (Rule-in) and Pertinent Negatives (Rule-out)."
+            },
+            {
+                id: 'cxr',
+                title: "3. CXR Reading (A-B-C-D-E-F)",
+                icon: "🩻",
+                checklist: [
+                    "Verify Patient Identity, Date, and Projection (PA/AP)",
+                    "Assess Quality (Rotation, Inspiration, Penetration)",
+                    "Airway: Trachea midline?",
+                    "Bones & Soft Tissue: Fractures? Subcutaneous emphysema?",
+                    "Cardiac Silhouette: Cardiomegaly? (CTR > 0.5)",
+                    "Diaphragm: Flattened? Elevated? Sharp costophrenic angles?",
+                    "Fields/Lungs: Infiltrates? Effusions? Hyperaeration?"
+                ],
+                patient: "(Examine the radiograph placed on the viewbox or screen.)",
+                preceptor: "This is a {PA} chest radiograph of patient {Juan Dela Cruz}, taken on {Date}. The film quality is adequate with {good inspiration}, {centralized} trachea, and adequate {penetration}. The airway is {midline}. Bones and soft tissues are {unremarkable}. The cardiac silhouette is {not enlarged}. Both hemidiaphragms are {dome-shaped} with {intact and sharp} costophrenic sulci. The lung fields exhibit {patchy alveolar infiltrates} in the {right lower lobe}. Impression: {Pneumonia, Right Lower Lobe}.",
+                pearl: "Never just jump to the abnormality. Preceptors grade you on the SYSTEMATIC approach. Always start with Patient ID, Film Projection (PA/AP), and Quality (RIP) before the ABCDEF steps."
+            },
+            {
+                id: 'rx',
+                title: "4. Prescription Writing",
+                icon: "✍️",
+                checklist: [
+                    "Patient details (Name, Age, Sex, Address) & Date",
+                    "Superscription (Rx symbol)",
+                    "Inscription (Generic name, Brand name, Dosage, Form)",
+                    "Subscription (Dispense quantity - 'Disp. #')",
+                    "Signa (Instructions to patient in English/Local language)",
+                    "Doctor's Details (Signature, Name, License No., PTR)"
+                ],
+                patient: "Heto po ang inyong reseta. Inumin po ninyo ang gamot na ito {dalawang beses} isang araw, {tuwing umaga at gabi}, pagkatapos kumain. Kailangan po itong ubusin sa loob ng {pitong araw} kahit maganda na ang inyong pakiramdam.",
+                preceptor: "I am writing a complete prescription. \nPatient: Juan Dela Cruz, 55/M. Date: Today.\nRx: {Co-amoxiclav} (Amoxicillin + Clavulanic Acid) {500mg/125mg} Tablet.\nDispense: {Fourteen (14)} Tablets.\nSigna: Take one tablet by mouth {twice a day} for {7 days}.\nSigned by: Dr. [Name], License Number: {123456}, PTR: {78910}.",
+                pearl: "An incomplete prescription is an automatic deduction. If prescribing an antibiotic, always emphasize completing the full course in your Signa/counseling."
+            }
+        ];
+
+        const casesData = [
+            {
+                id: 'cap',
+                disease: "Community-Acquired Pneumonia (CAP)",
+                hpi: "Presents with acute onset of {productive cough} (yellow/green sputum), {high-grade fever}, chills, and {pleuritic chest pain}. Physical exam shows {localized crackles/rales} and {tactile fremitus}.",
+                cxr: "Shows {lobar consolidation} or patchy alveolar infiltrates. May have {air bronchograms} or a blunted costophrenic angle if a parapneumonic effusion is present.",
+                rx: "Low-Risk: {Amoxicillin 1g TID} or {Azithromycin 500mg OD} x 3-5 days. \nModerate-Risk: {Co-amoxiclav 625mg BID} + {Azithromycin} x 5-7 days.",
+                pearl: "Always check for tachypnea (>24cpm) or tachycardia. A respiratory rate >30 or altered mental status indicates Severe CAP needing immediate hospital admission."
+            },
+            {
+                id: 'copd',
+                disease: "Chronic Obstructive Pulmonary Disease (COPD)",
+                hpi: "Presents in a {chronic smoker} (e.g., >20 pack-years) with progressive {dyspnea on exertion}, {chronic cough}, and morning sputum production. PE shows {barrel chest}, pursed-lip breathing, and {global wheezing/rhonchi}.",
+                cxr: "Shows {hyperaeration} (hyperinflated lungs), {flattened hemidiaphragms}, widened intercostal spaces, and a narrowed, {teardrop-shaped} cardiac silhouette.",
+                rx: "Maintenance: {LAMA} (e.g., Tiotropium inhaler OD) or {LABA}. \nExacerbation: Short-acting bronchodilators ({Salbutamol + Ipratropium} nebulization) + systemic steroids ({Prednisone 40mg OD} x 5 days).",
+                pearl: "The defining feature of COPD is that airflow limitation is NOT fully reversible. Do not prescribe oral steroids for long-term maintenance."
+            },
+            {
+                id: 'asthma',
+                disease: "Bronchial Asthma (Acute Exacerbation)",
+                hpi: "Presents with episodic {wheezing}, shortness of breath, and chest tightness. Often triggered by {allergens, cold air, or viral illness}. Notable for {nocturnal awakenings}. Personal or family history of atopy/allergies.",
+                cxr: "Usually {normal} in between attacks. During a severe acute exacerbation, it may show mild {hyperinflation}. Used primarily to rule out pneumonia or pneumothorax.",
+                rx: "Reliever: {Salbutamol} inhaler PRN. \nController/Maintenance: Low-dose {ICS-LABA} (e.g., Budesonide/Formoterol 160/4.5mcg inhaler 1-2 puffs BID).",
+                pearl: "Current GINA guidelines no longer recommend SABA (Salbutamol) alone. Mild asthma should be treated with ICS-Formoterol as needed to prevent severe exacerbations."
+            }
+        ];
+
+        const IMApp = () => {
+            const [view, setView] = useState('stations'); // 'stations', 'cases', 'rubric'
+            const [activeIndex, setActiveIndex] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+
+            const activePage = pagesData[activeIndex];
+
+            const shuffleBlanks = () => {
+                const newHidden = new Set();
+                
+                const processText = (text, prefix) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1 && Math.random() > 0.2) {
+                            newHidden.add(`${prefix}-${i}`);
+                        }
+                    });
+                };
+
+                if (view === 'stations') {
+                    processText(activePage.patient, `pat-${activeIndex}`);
+                    processText(activePage.preceptor, `pre-${activeIndex}`);
+                } else if (view === 'cases') {
+                    casesData.forEach((data, dIdx) => {
+                        processText(data.hpi, `case-hpi-${dIdx}`);
+                        processText(data.cxr, `case-cxr-${dIdx}`);
+                        processText(data.rx, `case-rx-${dIdx}`);
+                    });
+                }
+                
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks();
+                else setHiddenWords(new Set());
+            }, [view, activeIndex, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, prefix) => {
+                if (!text) return null;
+                const lines = text.split('\n');
+                
+                return lines.map((line, lineIndex) => {
+                    if (!memorizeMode) {
+                        const parts = line.split(/\{(.*?)\}/g);
+                        return (
+                            <React.Fragment key={lineIndex}>
+                                {parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-blue-700">{part}</strong> : <span key={i}>{part}</span>)}
+                                {lineIndex < lines.length - 1 && <br />}
+                            </React.Fragment>
+                        );
+                    }
+                    
+                    const parts = line.split(/\{(.*?)\}/g);
+                    return (
+                        <React.Fragment key={lineIndex}>
+                            {parts.map((part, i) => {
+                                if (i % 2 === 1) {
+                                    const wordId = `${prefix}-${lineIndex}-${i}`; 
+                                    if (hiddenWords.has(wordId) || hiddenWords.has(`${prefix}-${i}`)) { 
+                                        return <span key={wordId} onClick={() => revealWord(wordId || `${prefix}-${i}`)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
+                                    } else {
+                                        return <span key={wordId} className="font-bold bg-blue-100 text-blue-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
+                                    }
+                                }
+                                return <span key={i}>{part}</span>;
+                            })}
+                            {lineIndex < lines.length - 1 && <br />}
+                        </React.Fragment>
+                    );
+                });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row font-sans bg-slate-100">
+                    
+                    {/* SIDEBAR */}
+                    <nav className="w-full md:w-72 bg-slate-900 text-white shadow-2xl flex-shrink-0 z-10 flex flex-col">
+                        <div className="p-6 pb-2">
+                            <h1 className="text-3xl font-black text-blue-400 tracking-tight">IM 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Internal Medicine OSCE</p>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                            <button onClick={() => setView('stations')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'stations' ? 'bg-blue-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🩺</span> PWI & CXR Stations
+                            </button>
+                            <button onClick={() => setView('cases')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'cases' ? 'bg-blue-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🫁</span> Top Pulmo Cases
+                            </button>
+                            <button onClick={() => setView('rubric')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left border-t border-slate-700 mt-4 pt-4 ${view === 'rubric' ? 'bg-blue-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">⚖️</span> The Rating Scale
+                            </button>
+                        </div>
+                        
+                        {(view === 'stations' || view === 'cases') && (
+                            <div className="p-6 bg-slate-950 mt-auto border-t border-slate-800">
+                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center justify-center bg-slate-800 hover:bg-slate-700 px-4 py-3 rounded-lg transition-colors border border-slate-700">
+                                    <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-3 w-5 h-5 accent-blue-500" />
+                                    Active Recall Mode
+                                </label>
+                            </div>
+                        )}
+                    </nav>
+
+                    {/* MAIN CONTENT */}
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                        <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                            
+                            {/* VIEW 1: STATIONS */}
+                            {view === 'stations' && (
+                                <>
+                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-blue-200 pb-4 gap-4">
+                                        <div>
+                                            <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                                <span className="text-blue-600 mr-3">🩺</span> Core IM Stations
+                                            </h2>
+                                            <p className="text-slate-500 mt-2 font-medium">Master the Patient Walk-In, Problem Listing, CXR Reading, and Prescription Writing.</p>
+                                        </div>
+                                        {memorizeMode && (
+                                            <button onClick={shuffleBlanks} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                                                <span className="mr-2">🔀</span> Shuffle Blanks
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Pagination */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {pagesData.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIndex(idx)}
+                                                className={`whitespace-nowrap px-4 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${activeIndex === idx ? 'bg-blue-600 text-white ring-2 ring-blue-300' : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Content Grid */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+                                        <div className="lg:col-span-2 space-y-6">
+                                            {/* Patient Script */}
+                                            {activePage.id !== 'ddx' && activePage.id !== 'cxr' && (
+                                                <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                    <div className="bg-emerald-600 text-white p-3 font-bold flex items-center">
+                                                        <span className="text-xl mr-2">🗣️</span> TO PATIENT (FILIPINO)
+                                                    </div>
+                                                    <div className="p-6 bg-emerald-50">
+                                                        <p className="text-emerald-950 font-medium leading-relaxed text-[16px]">
+                                                            "{renderText(activePage.patient, `pat-${activeIndex}`)}"
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Preceptor Script */}
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-blue-700 text-white p-3 font-bold flex items-center">
+                                                    <span className="text-xl mr-2">👨‍⚕️</span> REPORTING TO PRECEPTOR (ENGLISH)
+                                                </div>
+                                                <div className="p-6 bg-blue-50">
+                                                    <p className="text-blue-950 font-medium leading-relaxed text-[16px]">
+                                                        "{renderText(activePage.preceptor, `pre-${activeIndex}`)}"
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Column: Checklist & Pearls */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white p-3 font-bold flex items-center justify-between">
+                                                    <div className="flex items-center"><span className="text-xl mr-2">📋</span> Target Checklist</div>
+                                                </div>
+                                                <div className="p-4 bg-slate-50">
+                                                    <ul className="space-y-3">
+                                                        {activePage.checklist.map((item, i) => (
+                                                            <li key={i} className="flex items-start text-sm text-slate-700 font-medium bg-white p-3 rounded border border-slate-200 shadow-sm">
+                                                                <span className="text-blue-600 mr-2 font-bold">✔</span>
+                                                                {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white rounded-xl shadow-lg border-t-4 border-amber-500 overflow-hidden">
+                                                <div className="p-5 bg-amber-50">
+                                                    <h4 className="font-black text-amber-900 flex items-center mb-2">
+                                                        <span className="text-xl mr-2">💡</span> OSCE Pearl / Trap
+                                                    </h4>
+                                                    <p className="text-sm text-amber-800 leading-relaxed font-medium">
+                                                        {activePage.pearl}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* VIEW 2: COMMON CASES */}
+                            {view === 'cases' && (
+                                <div className="space-y-6 animate-fade-in pb-10">
+                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-indigo-200 pb-4 gap-4">
+                                        <div>
+                                            <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                                <span className="text-indigo-600 mr-3">🫁</span> Common Pulmo Cases
+                                            </h2>
+                                            <p className="text-slate-500 mt-2 font-medium">The most frequent presentations for the DDx, CXR, and Prescription OSCE stations.</p>
+                                        </div>
+                                        {memorizeMode && (
+                                            <button onClick={shuffleBlanks} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                                                <span className="mr-2">🔀</span> Shuffle Blanks
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {memorizeMode && (
+                                        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 text-amber-900 text-sm flex items-start shadow-sm rounded-r-lg">
+                                            <span className="text-xl mr-3">🧠</span>
+                                            <div><strong>Randomized Recall Active!</strong> Key symptoms, radiographic findings, and treatments are hidden. Test your memory.</div>
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                                        {casesData.map((data, idx) => (
+                                            <div key={idx} className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
+                                                <div className="bg-indigo-600 p-4 text-white">
+                                                    <h3 className="text-xl font-black">{data.disease}</h3>
+                                                </div>
+                                                <div className="p-6 flex-1 space-y-5 bg-slate-50">
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">History & P.E. (PWI Station)</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed">
+                                                            {renderText(data.hpi, `case-hpi-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">CXR Station</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed">
+                                                            {renderText(data.cxr, `case-cxr-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Prescription Station</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed bg-indigo-50 p-3 rounded border border-indigo-100">
+                                                            {renderText(data.rx, `case-rx-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-amber-50 p-4 border-t border-amber-100">
+                                                    <h4 className="font-black text-amber-900 flex items-center mb-1 text-sm">
+                                                        <span className="mr-2">💡</span> Diagnostic Pearl
+                                                    </h4>
+                                                    <p className="text-sm text-amber-800 font-medium leading-relaxed">
+                                                        {data.pearl}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: RUBRIC */}
+                            {view === 'rubric' && (
+                                <div className="space-y-8 animate-fade-in pb-10">
+                                    <div className="border-b-2 border-slate-300 pb-4">
+                                        <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                            <span className="text-amber-500 mr-3">⚖️</span>
+                                            Clinical Reasoning Rating Scale
+                                        </h2>
+                                        <p className="text-slate-500 mt-2 font-medium">Based on the official LU5 Grand OSCE evaluation form for Diagnosis/Differential Diagnoses.</p>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-blue-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">1. Generation of Diagnosis & DDx (25 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (14*): Generates a logical primary diagnosis. Identifies important differential diagnoses.</p>
+                                            <div className="bg-blue-50 text-blue-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> Name your Primary Impression first, then give 2 to 3 solid differential diagnoses relevant to the chief complaint.
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-indigo-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">2. Sufficiency of Basis (15 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (14*): Identifies all pertinent (+) & (-) from history and PE.</p>
+                                            <div className="bg-indigo-50 text-indigo-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> Explicitly use the terms "Pertinent Positives" (findings that rule IN your diagnosis) and "Pertinent Negatives" (findings that rule OUT your differentials).
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-emerald-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">3. Clinical Reasoning (15 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (14*): Excellent and logical approach to diagnosis; spontaneous.</p>
+                                            <div className="bg-emerald-50 text-emerald-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> Link the patient's symptoms directly to pathophysiology. Do not just list symptoms blindly. Show how A leads to B.
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-purple-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">4. Communication Skills (5 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (3*): Statements clear, logical; able to defend statements; Fluent speech.</p>
+                                            <div className="bg-purple-50 text-purple-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> Speak clearly, do not use excessive medical jargon when talking to the patient, but be highly precise with terminology when reporting to the preceptor.
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-amber-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">5. Intellectual Integrity (5 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (4*): Intellectually honest; Accepts personal mistakes or limitations.</p>
+                                            <div className="bg-amber-50 text-amber-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> If the preceptor pimping gets too hard, say "I will look that up, Doc." Do NOT bluff or invent medical facts.
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-xl shadow-lg border-t-8 border-red-600 p-6">
+                                            <h3 className="text-xl font-black text-slate-800 mb-2">6. Confidence (5 pts)</h3>
+                                            <p className="text-sm text-slate-600 mb-4">Passing (3*): Self-assured.</p>
+                                            <div className="bg-red-50 text-red-900 p-3 rounded font-medium text-sm">
+                                                <strong>How to Ace:</strong> Maintain eye contact with the preceptor. Do not end your statements with an upward inflection (making them sound like questions). State your findings as facts.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<IMApp />);
+    </script>
+</body>
+</html>
