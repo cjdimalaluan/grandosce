@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychiatry OSCE Master - Ultimate Excellence</title>
+    <title>Psychiatry OSCE Master - Evidence-Based Excellence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -32,13 +32,13 @@
                 title: "1. Intro & Observations",
                 icon: "👁️",
                 checklist: [
-                    "Introduced self and the examination properly",
-                    "Appearance (Observe)",
-                    "Behavior/Mannerisms (Observe)",
-                    "Speech (Observe pace, volume, tone)"
+                    "1. Introduced self and the examination properly",
+                    "2. Appearance (Observe)",
+                    "3. Behavior/Mannerisms (Observe)",
+                    "4. Speech (Observe pace, volume, tone)"
                 ],
-                patient: "Magandang umaga/hapon po. Ako po si Doc {Pangalan}, isang estudyanteng doktor. Nandito po ako para kumustahin ang inyong {kasalukuyang kalagayan} at pag-isip ngayon. Okay lang po ba na mag-usap tayo nang ilang minuto?",
-                preceptor: "I am observing the patient's {Appearance} (grooming, hygiene, appropriateness of dress), {Behavior} (psychomotor retardation or agitation, eye contact, mannerisms), and {Speech} (rate, volume, prosody, and amount).",
+                patient: "Magandang umaga/hapon po. Ako po si Doc {Pangalan}, isang estudyanteng doktor ng PGH. Nandito po ako para kumustahin ang inyong {kasalukuyang kalagayan} at pag-iisip ngayon. Okay lang po ba na mag-usap tayo nang ilang minuto?",
+                preceptor: "I am actively observing the patient's {Appearance} (grooming, hygiene, appropriateness of dress), {Behavior} (psychomotor retardation, agitation, eye contact, mannerisms), and {Speech} (rate, volume, prosody, and amount).",
                 pearl: "Do NOT ask about the history of present illness. The OSCE prompt clearly states: 'Do NOT do history taking! Focus on the patient's CURRENT mental state.' Proceed directly to assessing how they feel today."
             },
             {
@@ -46,57 +46,55 @@
                 title: "2. Mood & Affect",
                 icon: "🎭",
                 checklist: [
-                    "Mood (Subjective emotion)",
-                    "Affect (Objective expression)",
-                    "Sensitive/empathic manner of interaction"
+                    "5. Mood (Subjective emotion)",
+                    "6. Affect (Objective expression)",
+                    "19. Sensitive/empathic manner of interaction"
                 ],
-                patient: "Kumusta po ang inyong {pakiramdam} ngayong araw? ... (Kung malungkot): Ano po ang madalas ninyong naiisip kapag nararamdaman niyo ito?",
-                preceptor: "I elicit the {Mood} by asking the patient directly how they feel, quoting their exact words (e.g., 'Sobrang lungkot'). I observe the {Affect}, noting its type (e.g., blunted, flat, expansive), its range, and its {congruence} with their stated mood.",
-                pearl: "Mood is what the patient says (climate). Affect is what you see (weather). A patient laughing while saying they are depressed has an 'incongruent' affect."
+                patient: "Kumusta po ang inyong {pakiramdam} ngayong araw? ... (Kung malungkot): Naiintindihan ko po. Ano po ang madalas ninyong {naiisip} kapag nararamdaman niyo ito?",
+                preceptor: "I elicit the {Mood} by asking the patient directly how they feel, quoting their exact words (e.g., 'Sobrang lungkot'). I objectively observe the {Affect}, noting its type (e.g., blunted, flat, expansive), its range, and its {congruence} with their stated mood.",
+                pearl: "Mood is what the patient says (climate). Affect is what you see (weather). If a patient laughs while saying they are depressed, you must report an 'incongruent' affect."
             },
             {
                 id: 'thought',
-                title: "3. Thought Process & Content",
+                title: "3. Perceptions & Ideations",
                 icon: "💭",
                 checklist: [
-                    "Thought process (Logical? Flight of ideas?)",
-                    "Hallucinations (if present, specify kind)",
-                    "Delusions (if present, specify kind)",
-                    "Self-harm ideations",
-                    "Suicidal ideations",
-                    "Homicidal ideations"
+                    "7. Thought process (Logical? Flight of ideas?)",
+                    "8. Hallucinations (if present, specify kind)",
+                    "9. Delusions (if present, specify kind)",
+                    "10. Self-harm ideations",
+                    "11. Suicidal ideations",
+                    "12. Homicidal ideations"
                 ],
-                patient: "May mga naririnig o nakikita po ba kayong mga bagay na {hindi nakikita o naririnig ng iba}? May mga paniniwala po ba kayo na pakiramdam niyo ay {hindi naiintindihan} ng ibang tao? Sa bigat po ng inyong pinagdadaanan, naisip niyo na po bang {saktan ang inyong sarili} o {tapusin ang inyong buhay}? May naiisip po ba kayong {saktan ang ibang tao}?",
-                preceptor: "I am assessing the {Thought Process} for linearity and goal-directedness. I screen for {Perceptual Disturbances} (hallucinations) and {Delusions} (e.g., persecutory, grandiose). Crucially, I directly ask about {Self-harm}, {Suicidal ideations}, and {Homicidal ideations}.",
-                pearl: "Never skip the suicide/homicide screening. Be direct and compassionate. 'Naisip mo na bang tapusin ang buhay mo?' is required for safety assessment."
+                patient: "May mga pagkakataon po ba na may {naririnig kayong boses} o nakikitang mga bagay na hindi naman naririnig o nakikita ng iba? May mga {matinding paniniwala} ba kayo na pakiramdam niyo ay totoo kahit sinasabi ng iba na hindi, o pakiramdam na may nagbabalak ng masama sa inyo? \n\nSa bigat ng inyong pinagdadaanan, naisip niyo na po bang {saktan ang inyong sarili} na hindi naman layuning mamatay? Naisip niyo na rin po bang {tapusin ang inyong buhay}? May naiisip po ba kayong {saktan o patayin} ang ibang tao?",
+                preceptor: "I am assessing the {Thought Process} for linearity and goal-directedness based on how they answer. I screen for {Hallucinations} (specifying auditory/visual) and {Delusions} (e.g., persecutory, grandiose). Crucially, I separate and directly ask about {Self-harm} (NSSI), {Suicidal ideations}, and {Homicidal ideations}.",
+                pearl: "OSCE Trap: You MUST separate self-harm and suicide. Non-Suicidal Self-Injury (NSSI) is a separate construct. Ask them as distinct questions to get the points for Checklist Items 10 and 11."
             },
             {
                 id: 'sensorium',
                 title: "4. Sensorium & Cognition",
                 icon: "🧠",
                 checklist: [
-                    "Orientation to person",
-                    "Orientation to place",
-                    "Orientation to time",
-                    "Concentration (WORLD backwards or Serial 7s)"
+                    "13. Orientation to person, place, time",
+                    "14. Concentration (WORLD backwards or Serial 7s)"
                 ],
                 patient: "Para po sa susunod kong mga tanong, parang nagtetest lang po tayo ng memorya. Ano pong {buong pangalan} ninyo? Anong {petsa at araw} po ngayon? Saan po tayong {lugar} ngayon? Maaari niyo po bang baybayin o i-spell ang salitang 'MUNDO' nang {pabalik} (O-D-N-U-M)?",
                 preceptor: "I am testing orientation to the {three spheres} (person, place, time). For {Concentration}, I am using the spelling of MUNDO backwards, or Serial 7s ({100 minus 7}, etc.), adjusting to the patient's educational level.",
-                pearl: "Concentration Grading: Target 5 items. 3 to 4 mistakes = POOR. 2 mistakes = FAIR. If the patient asks to repeat because they made a mistake, grade it as FAIR."
+                pearl: "Concentration Grading (Dr. Quiring): Target 5 items. 3 to 4 mistakes = POOR. 2 mistakes = FAIR. 0-1 mistake = GOOD. If the patient asks to repeat because they made a mistake, grade it as FAIR."
             },
             {
                 id: 'higher',
                 title: "5. Abstraction, Judgment, Insight",
                 icon: "⚖️",
                 checklist: [
-                    "Abstract thinking (Proverbs/Similarities)",
-                    "Judgment (Test scenario)",
-                    "Insight (Awareness of illness)",
-                    "Thanked the patient and ended well"
+                    "15. Abstract thinking (Proverbs/Similarities)",
+                    "16. Judgment (Test scenario)",
+                    "17. Insight (Awareness of illness)",
+                    "18. Thanked the patient and ended well"
                 ],
-                patient: "Ano po ang pagkakaintindi ninyo sa kasabihang: {'Pag may tiyaga, may nilaga'}? Kung makakita po kayo ng {usok sa loob ng sinehan}, ano po ang una ninyong gagawin? Sa tingin niyo po ba, ang mga nararanasan ninyo ngayon ay isang {sakit na nangangailangan ng gamutan}? Maraming salamat po sa inyong oras.",
+                patient: "Ano po ang pagkakaintindi ninyo sa kasabihang: {'Kapag may tiyaga, may nilaga'}? Kung makakita po kayo ng {makapal na usok} sa loob ng sinehan, ano po ang una ninyong gagawin? Sa tingin niyo po ba, ang mga nararanasan ninyong ito ay isang {sakit na nangangailangan ng gamutan} o tulong? Maraming salamat po sa inyong oras.",
                 preceptor: "I test {Abstract thinking} using proverbs or similarities. I test {Judgment} using a standard scenario like fire in a theater. I assess {Insight} on a scale of 1 to 6. I conclude the exam smoothly and {thank the patient}.",
-                pearl: "Insight Scale: 1 = Complete denial of illness. 6 = True emotional insight. If a patient says 'Malungkot ako dahil sa asawa ko pero wala akong sakit sa isip', that is Impaired Insight (Level 2/3)."
+                pearl: "6-Point Insight Scale: 1-Complete denial, 2-Slight awareness, 3-Aware but blames others/external factors, 4-Aware but blames unknown/biology, 5-Intellectual insight, 6-True emotional insight."
             }
         ];
 
@@ -104,32 +102,32 @@
             {
                 id: 'mdd',
                 disease: "Major Depressive Disorder (MDD)",
-                presentation: "Presents with {depressed mood}, {anhedonia}, changes in sleep/appetite, {psychomotor retardation}, and {suicidal ideation}.",
-                differentials: "1. {Bipolar Disorder} (Must rule out past manic episodes!)\n2. {Substance-Induced} Mood Disorder\n3. {Hypothyroidism} or other medical conditions\n4. {Adjustment Disorder} (if stressor occurred < 3 months ago)",
-                management: "Biopsychosocial: Start {SSRIs} (e.g., Escitalopram, Sertraline). Provide {Cognitive Behavioral Therapy (CBT)}. Critically assess {suicide risk} to determine if inpatient psychiatric admission is required.",
-                pearl: "OSCE Trap: If a patient presents with depression, you MUST ask: 'Have you ever had a period where you felt extremely energetic, needed less sleep, and made reckless decisions?' Giving an SSRI to a Bipolar patient can trigger a manic episode!"
+                presentation: "Presents with {depressed mood}, {anhedonia}, changes in sleep/appetite, {psychomotor retardation}, and {suicidal ideation} lasting ≥ 2 weeks.",
+                differentials: "1. {Bipolar Disorder} (Must rule out past manic/hypomanic episodes)\n2. {Substance-Induced} Mood Disorder\n3. {Hypothyroidism} (Must check TSH)\n4. {Adjustment Disorder} (if identifiable stressor < 3 months ago)",
+                management: "Biopsychosocial: Start {SSRIs} (e.g., Escitalopram 10mg OD, Sertraline 50mg OD). Provide {Cognitive Behavioral Therapy (CBT)}. Admit to inpatient unit if active suicidal ideation with a plan is present.",
+                pearl: "OSCE Trap: If a patient presents with depression, you MUST ask/rule-out Mania. Giving an SSRI to a Bipolar patient can trigger a manic episode!"
             },
             {
                 id: 'schizo',
                 disease: "Schizophrenia Spectrum & Psychosis",
-                presentation: "Presents with {auditory hallucinations} (commanding or conversing), {persecutory delusions}, {disorganized speech}, and {negative symptoms} (flat affect, alogia).",
-                differentials: "1. {Substance-Induced} Psychotic Disorder (Methamphetamine/Shabu use is very common)\n2. {Bipolar Disorder} with psychotic features\n3. {Delirium} (fluctuating sensorium)\n4. {Brief Psychotic Disorder} (< 1 month)",
-                management: "Biopsychosocial: Start {Atypical Antipsychotics} (e.g., Olanzapine, Risperidone). Provide {Family Psychoeducation} to ensure medication compliance and reduce Expressed Emotion (EE) at home.",
+                presentation: "Presents with {auditory hallucinations} (commanding or conversing), {persecutory delusions}, {disorganized speech}, and {negative symptoms} lasting ≥ 6 months.",
+                differentials: "1. {Substance-Induced} Psychotic Disorder (Methamphetamine/Shabu use)\n2. {Bipolar Disorder} with psychotic features\n3. {Schizoaffective Disorder}\n4. {Delirium} (fluctuating sensorium)",
+                management: "Biopsychosocial: Start {Atypical Antipsychotics} (e.g., Olanzapine 5mg OD, Risperidone 2mg OD). Provide {Family Psychoeducation} to reduce Expressed Emotion (EE) at home which prevents relapse.",
                 pearl: "Always specify the type of hallucination. 'Command hallucinations' telling the patient to hurt themselves or others is an absolute indication for involuntary hospital admission."
             },
             {
                 id: 'bipolar',
-                disease: "Bipolar Affective Disorder (Manic)",
-                presentation: "Presents with {elevated/irritable mood}, flight of ideas, {grandiosity}, {decreased need for sleep}, pressured speech, and reckless behavior (DIGFAST).",
-                differentials: "1. {Substance Abuse} (Stimulants/Cocaine)\n2. {Schizoaffective Disorder}\n3. {Hyperthyroidism}\n4. {MDD with mixed features}",
-                management: "Biopsychosocial: Start {Mood Stabilizers} (e.g., Lithium, Valproic Acid) or Atypical Antipsychotics. Ensure a {low-stimulation environment}. Inpatient admission if reckless behavior puts them at financial or physical risk.",
-                pearl: "Manic patients often lack insight (Level 1) and will refuse treatment because they 'feel great.' Do not argue with their delusions of grandeur; gently redirect the conversation to their current safety."
+                disease: "Bipolar I Disorder (Manic Episode)",
+                presentation: "Presents with {elevated/expansive mood}, flight of ideas, {grandiosity}, {decreased need for sleep}, and reckless behavior lasting ≥ 1 week.",
+                differentials: "1. {Substance Abuse} (Stimulants/Cocaine)\n2. {Schizoaffective Disorder}\n3. {Hyperthyroidism}\n4. {Borderline Personality Disorder}",
+                management: "Biopsychosocial: Start {Mood Stabilizers} (e.g., Lithium, Valproic Acid) or Atypical Antipsychotics. Ensure a {low-stimulation environment}. Inpatient admission if reckless behavior puts them at severe risk.",
+                pearl: "Manic patients often lack insight (Level 1) and will refuse treatment because they 'feel great.' Do not argue with their delusions of grandeur; gently redirect to safety."
             },
             {
                 id: 'anxiety',
                 title: "Generalized Anxiety Disorder (GAD) / Panic",
                 presentation: "Presents with {excessive worry} > 6 months, restlessness, muscle tension, and somatic symptoms like {palpitations} and shortness of breath.",
-                differentials: "1. {Hyperthyroidism} or Arrhythmias (Must rule out medical first!)\n2. {Caffeine Intoxication}\n3. {Panic Disorder} (if attacks are sudden and unprovoked)\n4. {Social Anxiety Disorder}",
+                differentials: "1. {Hyperthyroidism} or Arrhythmias (Must rule out medical first!)\n2. {Caffeine Intoxication}\n3. {Panic Disorder} (if attacks are sudden and unprovoked)",
                 management: "Biopsychosocial: Start {SSRIs} (long-term) and short-term {Benzodiazepines} (e.g., Clonazepam) for immediate bridging. Teach {relaxation techniques} (deep breathing) and CBT.",
                 pearl: "OSCE Trap: Never diagnose a primary psychiatric anxiety disorder without first stating that you will 'rule out general medical conditions' (like obtaining an ECG and TSH level)."
             },
@@ -138,8 +136,8 @@
                 disease: "Delirium vs. Major Neurocognitive Disorder",
                 presentation: "Delirium presents with {acute onset}, {fluctuating sensorium}, and {altered level of consciousness}. Dementia is {insidious}, chronic, with an intact sensorium early on.",
                 differentials: "Delirium causes (I WATCH DEATH): {Infection} (UTI/Pneumonia), {Withdrawal}, {Trauma}, {Metabolic} (Electrolytes/Hypoglycemia), {Hypoxia}.",
-                management: "Delirium: Identify and treat the {underlying medical cause} (e.g., antibiotics for UTI). Provide {environmental reorientation} (clocks, calendars, well-lit room). Avoid physical restraints if possible.",
-                pearl: "Visual hallucinations (seeing bugs, animals) in an elderly patient or alcohol-withdrawal patient is highly indicative of Delirium, NOT Schizophrenia."
+                management: "Delirium: Identify and treat the {underlying medical cause} (e.g., antibiotics for UTI). Provide {environmental reorientation} (clocks, well-lit room). Avoid physical restraints.",
+                pearl: "Visual hallucinations (seeing bugs, animals) in an elderly patient or a patient with a history of alcohol use is highly indicative of Delirium, NOT Schizophrenia."
             }
         ];
 
@@ -160,7 +158,8 @@
                     if (!text) return;
                     const parts = text.split(/\{(.*?)\}/g);
                     parts.forEach((part, i) => {
-                        if (i % 2 === 1 && Math.random() > 0.3) {
+                        // 80% chance to hide the bracketed keyword
+                        if (i % 2 === 1 && Math.random() > 0.2) {
                             newHidden.add(`${prefix}-${i}`);
                         }
                     });
@@ -197,7 +196,7 @@
             const renderText = (text, prefix) => {
                 if (!text) return null;
                 
-                // If it contains newlines, split them to render <br>
+                // Handle newlines gracefully
                 const lines = text.split('\n');
                 
                 return lines.map((line, lineIndex) => {
@@ -216,8 +215,8 @@
                         <React.Fragment key={lineIndex}>
                             {parts.map((part, i) => {
                                 if (i % 2 === 1) {
-                                    const wordId = `${prefix}-${lineIndex}-${i}`; // Added lineIndex to ensure uniqueness
-                                    if (hiddenWords.has(wordId) || hiddenWords.has(`${prefix}-${i}`)) { // Fallback for single line inputs
+                                    const wordId = `${prefix}-${lineIndex}-${i}`; 
+                                    if (hiddenWords.has(wordId) || hiddenWords.has(`${prefix}-${i}`)) { 
                                         return <span key={wordId} onClick={() => revealWord(wordId || `${prefix}-${i}`)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
                                     } else {
                                         return <span key={wordId} className="font-bold bg-sky-100 text-sky-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
@@ -300,14 +299,14 @@
                                     </div>
 
                                     {/* Content Grid */}
-                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
-                                        <div className="lg:col-span-2 space-y-6">
+                                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 animate-fade-in">
+                                        <div className="xl:col-span-2 space-y-6">
                                             <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
                                                 <div className="bg-emerald-600 text-white p-3 font-bold flex items-center">
                                                     <span className="text-xl mr-2">🗣️</span> TO PATIENT (FILIPINO SCRIPT)
                                                 </div>
                                                 <div className="p-6 bg-emerald-50">
-                                                    <p className="text-emerald-950 font-medium leading-relaxed text-[16px]">
+                                                    <p className="text-emerald-950 font-medium leading-relaxed text-[17px]">
                                                         "{renderText(activePage.patient, `script-pat-${activeIndex}`)}"
                                                     </p>
                                                 </div>
@@ -354,6 +353,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIndex(Math.max(0, activeIndex - 1))} disabled={activeIndex === 0} className="px-6 py-3 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIndex(Math.min(msePages.length - 1, activeIndex + 1))} disabled={activeIndex === msePages.length - 1} className="px-6 py-3 rounded-lg font-bold text-white bg-sky-600 hover:bg-sky-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
                                 </>
                             )}
 
@@ -364,13 +372,13 @@
                                         <h2 className="text-4xl font-black text-slate-800 flex items-center">
                                             <span className="text-sky-600 mr-3">📋</span> Formal Case Reporting
                                         </h2>
-                                        <p className="text-slate-600 mt-2 font-medium">The OSCE requires you to report findings based on 5 specific outputs. Do NOT explain the basis or give differential diagnoses. State the facts clearly.</p>
+                                        <p className="text-slate-600 mt-2 font-medium">The OSCE requires you to report findings based on 5 specific outputs. Do NOT explain your basis or give differential diagnoses. State the facts clearly.</p>
                                     </div>
                                     
                                     <div className="bg-white rounded-xl shadow-lg border-t-8 border-sky-600 p-8 space-y-8">
                                         <div>
                                             <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span> Complete MSE Findings</h3>
-                                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-5 rounded-lg border border-slate-200 font-mono text-sm shadow-inner">
+                                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-5 rounded-lg border border-slate-200 font-mono text-[15px] shadow-inner">
                                                 "Patient is a [Age]-year-old [Sex], casually dressed, with poor grooming and hygiene. He exhibits psychomotor retardation and poor eye contact. Speech is slow in pace, soft in volume, and minimal in amount. <br/><br/>
                                                 Subjective mood is 'sobrang lungkot', with a blunted, congruent affect. Thought process is goal-directed. He denies delusions but admits to command auditory hallucinations. He actively admits to self-harm and suicidal ideation, but denies homicidal ideation.<br/><br/>
                                                 He is oriented to person, place, and time. Concentration is fair, committing 2 errors in spelling MUNDO backwards. Abstract thinking is intact. Judgment is good. Insight is impaired at Level 3 (Blames factors outside of illness)."
@@ -380,30 +388,30 @@
                                         <div className="grid md:grid-cols-2 gap-8">
                                             <div>
                                                 <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span> Complete Diagnosis</h3>
-                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                                    "Major Depressive Disorder, Severe, with Psychotic Features." <br/>
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-medium">
+                                                    "Major Depressive Disorder, Single Episode, Severe, with Psychotic Features." <br/>
                                                     <span className="text-xs text-red-600 font-bold mt-2 block border-t border-red-100 pt-2">*OSCE Rule: Provide ONLY the final diagnosis. Do NOT explain your basis or list differential diagnoses.*</span>
                                                 </p>
                                             </div>
 
                                             <div>
                                                 <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span> Specific Medicine</h3>
-                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-medium">
                                                     "I will start an SSRI such as <strong>Escitalopram 10mg OD</strong> for the depression, and an atypical antipsychotic such as <strong>Olanzapine 5mg OD</strong> or <strong>Risperidone 2mg OD</strong> for the psychotic features."
                                                 </p>
                                             </div>
 
                                             <div>
                                                 <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">4</span> Psychosocial Intervention</h3>
-                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                                    "I suggest <strong>Cognitive Behavioral Therapy (CBT)</strong> to address cognitive distortions, and family psychoeducation to establish a support system and safety plan at home."
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200 font-medium">
+                                                    "I suggest <strong>Cognitive Behavioral Therapy (CBT)</strong> to address cognitive distortions, and <strong>Family Psychoeducation</strong> to establish a support system and safety plan at home."
                                                 </p>
                                             </div>
 
                                             <div>
                                                 <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">5</span> Patient Disposition</h3>
-                                                <p className="text-slate-700 leading-relaxed bg-red-50 p-4 rounded-lg border border-red-200">
-                                                    "Due to the presence of active suicidal ideations and command hallucinations, the patient is a danger to himself. I will <strong>ADMIT the patient to the psychiatric ward</strong>. I will not let the patient go home."
+                                                <p className="text-slate-700 leading-relaxed bg-red-50 p-4 rounded-lg border border-red-200 font-medium">
+                                                    "Due to the presence of active suicidal ideations and command hallucinations, the patient is a danger to himself. I will <strong>ADMIT the patient to the inpatient psychiatric unit</strong>. I will not let the patient go home."
                                                 </p>
                                             </div>
                                         </div>
@@ -419,7 +427,7 @@
                                             <h2 className="text-4xl font-black text-slate-800 flex items-center">
                                                 <span className="text-indigo-600 mr-3">🩺</span> Differentials & Management
                                             </h2>
-                                            <p className="text-slate-500 mt-2 font-medium">Common OSCE psychiatric presentations, differentials to rule out, and biopsychosocial management plans.</p>
+                                            <p className="text-slate-500 mt-2 font-medium">Common OSCE psychiatric presentations, differentials to rule out, and evidence-based biopsychosocial management plans.</p>
                                         </div>
                                         {memorizeMode && (
                                             <button onClick={shuffleBlanks} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
@@ -435,7 +443,7 @@
                                         </div>
                                     )}
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                                         {differentialsData.map((data, idx) => (
                                             <div key={idx} className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
                                                 <div className="bg-indigo-600 p-4 text-white">
@@ -456,12 +464,12 @@
                                                     </div>
                                                     <div>
                                                         <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Management Plan</h4>
-                                                        <p className="text-slate-800 font-medium leading-relaxed bg-indigo-50 p-3 rounded border border-indigo-100">
+                                                        <p className="text-slate-800 font-medium leading-relaxed bg-indigo-50 p-4 rounded border border-indigo-100">
                                                             {renderText(data.management, `diff-mgt-${idx}`)}
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className="bg-amber-50 p-4 border-t border-amber-100">
+                                                <div className="bg-amber-50 p-4 border-t border-amber-200">
                                                     <h4 className="font-black text-amber-900 flex items-center mb-1 text-sm">
                                                         <span className="mr-2">💡</span> Preceptor Pearl / OSCE Trap
                                                     </h4>
