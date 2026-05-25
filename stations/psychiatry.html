@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychiatry OSCE Master - Ultimate Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f0f9ff; }
+        ::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; border-bottom: 2px dashed #0284c7; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- DATA STRUCTURES ---
+        const msePages = [
+            {
+                id: 'intro',
+                title: "1. Intro & Observations",
+                icon: "👁️",
+                checklist: [
+                    "Introduced self and the examination properly",
+                    "Appearance (Observe)",
+                    "Behavior/Mannerisms (Observe)",
+                    "Speech (Observe pace, volume, tone)"
+                ],
+                patient: "Magandang umaga/hapon po. Ako po si Doc {Pangalan}, isang estudyanteng doktor. Nandito po ako para kumustahin ang inyong {kasalukuyang kalagayan} at pag-isip ngayon. Okay lang po ba na mag-usap tayo nang ilang minuto?",
+                preceptor: "I am observing the patient's {Appearance} (grooming, hygiene, appropriateness of dress), {Behavior} (psychomotor retardation or agitation, eye contact, mannerisms), and {Speech} (rate, volume, prosody, and amount).",
+                pearl: "Do NOT ask about the history of present illness. The OSCE prompt clearly states: 'Do NOT do history taking! Focus on the patient's CURRENT mental state.' Proceed directly to assessing how they feel today."
+            },
+            {
+                id: 'mood',
+                title: "2. Mood & Affect",
+                icon: "🎭",
+                checklist: [
+                    "Mood (Subjective emotion)",
+                    "Affect (Objective expression)",
+                    "Sensitive/empathic manner of interaction"
+                ],
+                patient: "Kumusta po ang inyong {pakiramdam} ngayong araw? ... (Kung malungkot): Ano po ang madalas ninyong naiisip kapag nararamdaman niyo ito?",
+                preceptor: "I elicit the {Mood} by asking the patient directly how they feel, quoting their exact words (e.g., 'Sobrang lungkot'). I observe the {Affect}, noting its type (e.g., blunted, flat, expansive), its range, and its {congruence} with their stated mood.",
+                pearl: "Mood is what the patient says (climate). Affect is what you see (weather). A patient laughing while saying they are depressed has an 'incongruent' affect."
+            },
+            {
+                id: 'thought',
+                title: "3. Thought Process & Content",
+                icon: "💭",
+                checklist: [
+                    "Thought process (Logical? Flight of ideas?)",
+                    "Hallucinations (if present, specify kind)",
+                    "Delusions (if present, specify kind)",
+                    "Self-harm ideations",
+                    "Suicidal ideations",
+                    "Homicidal ideations"
+                ],
+                patient: "May mga naririnig o nakikita po ba kayong mga bagay na {hindi nakikita o naririnig ng iba}? May mga paniniwala po ba kayo na pakiramdam niyo ay {hindi naiintindihan} ng ibang tao? Sa bigat po ng inyong pinagdadaanan, naisip niyo na po bang {saktan ang inyong sarili} o {tapusin ang inyong buhay}? May naiisip po ba kayong {saktan ang ibang tao}?",
+                preceptor: "I am assessing the {Thought Process} for linearity and goal-directedness. I screen for {Perceptual Disturbances} (hallucinations) and {Delusions} (e.g., persecutory, grandiose). Crucially, I directly ask about {Self-harm}, {Suicidal ideations}, and {Homicidal ideations}.",
+                pearl: "Never skip the suicide/homicide screening. Be direct and compassionate. 'Naisip mo na bang tapusin ang buhay mo?' is required for safety assessment."
+            },
+            {
+                id: 'sensorium',
+                title: "4. Sensorium & Cognition",
+                icon: "🧠",
+                checklist: [
+                    "Orientation to person",
+                    "Orientation to place",
+                    "Orientation to time",
+                    "Concentration (WORLD backwards or Serial 7s)"
+                ],
+                patient: "Para po sa susunod kong mga tanong, parang nagtetest lang po tayo ng memorya. Ano pong {buong pangalan} ninyo? Anong {petsa at araw} po ngayon? Saan po tayong {lugar} ngayon? Maaari niyo po bang baybayin o i-spell ang salitang 'MUNDO' nang {pabalik} (O-D-N-U-M)?",
+                preceptor: "I am testing orientation to the {three spheres} (person, place, time). For {Concentration}, I am using the spelling of MUNDO backwards, or Serial 7s ({100 minus 7}, etc.), adjusting to the patient's educational level.",
+                pearl: "Concentration Grading: Target 5 items. 3 to 4 mistakes = POOR. 2 mistakes = FAIR. If the patient asks to repeat because they made a mistake, grade it as FAIR."
+            },
+            {
+                id: 'higher',
+                title: "5. Abstraction, Judgment, Insight",
+                icon: "⚖️",
+                checklist: [
+                    "Abstract thinking (Proverbs/Similarities)",
+                    "Judgment (Test scenario)",
+                    "Insight (Awareness of illness)",
+                    "Thanked the patient and ended well"
+                ],
+                patient: "Ano po ang pagkakaintindi ninyo sa kasabihang: {'Pag may tiyaga, may nilaga'}? Kung makakita po kayo ng {usok sa loob ng sinehan}, ano po ang una ninyong gagawin? Sa tingin niyo po ba, ang mga nararanasan ninyo ngayon ay isang {sakit na nangangailangan ng gamutan}? Maraming salamat po sa inyong oras.",
+                preceptor: "I test {Abstract thinking} using proverbs or similarities. I test {Judgment} using a standard scenario like fire in a theater. I assess {Insight} on a scale of 1 to 6. I conclude the exam smoothly and {thank the patient}.",
+                pearl: "Insight Scale: 1 = Complete denial of illness. 6 = True emotional insight. If a patient says 'Malungkot ako dahil sa asawa ko pero wala akong sakit sa isip', that is Impaired Insight (Level 2/3)."
+            }
+        ];
+
+        const differentialsData = [
+            {
+                id: 'mdd',
+                disease: "Major Depressive Disorder (MDD)",
+                presentation: "Presents with {depressed mood}, {anhedonia}, changes in sleep/appetite, {psychomotor retardation}, and {suicidal ideation}.",
+                differentials: "1. {Bipolar Disorder} (Must rule out past manic episodes!)\n2. {Substance-Induced} Mood Disorder\n3. {Hypothyroidism} or other medical conditions\n4. {Adjustment Disorder} (if stressor occurred < 3 months ago)",
+                management: "Biopsychosocial: Start {SSRIs} (e.g., Escitalopram, Sertraline). Provide {Cognitive Behavioral Therapy (CBT)}. Critically assess {suicide risk} to determine if inpatient psychiatric admission is required.",
+                pearl: "OSCE Trap: If a patient presents with depression, you MUST ask: 'Have you ever had a period where you felt extremely energetic, needed less sleep, and made reckless decisions?' Giving an SSRI to a Bipolar patient can trigger a manic episode!"
+            },
+            {
+                id: 'schizo',
+                disease: "Schizophrenia Spectrum & Psychosis",
+                presentation: "Presents with {auditory hallucinations} (commanding or conversing), {persecutory delusions}, {disorganized speech}, and {negative symptoms} (flat affect, alogia).",
+                differentials: "1. {Substance-Induced} Psychotic Disorder (Methamphetamine/Shabu use is very common)\n2. {Bipolar Disorder} with psychotic features\n3. {Delirium} (fluctuating sensorium)\n4. {Brief Psychotic Disorder} (< 1 month)",
+                management: "Biopsychosocial: Start {Atypical Antipsychotics} (e.g., Olanzapine, Risperidone). Provide {Family Psychoeducation} to ensure medication compliance and reduce Expressed Emotion (EE) at home.",
+                pearl: "Always specify the type of hallucination. 'Command hallucinations' telling the patient to hurt themselves or others is an absolute indication for involuntary hospital admission."
+            },
+            {
+                id: 'bipolar',
+                disease: "Bipolar Affective Disorder (Manic)",
+                presentation: "Presents with {elevated/irritable mood}, flight of ideas, {grandiosity}, {decreased need for sleep}, pressured speech, and reckless behavior (DIGFAST).",
+                differentials: "1. {Substance Abuse} (Stimulants/Cocaine)\n2. {Schizoaffective Disorder}\n3. {Hyperthyroidism}\n4. {MDD with mixed features}",
+                management: "Biopsychosocial: Start {Mood Stabilizers} (e.g., Lithium, Valproic Acid) or Atypical Antipsychotics. Ensure a {low-stimulation environment}. Inpatient admission if reckless behavior puts them at financial or physical risk.",
+                pearl: "Manic patients often lack insight (Level 1) and will refuse treatment because they 'feel great.' Do not argue with their delusions of grandeur; gently redirect the conversation to their current safety."
+            },
+            {
+                id: 'anxiety',
+                title: "Generalized Anxiety Disorder (GAD) / Panic",
+                presentation: "Presents with {excessive worry} > 6 months, restlessness, muscle tension, and somatic symptoms like {palpitations} and shortness of breath.",
+                differentials: "1. {Hyperthyroidism} or Arrhythmias (Must rule out medical first!)\n2. {Caffeine Intoxication}\n3. {Panic Disorder} (if attacks are sudden and unprovoked)\n4. {Social Anxiety Disorder}",
+                management: "Biopsychosocial: Start {SSRIs} (long-term) and short-term {Benzodiazepines} (e.g., Clonazepam) for immediate bridging. Teach {relaxation techniques} (deep breathing) and CBT.",
+                pearl: "OSCE Trap: Never diagnose a primary psychiatric anxiety disorder without first stating that you will 'rule out general medical conditions' (like obtaining an ECG and TSH level)."
+            },
+            {
+                id: 'delirium',
+                disease: "Delirium vs. Major Neurocognitive Disorder",
+                presentation: "Delirium presents with {acute onset}, {fluctuating sensorium}, and {altered level of consciousness}. Dementia is {insidious}, chronic, with an intact sensorium early on.",
+                differentials: "Delirium causes (I WATCH DEATH): {Infection} (UTI/Pneumonia), {Withdrawal}, {Trauma}, {Metabolic} (Electrolytes/Hypoglycemia), {Hypoxia}.",
+                management: "Delirium: Identify and treat the {underlying medical cause} (e.g., antibiotics for UTI). Provide {environmental reorientation} (clocks, calendars, well-lit room). Avoid physical restraints if possible.",
+                pearl: "Visual hallucinations (seeing bugs, animals) in an elderly patient or alcohol-withdrawal patient is highly indicative of Delirium, NOT Schizophrenia."
+            }
+        ];
+
+        // --- MAIN APP COMPONENT ---
+        const PsychApp = () => {
+            const [view, setView] = useState('script'); // 'script', 'reporting', 'differentials', 'rubric'
+            const [activeIndex, setActiveIndex] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+
+            const activePage = msePages[activeIndex];
+
+            // Centralized randomizer that adapts based on current view
+            const shuffleBlanks = () => {
+                const newHidden = new Set();
+                
+                const processText = (text, prefix) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1 && Math.random() > 0.3) {
+                            newHidden.add(`${prefix}-${i}`);
+                        }
+                    });
+                };
+
+                if (view === 'script') {
+                    processText(activePage.patient, `script-pat-${activeIndex}`);
+                    processText(activePage.preceptor, `script-pre-${activeIndex}`);
+                } else if (view === 'differentials') {
+                    differentialsData.forEach((diff, dIdx) => {
+                        processText(diff.presentation, `diff-pres-${dIdx}`);
+                        processText(diff.differentials, `diff-diffs-${dIdx}`);
+                        processText(diff.management, `diff-mgt-${dIdx}`);
+                    });
+                }
+                
+                setHiddenWords(newHidden);
+            };
+
+            // Re-run randomizer when view, page, or mode changes
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks();
+                else setHiddenWords(new Set());
+            }, [view, activeIndex, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, prefix) => {
+                if (!text) return null;
+                
+                // If it contains newlines, split them to render <br>
+                const lines = text.split('\n');
+                
+                return lines.map((line, lineIndex) => {
+                    if (!memorizeMode) {
+                        const parts = line.split(/\{(.*?)\}/g);
+                        return (
+                            <React.Fragment key={lineIndex}>
+                                {parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-sky-700">{part}</strong> : <span key={i}>{part}</span>)}
+                                {lineIndex < lines.length - 1 && <br />}
+                            </React.Fragment>
+                        );
+                    }
+                    
+                    const parts = line.split(/\{(.*?)\}/g);
+                    return (
+                        <React.Fragment key={lineIndex}>
+                            {parts.map((part, i) => {
+                                if (i % 2 === 1) {
+                                    const wordId = `${prefix}-${lineIndex}-${i}`; // Added lineIndex to ensure uniqueness
+                                    if (hiddenWords.has(wordId) || hiddenWords.has(`${prefix}-${i}`)) { // Fallback for single line inputs
+                                        return <span key={wordId} onClick={() => revealWord(wordId || `${prefix}-${i}`)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
+                                    } else {
+                                        return <span key={wordId} className="font-bold bg-sky-100 text-sky-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
+                                    }
+                                }
+                                return <span key={i}>{part}</span>;
+                            })}
+                            {lineIndex < lines.length - 1 && <br />}
+                        </React.Fragment>
+                    );
+                });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row font-sans bg-slate-100">
+                    
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className="w-full md:w-72 bg-slate-900 text-white shadow-2xl flex-shrink-0 z-10 flex flex-col">
+                        <div className="p-6 pb-2">
+                            <h1 className="text-3xl font-black text-sky-400 tracking-tight">PSYCH 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Ward 7 Mastery</p>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                            <button onClick={() => setView('script')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'script' ? 'bg-sky-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🗣️</span> MSE Script
+                            </button>
+                            <button onClick={() => setView('reporting')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'reporting' ? 'bg-sky-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">📋</span> Formal Reporting
+                            </button>
+                            <button onClick={() => setView('differentials')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'differentials' ? 'bg-indigo-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🩺</span> Ddx & Management
+                            </button>
+                            <button onClick={() => setView('rubric')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left border-t border-slate-700 mt-4 pt-4 ${view === 'rubric' ? 'bg-sky-600 text-white shadow-lg transform scale-105 ml-2' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🧠</span> The 19-Pt Rubric
+                            </button>
+                        </div>
+                        
+                        {(view === 'script' || view === 'differentials') && (
+                            <div className="p-6 bg-slate-950 mt-auto border-t border-slate-800">
+                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center justify-center bg-slate-800 hover:bg-slate-700 px-4 py-3 rounded-lg transition-colors border border-slate-700">
+                                    <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-3 w-5 h-5 accent-sky-500" />
+                                    Active Recall Mode
+                                </label>
+                            </div>
+                        )}
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                        <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+                            
+                            {/* VIEW 1: MSE SCRIPT */}
+                            {view === 'script' && (
+                                <>
+                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-sky-200 pb-4 gap-4">
+                                        <div>
+                                            <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                                <span className="text-sky-600 mr-3">🗣️</span> MSE Stepwise Script
+                                            </h2>
+                                            <p className="text-slate-500 mt-2 font-medium">Do NOT take history. Ask smooth, conversational questions to assess the CURRENT state.</p>
+                                        </div>
+                                        {memorizeMode && (
+                                            <button onClick={shuffleBlanks} className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                                                <span className="mr-2">🔀</span> Shuffle Blanks
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Pagination Buttons */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {msePages.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIndex(idx)}
+                                                className={`whitespace-nowrap px-4 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${activeIndex === idx ? 'bg-sky-600 text-white ring-2 ring-sky-300' : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Content Grid */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+                                        <div className="lg:col-span-2 space-y-6">
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-emerald-600 text-white p-3 font-bold flex items-center">
+                                                    <span className="text-xl mr-2">🗣️</span> TO PATIENT (FILIPINO SCRIPT)
+                                                </div>
+                                                <div className="p-6 bg-emerald-50">
+                                                    <p className="text-emerald-950 font-medium leading-relaxed text-[16px]">
+                                                        "{renderText(activePage.patient, `script-pat-${activeIndex}`)}"
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-sky-700 text-white p-3 font-bold flex items-center">
+                                                    <span className="text-xl mr-2">👨‍⚕️</span> CLINICAL CONTEXT & OBSERVATION
+                                                </div>
+                                                <div className="p-6 bg-sky-50">
+                                                    <p className="text-sky-950 font-medium leading-relaxed text-[16px]">
+                                                        "{renderText(activePage.preceptor, `script-pre-${activeIndex}`)}"
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white p-3 font-bold flex items-center justify-between">
+                                                    <div className="flex items-center"><span className="text-xl mr-2">📋</span> Target Checklist</div>
+                                                </div>
+                                                <div className="p-4 bg-slate-50">
+                                                    <ul className="space-y-3">
+                                                        {activePage.checklist.map((item, i) => (
+                                                            <li key={i} className="flex items-start text-sm text-slate-700 font-medium bg-white p-3 rounded border border-slate-200 shadow-sm">
+                                                                <span className="text-sky-600 mr-2 font-bold">✔</span>
+                                                                {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-white rounded-xl shadow-lg border-t-4 border-amber-500 overflow-hidden">
+                                                <div className="p-5 bg-amber-50">
+                                                    <h4 className="font-black text-amber-900 flex items-center mb-2">
+                                                        <span className="text-xl mr-2">💡</span> Clinical Pearl
+                                                    </h4>
+                                                    <p className="text-sm text-amber-800 leading-relaxed font-medium">
+                                                        {activePage.pearl}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* VIEW 2: FORMAL REPORTING */}
+                            {view === 'reporting' && (
+                                <div className="space-y-8 animate-fade-in pb-10">
+                                    <div className="border-b-2 border-slate-300 pb-4">
+                                        <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                            <span className="text-sky-600 mr-3">📋</span> Formal Case Reporting
+                                        </h2>
+                                        <p className="text-slate-600 mt-2 font-medium">The OSCE requires you to report findings based on 5 specific outputs. Do NOT explain the basis or give differential diagnoses. State the facts clearly.</p>
+                                    </div>
+                                    
+                                    <div className="bg-white rounded-xl shadow-lg border-t-8 border-sky-600 p-8 space-y-8">
+                                        <div>
+                                            <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span> Complete MSE Findings</h3>
+                                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-5 rounded-lg border border-slate-200 font-mono text-sm shadow-inner">
+                                                "Patient is a [Age]-year-old [Sex], casually dressed, with poor grooming and hygiene. He exhibits psychomotor retardation and poor eye contact. Speech is slow in pace, soft in volume, and minimal in amount. <br/><br/>
+                                                Subjective mood is 'sobrang lungkot', with a blunted, congruent affect. Thought process is goal-directed. He denies delusions but admits to command auditory hallucinations. He actively admits to self-harm and suicidal ideation, but denies homicidal ideation.<br/><br/>
+                                                He is oriented to person, place, and time. Concentration is fair, committing 2 errors in spelling MUNDO backwards. Abstract thinking is intact. Judgment is good. Insight is impaired at Level 3 (Blames factors outside of illness)."
+                                            </p>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-8">
+                                            <div>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span> Complete Diagnosis</h3>
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                    "Major Depressive Disorder, Severe, with Psychotic Features." <br/>
+                                                    <span className="text-xs text-red-600 font-bold mt-2 block border-t border-red-100 pt-2">*OSCE Rule: Provide ONLY the final diagnosis. Do NOT explain your basis or list differential diagnoses.*</span>
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span> Specific Medicine</h3>
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                    "I will start an SSRI such as <strong>Escitalopram 10mg OD</strong> for the depression, and an atypical antipsychotic such as <strong>Olanzapine 5mg OD</strong> or <strong>Risperidone 2mg OD</strong> for the psychotic features."
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">4</span> Psychosocial Intervention</h3>
+                                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                    "I suggest <strong>Cognitive Behavioral Therapy (CBT)</strong> to address cognitive distortions, and family psychoeducation to establish a support system and safety plan at home."
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">5</span> Patient Disposition</h3>
+                                                <p className="text-slate-700 leading-relaxed bg-red-50 p-4 rounded-lg border border-red-200">
+                                                    "Due to the presence of active suicidal ideations and command hallucinations, the patient is a danger to himself. I will <strong>ADMIT the patient to the psychiatric ward</strong>. I will not let the patient go home."
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: DIFFERENTIALS & MANAGEMENT */}
+                            {view === 'differentials' && (
+                                <div className="space-y-6 animate-fade-in pb-10">
+                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end border-b-2 border-indigo-200 pb-4 gap-4">
+                                        <div>
+                                            <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                                <span className="text-indigo-600 mr-3">🩺</span> Differentials & Management
+                                            </h2>
+                                            <p className="text-slate-500 mt-2 font-medium">Common OSCE psychiatric presentations, differentials to rule out, and biopsychosocial management plans.</p>
+                                        </div>
+                                        {memorizeMode && (
+                                            <button onClick={shuffleBlanks} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors flex items-center">
+                                                <span className="mr-2">🔀</span> Shuffle Blanks
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {memorizeMode && (
+                                        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 text-amber-900 text-sm flex items-start shadow-sm rounded-r-lg">
+                                            <span className="text-xl mr-3">🧠</span>
+                                            <div><strong>Randomized Recall Active!</strong> Key symptoms, differentials, and treatments are hidden. Test your memory before clicking to reveal.</div>
+                                        </div>
+                                    )}
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {differentialsData.map((data, idx) => (
+                                            <div key={idx} className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
+                                                <div className="bg-indigo-600 p-4 text-white">
+                                                    <h3 className="text-xl font-black">{data.disease}</h3>
+                                                </div>
+                                                <div className="p-6 flex-1 space-y-5 bg-slate-50">
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Presentation</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed">
+                                                            {renderText(data.presentation, `diff-pres-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Differentials to R/O</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed whitespace-pre-line">
+                                                            {renderText(data.differentials, `diff-diffs-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Management Plan</h4>
+                                                        <p className="text-slate-800 font-medium leading-relaxed bg-indigo-50 p-3 rounded border border-indigo-100">
+                                                            {renderText(data.management, `diff-mgt-${idx}`)}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="bg-amber-50 p-4 border-t border-amber-100">
+                                                    <h4 className="font-black text-amber-900 flex items-center mb-1 text-sm">
+                                                        <span className="mr-2">💡</span> Preceptor Pearl / OSCE Trap
+                                                    </h4>
+                                                    <p className="text-sm text-amber-800 font-medium leading-relaxed">
+                                                        {data.pearl}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 4: RUBRIC */}
+                            {view === 'rubric' && (
+                                <div className="space-y-8 animate-fade-in pb-10">
+                                    <div className="border-b-2 border-slate-300 pb-4">
+                                        <h2 className="text-4xl font-black text-slate-800 flex items-center">
+                                            <span className="text-amber-500 mr-3">🧠</span>
+                                            The 19-Point Evaluator Rubric
+                                        </h2>
+                                        <p className="text-slate-500 mt-2 font-medium">The evaluator gives 1 point for each item observed (Done/Elicited AND Reported). Passing grade is 70% (14/19).</p>
+                                    </div>
+                                    
+                                    <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm">
+                                                <thead className="bg-slate-800 text-white">
+                                                    <tr>
+                                                        <th className="p-4 font-bold text-lg">Mental Status Examination Item</th>
+                                                        <th className="p-4 font-bold text-center w-24 text-lg">Pts</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-200 text-slate-700 font-medium">
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">1. Introduced self and the examination properly.</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">2. Appearance</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">3. Behavior/Mannerisms</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">4. Speech</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">5. Mood</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">6. Affect</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">7. Thought process</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">8. Hallucinations (if present, specify kind)</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">9. Delusions (if present, specify kind)</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">10. Self-harm ideations</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">11. Suicidal ideations</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">12. Homicidal ideations</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">13. Orientation to person, place, time</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">14. Concentration</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">15. Abstract thinking</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">16. Judgment</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">17. Insight</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="hover:bg-slate-50"><td className="p-4">18. Thanked the patient and ended the examination well.</td><td className="p-4 text-center font-bold text-sky-600 text-lg">1</td></tr>
+                                                    <tr className="bg-sky-50"><td className="p-4 font-black text-sky-900">19. Sensitive/empathic manner of interaction + Smooth, conversational flow</td><td className="p-4 text-center font-black text-sky-700 text-lg">1</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PsychApp />);
+    </script>
+</body>
+</html>
