@@ -72,7 +72,6 @@
         h2 { color: var(--up-maroon); margin-top: 0; border-bottom: 2px solid var(--border-light); padding-bottom: 10px; font-size: 1.5rem; }
         h3 { color: var(--up-green); margin-top: 25px; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; }
         h3::before { content: '■'; font-size: 0.7em; }
-        h4 { color: #343a40; margin-bottom: 10px; font-size: 1.05rem; }
 
         /* Tables */
         .table-responsive { overflow-x: auto; margin: 15px 0; border-radius: 6px; border: 1px solid var(--border-light); }
@@ -80,13 +79,11 @@
         th, td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); padding: 12px 15px; text-align: left; }
         th { background-color: #f8f9fa; color: var(--up-maroon); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; }
         tr:nth-child(even) { background-color: #fcfcfc; }
-        tr:hover { background-color: var(--highlight); }
 
         /* Checklist System */
         .checklist-group { margin-bottom: 25px; background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid var(--border-light); }
         .checklist-group h4 { margin: 0 0 12px 0; border-bottom: 1px dashed #ced4da; padding-bottom: 6px; }
         .checklist-item { display: flex; align-items: flex-start; margin-bottom: 8px; padding: 8px; border-radius: 4px; transition: all 0.2s; }
-        .checklist-item:hover { background-color: var(--highlight); }
         .checklist-item input[type="checkbox"] { margin-right: 12px; margin-top: 4px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--up-green); }
         .checklist-item label { cursor: pointer; flex: 1; font-size: 1rem; font-weight: 500; }
         .strikethrough { text-decoration: line-through; color: #adb5bd; }
@@ -100,19 +97,28 @@
             border-radius: 6px; padding: 18px; cursor: pointer; transition: all 0.2s ease;
             display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .flashcard:hover { box-shadow: 0 6px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
         .flashcard-q { font-weight: 700; font-size: 1rem; display: flex; justify-content: space-between; align-items: flex-start; }
         .flashcard-q::after { content: '▼'; font-size: 12px; color: #adb5bd; transition: transform 0.3s; margin-left: 8px; margin-top: 2px; }
         .flashcard-a { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-light); display: none; color: #343a40; font-size: 0.95rem; line-height: 1.6; }
         .flashcard.open .flashcard-a { display: block; animation: fadeIn 0.3s; }
         .flashcard.open .flashcard-q::after { transform: rotate(180deg); }
-        .tag { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-bottom: 10px; background: #e9ecef; color: var(--up-maroon); align-self: flex-start; text-transform: uppercase; letter-spacing: 0.5px;}
+        .tag { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-bottom: 10px; background: #e9ecef; color: var(--up-maroon); align-self: flex-start; text-transform: uppercase;}
 
         /* Alerts & Utility */
         .alert { background: var(--alert-bg); color: #856404; padding: 15px; border-radius: 6px; border-left: 4px solid var(--alert-border); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5;}
         
         .progress-bar { height: 10px; background: var(--border-light); border-radius: 5px; overflow: hidden; margin-bottom: 15px; }
         .progress-fill { height: 100%; background: var(--up-green); width: 0%; transition: width 0.3s; }
+
+        /* Simulator Styles */
+        .sim-btn { background-color: var(--up-green); color: white; border: none; padding: 12px 24px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s; margin-bottom: 20px;}
+        .sim-btn:hover { background-color: #084c1a; }
+        .sim-task { background: #fafafa; border: 1px solid var(--border-light); padding: 15px; border-radius: 6px; margin-bottom: 15px; border-left: 4px solid var(--up-green); }
+        .sim-task h4 { margin: 0 0 8px 0; color: var(--up-maroon); }
+        .sim-qa-block { background: #f8f9fa; border: 1px dashed var(--border-light); padding: 15px; border-radius: 6px; margin-bottom: 15px;}
+        .reveal-btn { background: none; border: 1px solid var(--up-maroon); color: var(--up-maroon); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: bold; margin-top: 10px;}
+        .reveal-btn:hover { background: var(--up-maroon); color: white; }
+        .sim-answer { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 0.95rem; color: #333;}
     </style>
 </head>
 <body>
@@ -128,10 +134,22 @@
     <button class="nav-btn" onclick="showPage('stn2')">2. Cranial Nerves</button>
     <button class="nav-btn" onclick="showPage('stn3')">3. Sensory & Meningeal</button>
     <button class="nav-btn" onclick="showPage('stn4')">4. Motor & Reflexes</button>
-    <button class="nav-btn" onclick="showPage('recall')">🎯 Master Q&A Bank</button>
+    <button class="nav-btn" onclick="showPage('recall')">Master Q&A Bank</button>
+    <button class="nav-btn" onclick="showPage('simulator')" style="background-color: var(--up-maroon); border-radius: 4px; margin-left: 10px;">🎯 Mock Simulator</button>
 </nav>
 
 <div class="container">
+
+    <div id="simulator" class="page">
+        <div class="card maroon-border" id="sim-setup">
+            <h2>OSCE Random Encounter Simulator</h2>
+            <p>Welcome to the OS202 Mock OSCE. Click the button below to draw your random station card and specific task option. You have 10 minutes to execute Tasks 1-3, and 2 minutes to answer Task 4.</p>
+            <button class="sim-btn" onclick="startSimulation()">Draw Random Station Card</button>
+        </div>
+
+        <div class="card" id="sim-run" style="display:none;">
+            </div>
+    </div>
 
     <div id="setup" class="page active">
         <div class="card maroon-border">
@@ -333,7 +351,7 @@
                 </div>
             </div>
 
-            <h3>Movement Disorders</h3>
+            <h3>Movement Disorders (Definitions)</h3>
             <div class="table-responsive">
                 <table>
                     <thead><tr><th>Disorder</th><th>Description</th><th>Localization / Cause</th></tr></thead>
@@ -354,11 +372,12 @@
 
     <div id="recall" class="page">
         <div class="card">
-            <h2>Theoretical & Faculty Guide Questions</h2>
-            <p style="margin-top:0; font-size: 0.95rem;">These are the exact required Q&A pairings derived from the official Faculty Station Guide. Click to reveal.</p>
+            <h2> Theoretical & Faculty Guide Questions </h2>
+            <p style="margin-top:0; font-size: 0.95rem;">These are the exact required Q&A pairings derived from the official Faculty Station Guide. Click to reveal.
+
+</p>
             
             <div class="flashcard-grid">
-                
                 <div class="flashcard" onclick="toggleCard(this)">
                     <span class="tag">Combo 1: Pathways</span>
                     <div class="flashcard-q">Trace the OLFACTORY pathway sequentially.</div>
@@ -393,7 +412,6 @@
                         7. Visual Cortex (calcarine sulcus, occipital lobe).
                     </div>
                 </div>
-
                 <div class="flashcard" onclick="toggleCard(this)">
                     <span class="tag">Combo 3: Meningeal</span>
                     <div class="flashcard-q">What causes meningeal irritation?</div>
@@ -421,7 +439,6 @@
                         <strong>NO.</strong> Neck flexion is specifically used to test for nuchal rigidity (meningeal irritation). Rigidity of the neck in <em>all</em> directions combined with 4-limb rigidity suggests diffuse severe pathology (e.g., decerebrate/decorticate posturing or massive brainstem involvement), not a simple meningeal sign.
                     </div>
                 </div>
-
                 <div class="flashcard" onclick="toggleCard(this)">
                     <span class="tag">Faculty Guide: Motor</span>
                     <div class="flashcard-q">Trace the afferent-efferent arc of muscle stretch reflexes.</div>
@@ -453,7 +470,6 @@
                         Draw a stick figure representing the patient facing you. Document the 0-4+ grade at the respective joints: Biceps/Brachioradialis at elbows, Triceps above elbows, Patellar at knees, Achilles at ankles. Append an up arrow (&uarr;) or down arrow (&darr;) at the feet for the plantar response. Include superficial reflexes (jaw jerk, abdominal) if tested.
                     </div>
                 </div>
-
                 <div class="flashcard" onclick="toggleCard(this)">
                     <span class="tag">Faculty Guide: Stn 1</span>
                     <div class="flashcard-q">Identify the cortical regions involved in aphasias, apraxias, and agnosias.</div>
@@ -478,7 +494,6 @@
                         <strong>Cerebellar Ataxia:</strong> Caused by defective cerebellar integration. The patient is uncoordinated and unsteady regardless of whether eyes are open or closed (Romberg is inapplicable).
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -486,7 +501,7 @@
 </div>
 
 <script>
-    // Master Procedural Checklists (Derived directly from Guidelines & Transes)
+    // --- CHECKLIST & UI LOGIC ---
     const checklists = {
         'equipment': [
             { text: "Complete White Uniform, ID, Nameplate", note: "EPA Grading factor: Professionalism." },
@@ -508,14 +523,12 @@
             { text: "Introduce self, verify patient ID & consent." },
             { text: "Assess LOC & Orientation (Time, Place, Person)." },
             { text: "Assess General behavior, mood (subjective), affect (objective)." },
-            { text: "Test Memory: Immediate (digit span), Recent (3 words at 5 mins), Remote." },
-            
+            { text: "Test Memory: Immediate, Recent (3 words at 5 mins), Remote." },
             { group: "B. Higher Cortical: Language (Aphasia)" },
             { text: "Assess Spontaneous Speech (Fluency, paraphasias)." },
             { text: "Test Comprehension (3-step midline command)." },
             { text: "Test Repetition ('No ifs, ands, or buts')." },
             { text: "Test Naming (Point to watch, pen)." },
-            
             { group: "C. Higher Cortical: Praxis, Gnosia, Parietal" },
             { text: "Test Apraxia: 'Show me how to blow out a match'." },
             { text: "Test Agnosia: Astereognosis (eyes closed, identify object in hand)." },
@@ -529,7 +542,6 @@
             { text: "CN II (Optic): Fundoscopy (Check for Red-Orange Reflex only)." },
             { text: "CN II, III: Direct/Consensual light reflex, Swinging flashlight test (RAPD)." },
             { text: "CN III, IV, VI: EOMs (H-pattern). Check accommodation (convergence + constriction)." },
-            
             { group: "B. CN V, VII, VIII, IX, X, XI, XII" },
             { text: "CN V: Palpate masseter/temporalis. Test light touch (V1, V2, V3 bilaterally)." },
             { text: "CN V, VII: Corneal reflex (touch wisp to cornea from side)." },
@@ -547,13 +559,11 @@
             { text: "Vibration (DCML): 128Hz fork on DIP of finger, IP of toe." },
             { text: "<span class='pearl'>PEARL:</span> Proprioception (DCML): Grasp SIDES of distal phalanx. Move up/down eyes closed." },
             { text: "<span class='pearl'>PEARL:</span> Malingering Check: Ask for sensation even if no stimulus is applied." },
-            
             { group: "B. Cerebellar & Gait" },
             { text: "Dysmetria: Finger-to-Nose (upper), Heel-to-Shin (lower)." },
             { text: "Dysdiadochokinesia: Rapid alternating movements." },
             { text: "Romberg Test: Stand feet together, close eyes 30s." },
             { text: "Gait: Normal, Tandem (heel-to-toe), Heel walk, Toe walk." },
-
             { group: "C. Meningeal Irritation" },
             { text: "<span class='pearl'>PEARL:</span> Contraindication check: Ensure no cervical instability (Trauma, RA) before proceeding." },
             { text: "Nuchal Rigidity: Passive neck flexion." },
@@ -567,7 +577,6 @@
             { text: "Tone: Passive ROM. Note spasticity, rigidity, flaccidity." },
             { text: "Strength Upper (MRC 0-5): Shoulder Abduction, Elbow Flex/Ext, Wrist Ext, Grip." },
             { text: "Strength Lower (MRC 0-5): Hip Flex/Ext, Knee Flex/Ext, Ankle Dorsi/Plantar." },
-            
             { group: "B. Reflexes (Deep & Superficial)" },
             { text: "Upper DTRs: Biceps, Brachioradialis, Triceps." },
             { text: "Lower DTRs: Patellar (Knee jerk), Achilles (Ankle jerk)." },
@@ -580,7 +589,6 @@
     function showPage(pageId) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        
         document.getElementById(pageId).classList.add('active');
         event.currentTarget.classList.add('active');
     }
@@ -616,7 +624,6 @@
                 }
             });
             if(html.includes('<div class="checklist-group">')) html += '</div>';
-            
             container.innerHTML = html;
         }
         updateEquipProgress();
@@ -625,9 +632,7 @@
     function updateCheck(id, key) {
         const checkbox = document.getElementById(id);
         const labelText = document.getElementById(`lbl_${id}`);
-        
         localStorage.setItem(id, checkbox.checked);
-        
         if(checkbox.checked) {
             labelText.classList.add('strikethrough');
         } else {
@@ -640,13 +645,107 @@
         const items = checklists['equipment'].filter(i => !i.group);
         const total = items.length;
         let checked = 0;
-        
         checklists['equipment'].forEach((item, index) => {
             if(!item.group && localStorage.getItem(`chk_equipment_${index}`) === 'true') checked++;
         });
-        
         const pct = Math.round((checked / total) * 100);
         document.getElementById('equip-progress').style.width = pct + '%';
+    }
+
+    // --- OSCE SIMULATOR ENGINE ---
+    const simData = {
+        stn1: {
+            title: "Station 1: History, Mental Status, & Higher Cortical",
+            options: [
+                { name: "Option 1: Hx & MSE", tasks: ["Task 1: History-taking (Chief complaint & HPI).", "Task 2: Mental Status (General behavior, appearance, language, mood).", "Task 3: Mental Status (Content of thought, sensorium)."] },
+                { name: "Option 2: Hx & Higher Cortical", tasks: ["Task 1: History-taking (Chief complaint & HPI).", "Task 2: Higher cortical (Aphasias and Apraxias).", "Task 3: Higher cortical (Agnosias and Gerstmann syndrome)."] }
+            ],
+            questions: [
+                { q: "Identify the cortical regions involved in aphasias, apraxias, and agnosias.", a: "Aphasias: Broca's (Inf. Frontal Gyrus), Wernicke's (Sup. Temporal Gyrus). Apraxias: Premotor/Parietal. Agnosias: Occipitotemporal/Parietal." },
+                { q: "Enumerate the components of Gerstmann syndrome.", a: "Acalculia, Agraphia (w/o alexia), Right-Left disorientation, Finger agnosia. Localization: Dominant (Left) Inferior Parietal Lobule." },
+                { q: "Differentiate expressive versus receptive aphasia.", a: "Expressive (Broca's): Non-fluent, intact comprehension, frustrated. Receptive (Wernicke's): Fluent/word salad, impaired comprehension, unaware." }
+            ]
+        },
+        stn2: {
+            title: "Station 2: Cranial Nerves",
+            options: [
+                { name: "Option 1: CN I-IV, VI", tasks: ["Task 1: CN I (Olfactory).", "Task 2: CN II (Acuity, Fields, Red-Orange Reflex only).", "Task 3: CN II & III (Pupils); CN III, IV, & VI (EOMs, Accommodation)."] },
+                { name: "Option 2: CN V, VII-X", tasks: ["Task 1: CN V (Motor and Sensory, Corneal Reflex).", "Task 2: CN VII (Facial Expression).", "Task 3: CN VIII (Hearing/Weber/Rinne), IX, & X (Palate/Gag)."] },
+                { name: "Option 3: Lower CNs & EOMs", tasks: ["Task 1: CN III, IV, & VI (EOMs).", "Task 2: CN VIII, IX, & X.", "Task 3: CN XI (Spinal Accessory) & XII (Hypoglossal)."] }
+            ],
+            questions: [
+                { q: "Correlate visual field defects with lesions along the visual pathway.", a: "Optic Nerve: Monocular blindness. Optic Chiasm: Bitemporal hemianopsia. Optic Tract: Contralateral homonymous hemianopsia." },
+                { q: "Trace the pupillary light reflex.", a: "Afferent: CN II (Optic). Integration: Pretectal to Edinger-Westphal. Efferent: CN III (Parasympathetic)." },
+                { q: "Explain the swinging flashlight test and RAPD.", a: "Tests for Relative Afferent Pupillary Defect. When light swings to the affected eye, both pupils paradoxically dilate due to a weaker afferent signal." }
+            ]
+        },
+        stn3: {
+            title: "Station 3: Somatosensory & Cerebellar",
+            options: [
+                { name: "Option 1: STT & Dystaxia", tasks: ["Task 1: Light touch, upper extremities.", "Task 2: Pain/temperature, upper extremities.", "Task 3: Dystaxia/ataxia (Finger-to-Nose, Heel-to-Shin, RAM)."] },
+                { name: "Option 2: DCML & Gait", tasks: ["Task 1: Vibration sense, upper extremities (128Hz).", "Task 2: Proprioception, upper extremities.", "Task 3: Romberg, posture, stance, and gait."] }
+            ],
+            questions: [
+                { q: "Discuss the levels of decussation of major somatosensory pathways.", a: "Spinothalamic Tract: Decussates immediately in the spinal cord. DCML: Ascends ipsilaterally, decussates in the medulla." },
+                { q: "Distinguish sensory ataxia from cerebellar ataxia.", a: "Sensory Ataxia (DCML): Worsens significantly with eyes closed (Positive Romberg). Cerebellar Ataxia: Unsteady regardless of eyes open/closed." },
+                { q: "If there is meningeal irritation, what signs do you expect?", a: "(+) Nuchal rigidity (resistance to flexion), (+) Brudzinski's (hip/knee flex upon neck flexion), (+) Kernig's (pain on knee extension)." }
+            ]
+        },
+        stn4: {
+            title: "Station 4: Motor & Reflexes",
+            options: [
+                { name: "Option 1: Upper Extremities", tasks: ["Task 1: Inspection, muscle tone testing, upper extremities.", "Task 2: Strength testing, upper extremities (MRC 0-5).", "Task 3: Muscle stretch reflex, upper extremities (Biceps, Triceps, Brachioradialis)."] },
+                { name: "Option 2: Lower Extremities", tasks: ["Task 1: Inspection, muscle tone testing, lower extremities.", "Task 2: Strength testing, lower extremities (MRC 0-5).", "Task 3: Muscle stretch reflex, lower extremities (Patellar, Achilles, Babinski, Clonus)."] }
+            ],
+            questions: [
+                { q: "Differentiate UMN vs. LMN findings.", a: "UMN: Spastic tone, hyperreflexia (3+/4+), positive Babinski, minimal atrophy. LMN: Flaccid tone, hyporeflexia (0/1+), normal plantar, severe atrophy, fasciculations." },
+                { q: "Discuss the Modified MRC muscle strength scale.", a: "0: No contraction. 1: Flicker. 2: Active movement, gravity eliminated. 3: Active movement against gravity. 4: Against moderate resistance. 5: Normal." },
+                { q: "Trace the corticospinal tract.", a: "Motor Cortex -> Corona Radiata -> Internal Capsule -> Cerebral Peduncles -> Pons -> Medullary Pyramids (Decussates) -> Lateral Corticospinal Tract -> Anterior Horn." }
+            ]
+        }
+    };
+
+    function startSimulation() {
+        const keys = Object.keys(simData);
+        const randomStnKey = keys[Math.floor(Math.random() * keys.length)];
+        const station = simData[randomStnKey];
+        
+        const randomOpt = station.options[Math.floor(Math.random() * station.options.length)];
+        const randomQs = station.questions.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+        let html = `
+            <h2>${station.title}</h2>
+            <h3 style="color:var(--text-main); margin-bottom: 20px;">Card Drawn: ${randomOpt.name}</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <p><strong>INSTRUCTIONS:</strong> You have 10 minutes to mentally execute or verbalize the following tasks. Wash hands and introduce yourself first.</p>
+            </div>
+        `;
+
+        randomOpt.tasks.forEach((task, idx) => {
+            html += `<div class="sim-task"><h4>Task ${idx + 1}</h4><p>${task}</p></div>`;
+        });
+
+        html += `
+            <h3 style="margin-top: 30px; border-top: 2px solid var(--border-light); padding-top: 20px;">Task 4: Faculty Q&A (2 Minutes)</h3>
+            <p>The examiner asks you the following question(s):</p>
+        `;
+
+        randomQs.forEach((qObj, idx) => {
+            html += `
+                <div class="sim-qa-block">
+                    <strong>Q${idx + 1}: ${qObj.q}</strong><br>
+                    <button class="reveal-btn" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Reveal Answer</button>
+                    <div class="sim-answer"><strong>Faculty Guide Expected Answer:</strong><br>${qObj.a}</div>
+                </div>
+            `;
+        });
+
+        html += `<button class="sim-btn" onclick="startSimulation()" style="margin-top: 20px; background-color: var(--up-maroon);">Draw New Card</button>`;
+
+        document.getElementById('sim-run').innerHTML = html;
+        document.getElementById('sim-run').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     window.onload = initChecklists;
