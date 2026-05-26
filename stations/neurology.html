@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPCM Neuro OSCE 2026: The Master Reviewer</title>
+    <style>
+        :root {
+            --up-green: #0b6623; 
+            --up-maroon: #7b1113; 
+            --bg-body: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-main: #212529;
+            --text-muted: #6c757d;
+            --border-light: #dee2e6;
+            --highlight: #e8f5e9;
+            --alert-bg: #fff3cd;
+            --alert-border: #ffeeba;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0; padding: 0; line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--up-maroon); color: white;
+            padding: 25px 20px; text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        header h1 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: 0.5px; }
+        header p { margin: 8px 0 0; font-size: 1rem; opacity: 0.9; font-style: italic; }
+
+        nav {
+            display: flex; justify-content: center; background-color: var(--up-green);
+            flex-wrap: wrap; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        nav button {
+            background: none; border: none; color: rgba(255,255,255,0.8);
+            padding: 15px 18px; font-size: 14px; cursor: pointer; transition: all 0.2s ease;
+            font-weight: 600; border-bottom: 3px solid transparent;
+        }
+        nav button:hover { color: white; background-color: rgba(255, 255, 255, 0.1); }
+        nav button.active {
+            color: white; background-color: rgba(255, 255, 255, 0.2);
+            border-bottom: 3px solid white;
+        }
+
+        /* Layout & Cards */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background-color: var(--bg-card); border-radius: 8px; padding: 25px;
+            margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--up-green);
+        }
+        .card.maroon-border { border-left: 5px solid var(--up-maroon); }
+
+        h2 { color: var(--up-maroon); margin-top: 0; border-bottom: 2px solid var(--border-light); padding-bottom: 10px; font-size: 1.5rem; }
+        h3 { color: var(--up-green); margin-top: 25px; font-size: 1.25rem; display: flex; align-items: center; gap: 8px; }
+        h3::before { content: '■'; font-size: 0.7em; }
+        h4 { color: #343a40; margin-bottom: 10px; font-size: 1.05rem; }
+
+        /* Tables */
+        .table-responsive { overflow-x: auto; margin: 15px 0; border-radius: 6px; border: 1px solid var(--border-light); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; background: white; }
+        th, td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); padding: 12px 15px; text-align: left; }
+        th { background-color: #f8f9fa; color: var(--up-maroon); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; }
+        tr:nth-child(even) { background-color: #fcfcfc; }
+        tr:hover { background-color: var(--highlight); }
+
+        /* Checklist System */
+        .checklist-group { margin-bottom: 25px; background: #fafafa; padding: 15px; border-radius: 6px; border: 1px solid var(--border-light); }
+        .checklist-group h4 { margin: 0 0 12px 0; border-bottom: 1px dashed #ced4da; padding-bottom: 6px; }
+        .checklist-item { display: flex; align-items: flex-start; margin-bottom: 8px; padding: 8px; border-radius: 4px; transition: all 0.2s; }
+        .checklist-item:hover { background-color: var(--highlight); }
+        .checklist-item input[type="checkbox"] { margin-right: 12px; margin-top: 4px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--up-green); }
+        .checklist-item label { cursor: pointer; flex: 1; font-size: 1rem; font-weight: 500; }
+        .strikethrough { text-decoration: line-through; color: #adb5bd; }
+        .note { display: block; font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+        .pearl { color: var(--up-maroon); font-weight: bold; font-size: 0.85rem; text-transform: uppercase; margin-right: 5px; }
+
+        /* Flashcards */
+        .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+        .flashcard {
+            background-color: white; border: 1px solid var(--border-light); border-top: 4px solid var(--up-maroon);
+            border-radius: 6px; padding: 18px; cursor: pointer; transition: all 0.2s ease;
+            display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .flashcard:hover { box-shadow: 0 6px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
+        .flashcard-q { font-weight: 700; font-size: 1rem; display: flex; justify-content: space-between; align-items: flex-start; }
+        .flashcard-q::after { content: '▼'; font-size: 12px; color: #adb5bd; transition: transform 0.3s; margin-left: 8px; margin-top: 2px; }
+        .flashcard-a { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-light); display: none; color: #343a40; font-size: 0.95rem; line-height: 1.6; }
+        .flashcard.open .flashcard-a { display: block; animation: fadeIn 0.3s; }
+        .flashcard.open .flashcard-q::after { transform: rotate(180deg); }
+        .tag { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; margin-bottom: 10px; background: #e9ecef; color: var(--up-maroon); align-self: flex-start; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        /* Alerts & Utility */
+        .alert { background: var(--alert-bg); color: #856404; padding: 15px; border-radius: 6px; border-left: 4px solid var(--alert-border); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5;}
+        
+        .progress-bar { height: 10px; background: var(--border-light); border-radius: 5px; overflow: hidden; margin-bottom: 15px; }
+        .progress-fill { height: 100%; background: var(--up-green); width: 0%; transition: width 0.3s; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Neuro OSCE OS202: Ultimate Class of 2026 Edition</h1>
+    <p>Comprehensive Integration of T09-T23, Faculty Guides, & Theoretical Combos</p>
+</header>
+
+<nav>
+    <button class="nav-btn active" onclick="showPage('setup')">EPA Guidelines & Setup</button>
+    <button class="nav-btn" onclick="showPage('stn1')">1. Higher Cortical</button>
+    <button class="nav-btn" onclick="showPage('stn2')">2. Cranial Nerves</button>
+    <button class="nav-btn" onclick="showPage('stn3')">3. Sensory & Meningeal</button>
+    <button class="nav-btn" onclick="showPage('stn4')">4. Motor & Reflexes</button>
+    <button class="nav-btn" onclick="showPage('recall')">🎯 Master Q&A Bank</button>
+</nav>
+
+<div class="container">
+
+    <div id="setup" class="page active">
+        <div class="card maroon-border">
+            <h2>OSCE Logistics & EPA Grading</h2>
+            <div class="alert">
+                <strong>Time Format:</strong> 12 minutes total per station. 10 minutes for Task Execution + 2 minutes for Faculty Q&A. You will draw a random task card at the start of the encounter.
+            </div>
+            
+            <h3>Faculty Evaluator Entrustment Scale</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>Level</th><th>Description</th><th>Score Equivalent</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>EPA 1</strong></td><td>Unable to perform, requires full guidance. Cannot answer questions.</td><td>50 / 100 (Fail)</td></tr>
+                        <tr><td><strong>EPA 2</strong></td><td>Incomplete/inconsistent. Requires frequent prompting. Answers with heavy prodding.</td><td>75 / 100 (Fail)</td></tr>
+                        <tr style="background-color: var(--highlight);"><td><strong>EPA 3</strong></td><td><strong>Complete exam with minor errors. Indirect supervision. Minimal prodding on Q&A.</strong></td><td><strong>100 / 100 (Pass)</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="font-style: italic; text-align: center; color: var(--text-muted); margin-top: 15px;">"Mistakes may happen and that is part of medical training. What matters most is your willingness to remain composed, mindful, teachable, and respectful... PADAYON!" - CWR Turalde</p>
+        </div>
+
+        <div class="card">
+            <h2>Master Equipment Checklist</h2>
+            <div class="progress-bar"><div id="equip-progress" class="progress-fill"></div></div>
+            <div id="equipment-checklist"></div>
+        </div>
+    </div>
+
+    <div id="stn1" class="page">
+        <div class="card maroon-border">
+            <h2>Trans 09: Higher Cortical & Mental Status</h2>
+            <div class="alert">
+                <span class="pearl">T09 Sequence Rule:</span> The Mental Status Exam (MSE) MUST be performed <strong>first</strong> among all neurological exams. It ensures the exam is valid; if the patient cannot comprehend instructions, subsequent motor/sensory testing is invalid.
+            </div>
+            <div class="alert">
+                <span class="pearl">T09 Sensorium Pearl:</span> A decreased sensorium CANNOT be produced by a single, one-sided cerebral hemisphere lesion (unless it is massively edematous and space-occupying). Normal sensorium strictly requires: <strong>1. Bilateral Reticular Formation, 2. Bilateral Thalami, 3. Bilateral Hemispheres.</strong>
+            </div>
+            
+            <h3>Master Aphasia Classification</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Aphasia Type</th><th>Fluent?</th><th>Comprehends?</th><th>Repeats?</th><th>Classic Localization</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Broca's</strong> (Expressive)</td><td>No</td><td>Yes</td><td>No</td><td>Dominant (Left) Inferior Frontal Gyrus</td></tr>
+                        <tr><td><strong>Wernicke's</strong> (Receptive)</td><td>Yes</td><td>No</td><td>No</td><td>Dominant (Left) Superior Temporal Gyrus</td></tr>
+                        <tr><td><strong>Global</strong></td><td>No</td><td>No</td><td>No</td><td>Massive MCA territory infarct</td></tr>
+                        <tr><td><strong>Conduction</strong></td><td>Yes</td><td>Yes</td><td>No</td><td>Arcuate Fasciculus</td></tr>
+                        <tr><td><strong>Transcortical Motor</strong></td><td>No</td><td>Yes</td><td>Yes</td><td>Frontal lobe (anterior/superior to Broca)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Cortical Syndromes</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Syndrome / Deficit</th><th>Components / Presentation</th><th>Localization</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Gerstmann Syndrome</strong></td><td>Acalculia, Agraphia (w/o alexia), Finger Agnosia, R/L Disorientation.</td><td>Dominant Inferior Parietal Lobule (Angular Gyrus)</td></tr>
+                        <tr><td><strong>Hemispatial Neglect</strong></td><td>Failure to attend to contralateral space despite intact vision/sensation.</td><td>Non-dominant (Right) Parietal Lobe</td></tr>
+                        <tr><td><strong>Ideomotor Apraxia</strong></td><td>Inability to perform learned acts on command (e.g., mime brushing teeth).</td><td>Premotor Cortex or Parietal Lobe</td></tr>
+                        <tr><td><strong>Prosopagnosia</strong></td><td>Inability to recognize familiar faces.</td><td>Bilateral Occipitotemporal (Fusiform) Gyrus</td></tr>
+                        <tr><td><strong>Dysgraphia Note</strong></td><td>Difficulty writing that is NOT strictly proportional to right hemiparesis.</td><td>Language network deficit.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Station 1 Procedural Script</h2>
+            <div id="stn1-checklist"></div>
+        </div>
+    </div>
+
+    <div id="stn2" class="page">
+        <div class="card maroon-border">
+            <h2>Trans 14: Cranial Nerves</h2>
+            <div class="alert">
+                <span class="pearl">T14 Timing & Order:</span> Examination of the cranial nerves should last exactly 3-5 minutes. Arrange instruments in order of use to maintain a systematic flow.
+            </div>
+
+            <h3>Master Reflex Arcs & Innervations</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Reflex / System</th><th>Afferent Limb (Sensory)</th><th>Efferent Limb (Motor)</th><th>Notes</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Pupillary Light</strong></td><td>CN II (Optic)</td><td>CN III (Parasympathetic fibers)</td><td>Integration at Pretectal & Edinger-Westphal nuclei.</td></tr>
+                        <tr><td><strong>Corneal Reflex</strong></td><td>CN V1 (Ophthalmic)</td><td>CN VII (Facial - Orbicularis oculi)</td><td>Touch cornea with wisp; look for bilateral blink.</td></tr>
+                        <tr><td><strong>Gag Reflex</strong></td><td>CN IX (Glossopharyngeal)</td><td>CN X (Vagus - Pharyngeal mm.)</td><td>Uvula deviates AWAY from a CN X lesion.</td></tr>
+                        <tr><td><strong>Jaw Jerk</strong></td><td>CN V3 (Mandibular)</td><td>CN V3 (Mandibular - Masseter)</td><td>Hyperactive response = Bilateral UMN lesion above pons.</td></tr>
+                        <tr><td><strong>EOM Formula</strong></td><td>N/A</td><td><strong>LR6 SO4</strong> (Rest are 3)</td><td>Lateral Rectus = CN VI; Superior Oblique = CN IV (Depresses & Intorts).</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Station 2 Procedural Script</h2>
+            <div id="stn2-checklist"></div>
+        </div>
+    </div>
+
+    <div id="stn3" class="page">
+        <div class="card maroon-border">
+            <h2>Trans 22 & 23: Somatosensory & Meningeal</h2>
+            
+            <div class="alert">
+                <span class="pearl">T23 Proprioception Handling:</span> When testing joint position sense, you must hold the distal phalanx strictly on the <strong>SIDES</strong> (medial/lateral). Pressing the nail bed (top/bottom) stimulates pressure receptors and invalidates the proprioceptive test.
+            </div>
+            <div class="alert">
+                <span class="pearl">T23 Malingering Check:</span> To test for malingering/psychogenic deficits, occasionally ask the patient for sensation even if there is NO stimulus applied. True deficits follow sharp dermatomal demarcations.
+            </div>
+            <div class="alert">
+                <span class="pearl">T22 Meningeal Contraindication:</span> Do NOT perform nuchal rigidity testing if the patient has suspected cervical instability (e.g., severe Trauma, severe Rheumatoid Arthritis).
+            </div>
+
+            <h3>Ascending Tracts & Crossings</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Tract / Pathway</th><th>Modalities Carried</th><th>Point of Decussation (Crossing)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Spinothalamic (Anterolateral)</strong></td><td>Pain (Pinprick), Temperature, Crude Touch.</td><td><strong>Spinal Cord</strong> (Crosses immediately, or 1-2 levels above entry, via Anterior White Commissure).</td></tr>
+                        <tr><td><strong>DCML (Posterior Columns)</strong></td><td>Vibration, Proprioception, Fine Touch, 2-point.</td><td><strong>Medulla</strong> (Ascends ipsilaterally in cord, crosses in lower medulla as Internal Arcuate Fibers).</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Station 3 Procedural Script</h2>
+            <div id="stn3-checklist"></div>
+        </div>
+    </div>
+
+    <div id="stn4" class="page">
+        <div class="card maroon-border">
+            <h2>Trans 20 & 21: Motor System, Reflexes, & Cerebellum</h2>
+            
+            <h3>MASTER MOTOR INNERVATION TABLE</h3>
+            <p style="font-size: 0.9rem; margin-top: 0; color: var(--text-muted);">The most critical table for localization. Know the root, nerve, and primary muscle.</p>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Action Tested</th><th>Primary Muscle(s)</th><th>Peripheral Nerve</th><th>Nerve Root(s)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Shoulder Abduction</td><td>Deltoid</td><td>Axillary n.</td><td>C5, C6</td></tr>
+                        <tr><td>Elbow Flexion</td><td>Biceps brachii, Brachialis</td><td>Musculocutaneous n.</td><td>C5, C6</td></tr>
+                        <tr><td>Elbow Extension</td><td>Triceps brachii</td><td>Radial n.</td><td>C7, C8</td></tr>
+                        <tr><td>Wrist Extension</td><td>Extensor carpi radialis</td><td>Radial n.</td><td>C6, C7, C8</td></tr>
+                        <tr><td>Finger Abduction</td><td>Dorsal interossei</td><td>Ulnar n.</td><td>C8, T1</td></tr>
+                        <tr><td>Thumb Opposition</td><td>Opponens pollicis</td><td>Median n.</td><td>C8, T1</td></tr>
+                        <tr><td colspan="4" style="background-color: #e9ecef; text-align: center; font-weight: bold; color: var(--up-maroon);">LOWER EXTREMITY</td></tr>
+                        <tr><td>Hip Flexion</td><td>Iliopsoas</td><td>Femoral n.</td><td>L2, L3</td></tr>
+                        <tr><td>Hip Extension</td><td>Gluteus maximus</td><td>Inferior Gluteal n.</td><td>L5, S1, S2</td></tr>
+                        <tr><td>Knee Extension</td><td>Quadriceps femoris</td><td>Femoral n.</td><td>L2, L3, L4</td></tr>
+                        <tr><td>Knee Flexion</td><td>Hamstrings</td><td>Sciatic n.</td><td>L5, S1, S2</td></tr>
+                        <tr><td>Ankle Dorsiflexion</td><td>Tibialis anterior</td><td>Deep Peroneal n.</td><td>L4, L5</td></tr>
+                        <tr><td>Ankle Plantarflexion</td><td>Gastrocnemius, Soleus</td><td>Tibial n.</td><td>S1, S2</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>UMN vs LMN Signs (T21)</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Parameter</th><th>Upper Motor Neuron (UMN) Lesion</th><th>Lower Motor Neuron (LMN) Lesion</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Muscle Tone</strong></td><td>Increased (Spasticity / Clasp-knife)</td><td>Decreased (Flaccidity)</td></tr>
+                        <tr><td><strong>Reflexes</strong></td><td>Hyperreflexia (3+, 4+ with clonus)</td><td>Hyporeflexia / Areflexia (0, 1+)</td></tr>
+                        <tr><td><strong>Muscle Bulk</strong></td><td>Normal or slight disuse atrophy</td><td>Profound, severe atrophy</td></tr>
+                        <tr><td><strong>Fasciculations</strong></td><td>Absent</td><td>Present (spontaneous muscle twitches)</td></tr>
+                        <tr><td><strong>Plantar Reflex</strong></td><td>Positive Babinski (Extensor response)</td><td>Normal (Flexor response)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>MRC Strength Scale (0-5)</h3>
+                    <ul style="font-size: 0.95rem; line-height: 1.6;">
+                        <li><strong>0:</strong> No visible/palpable contraction.</li>
+                        <li><strong>1:</strong> Flicker/trace, no joint movement.</li>
+                        <li><strong>2:</strong> Active movement, gravity eliminated.</li>
+                        <li><strong>3:</strong> Active movement against gravity only.</li>
+                        <li><strong>4:</strong> Active movement against moderate resistance.</li>
+                        <li><strong>5:</strong> Normal power against maximal resistance.</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>Deep & Superficial Reflex Inventory</h3>
+                    <ul style="font-size: 0.95rem; line-height: 1.6;">
+                        <li><strong>Biceps (Deep):</strong> C5, C6</li>
+                        <li><strong>Brachioradialis (Deep):</strong> C5, C6</li>
+                        <li><strong>Triceps (Deep):</strong> C7, C8</li>
+                        <li><strong>Patellar (Deep):</strong> L2, L3, L4</li>
+                        <li><strong>Achilles (Deep):</strong> S1, S2</li>
+                        <li><strong>Abdominal (Superficial):</strong> T8-T12</li>
+                        <li><strong>Cremasteric (Superficial):</strong> L1, L2</li>
+                        <li><strong>Grading:</strong> 0 (Absent), 1+ (Trace), 2+ (Normal), 3+ (Brisk), 4+ (Clonus/Pathologic).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Movement Disorders (T20 Definitions)</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead><tr><th>Disorder</th><th>Description</th><th>Localization / Cause</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Tremor</strong></td><td>Rhythmical, involuntary oscillatory movement.</td><td>Resting (Parkinson's), Intention (Cerebellar).</td></tr>
+                        <tr><td><strong>Athetosis</strong></td><td>Slow, writhing movements (appendicular).</td><td>Cerebral palsy, striatum/thalamus hypomyelination.</td></tr>
+                        <tr><td><strong>Dystonia</strong></td><td>Long, sustained twisting movements (axial).</td><td>Basal motor nuclei lesions.</td></tr>
+                        <tr><td><strong>Hemiballismus</strong></td><td>Wild, flinging movements of half the body.</td><td>Contralateral Subthalamic Nucleus (HTN bleed).</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Station 4 Procedural Script</h2>
+            <div id="stn4-checklist"></div>
+        </div>
+    </div>
+
+    <div id="recall" class="page">
+        <div class="card">
+            <h2>Class of 2026 Master Theoretical Combos & Faculty Guide Qs</h2>
+            <p style="margin-top:0; font-size: 0.95rem;">These are the exact required Q&A pairings derived from the "Class 2026 Theoreticals" document and the official Faculty Station Guide. Click to reveal.</p>
+            
+            <div class="flashcard-grid">
+                
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 1: Pathways</span>
+                    <div class="flashcard-q">Trace the OLFACTORY pathway sequentially.</div>
+                    <div class="flashcard-a">
+                        1. Olfactory receptor cells (1st order) &rarr;<br>
+                        2. Olfactory nerves (pass through cribriform plate) &rarr;<br>
+                        3. Olfactory bulb (synapse with mitral cells at glomeruli) &rarr;<br>
+                        4. Olfactory tract (axons of mitral cells) &rarr;<br>
+                        5. Olfactory striae (Lateral to primary cortex, Medial across anterior commissure) &rarr;<br>
+                        6. Olfactory cortex (temporal lobe).
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 1: Pathways</span>
+                    <div class="flashcard-q">What two nerves are involved in testing olfaction, and why avoid irritating odors?</div>
+                    <div class="flashcard-a">
+                        <strong>CN I (Olfactory):</strong> For true olfaction.<br>
+                        <strong>CN V (Trigeminal):</strong> Senses temperature and irritating substances (e.g., ammonia, alcohol).<br>
+                        Irritating odors stimulate CN V, giving a false positive result in a patient who is actually anosmic.
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 1: Pathways</span>
+                    <div class="flashcard-q">Trace the OPTIC pathway sequentially.</div>
+                    <div class="flashcard-a">
+                        1. Retina ganglionic layer (optic nerve fibers) &rarr;<br>
+                        2. Optic disc &rarr; Optic canal &rarr;<br>
+                        3. Optic Chiasm (nasal fibers decussate, temporal stay ipsilateral) &rarr;<br>
+                        4. Optic Tract &rarr;<br>
+                        5. Lateral Geniculate Body (posterior thalamus) &rarr;<br>
+                        6. Optic Radiations (upper/parietal = inferior visual field; lower/temporal = superior field) &rarr;<br>
+                        7. Visual Cortex (calcarine sulcus, occipital lobe).
+                    </div>
+                </div>
+
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 3: Meningeal</span>
+                    <div class="flashcard-q">What causes meningeal irritation?</div>
+                    <div class="flashcard-a">
+                        Irritation of the subarachnoid space. Common causes include:<br>
+                        1. Infectious meningitis (bacterial/viral)<br>
+                        2. Subarachnoid hemorrhage (blood is highly irritating)<br>
+                        3. Brain and meningeal neoplasms<br>
+                        4. Stroke affecting an area adjacent to CSF spaces.
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 3: Meningeal</span>
+                    <div class="flashcard-q">If there is meningeal irritation, what signs and resistance do you expect?</div>
+                    <div class="flashcard-a">
+                        <strong>(+) Nuchal rigidity:</strong> Neck flexion limitation or pain upon flexion.<br>
+                        <strong>(+) Brudzinski's:</strong> Involuntary flexion of hips & knees upon neck flexion.<br>
+                        <strong>(+) Kernig's:</strong> Pain in the hamstrings/lower back and resistance to further extension (patient cannot extend knee beyond ~135 degrees).
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Combo 3: Meningeal</span>
+                    <div class="flashcard-q">If an unconscious patient has a rigid neck in ALL directions AND all 4 limbs are rigid, is this a meninges problem? Yes or No?</div>
+                    <div class="flashcard-a">
+                        <strong>NO.</strong> Neck flexion is specifically used to test for nuchal rigidity (meningeal irritation). Rigidity of the neck in <em>all</em> directions combined with 4-limb rigidity suggests diffuse severe pathology (e.g., decerebrate/decorticate posturing or massive brainstem involvement), not a simple meningeal sign.
+                    </div>
+                </div>
+
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Motor</span>
+                    <div class="flashcard-q">Trace the afferent-efferent arc of muscle stretch reflexes.</div>
+                    <div class="flashcard-a">
+                        Muscle spindle stretch receptor (Afferent sensory fiber) &rarr; Dorsal root ganglion &rarr; Dorsal horn &rarr; Synapse directly on Alpha motor neuron in Anterior horn (Integration) &rarr; Ventral root (Efferent motor fiber) &rarr; Neuromuscular junction &rarr; Muscle contraction. (This is a monosynaptic arc).
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Motor</span>
+                    <div class="flashcard-q">Trace the corticospinal tract.</div>
+                    <div class="flashcard-a">
+                        Primary Motor Cortex (Precentral Gyrus) &rarr; Corona Radiata &rarr; Posterior Limb of Internal Capsule &rarr; Cerebral Peduncles (Midbrain) &rarr; Pons &rarr; Medullary Pyramids (Decussation of lateral tract) &rarr; Lateral Corticospinal Tract in Spinal Cord &rarr; Anterior Horn (synapse with LMN).
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Motor</span>
+                    <div class="flashcard-q">Enumerate methods of eliciting extensor plantar responses aside from Babinski.</div>
+                    <div class="flashcard-a">
+                        Used when the soles are sensitive or damaged:<br>
+                        <strong>Chaddock:</strong> Stroking lateral malleolus.<br>
+                        <strong>Oppenheim:</strong> Sliding knuckles down tibial crest.<br>
+                        <strong>Gordon:</strong> Squeezing the calf muscle.
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Motor</span>
+                    <div class="flashcard-q">Explain how to document reflex findings using the standard reflex stick figure.</div>
+                    <div class="flashcard-a">
+                        Draw a stick figure representing the patient facing you. Document the 0-4+ grade at the respective joints: Biceps/Brachioradialis at elbows, Triceps above elbows, Patellar at knees, Achilles at ankles. Append an up arrow (&uarr;) or down arrow (&darr;) at the feet for the plantar response. Include superficial reflexes (jaw jerk, abdominal) if tested.
+                    </div>
+                </div>
+
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Stn 1</span>
+                    <div class="flashcard-q">Identify the cortical regions involved in aphasias, apraxias, and agnosias.</div>
+                    <div class="flashcard-a">
+                        <strong>Aphasias:</strong> Broca's (Inferior Frontal Gyrus), Wernicke's (Superior Temporal Gyrus).<br>
+                        <strong>Apraxias:</strong> Premotor cortex, Supplementary motor area, or Parietal lobe.<br>
+                        <strong>Agnosias:</strong> Occipitotemporal (fusiform) or Parietal regions.
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Stn 2</span>
+                    <div class="flashcard-q">Explain the swinging flashlight test and RAPD.</div>
+                    <div class="flashcard-a">
+                        Detects a <strong>Relative Afferent Pupillary Defect (RAPD)</strong>. When light swings from the healthy eye to the affected eye, both pupils paradoxically <em>dilate</em>. This occurs because the sick optic nerve generates a weaker afferent signal than the healthy eye did, leading to less efferent constriction.
+                    </div>
+                </div>
+                <div class="flashcard" onclick="toggleCard(this)">
+                    <span class="tag">Faculty Guide: Stn 3</span>
+                    <div class="flashcard-q">Distinguish sensory ataxia from cerebellar ataxia.</div>
+                    <div class="flashcard-a">
+                        <strong>Sensory Ataxia:</strong> Caused by DCML lesions. Worsens significantly when eyes are closed (Positive Romberg) because visual compensation is removed.<br>
+                        <strong>Cerebellar Ataxia:</strong> Caused by defective cerebellar integration. The patient is uncoordinated and unsteady regardless of whether eyes are open or closed (Romberg is inapplicable).
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Master Procedural Checklists (Derived directly from Guidelines & Transes)
+    const checklists = {
+        'equipment': [
+            { text: "Complete White Uniform, ID, Nameplate", note: "EPA Grading factor: Professionalism." },
+            { text: "Ballpen & Paper / Clipboard" },
+            { text: "Small pouch for anomia (watch, coins, keys)" },
+            { text: "Opaque vials with odorants (coffee, vanilla). NO ammonia/alcohol." },
+            { text: "Opaque vials with tastants (sugar, salt) & drinking water" },
+            { text: "Pocket Jaeger chart / standard newsprint" },
+            { text: "Penlight (+ extra backup penlight)" },
+            { text: "Cotton wisp & broken cotton swab (sharp/dull)" },
+            { text: "Tuning forks (256/512 Hz and 128 Hz)" },
+            { text: "Wooden tongue depressors" },
+            { text: "Reflex hammer (Tomahawk recommended)" },
+            { text: "Clean gloves & Alcohol (Asepsis)" }
+        ],
+        'stn1': [
+            { group: "A. Preparation & Mental Status (Sequence Rule: Do First)" },
+            { text: "WASH HANDS / Perform Asepsis." },
+            { text: "Introduce self, verify patient ID & consent." },
+            { text: "Assess LOC & Orientation (Time, Place, Person)." },
+            { text: "Assess General behavior, mood (subjective), affect (objective)." },
+            { text: "Test Memory: Immediate (digit span), Recent (3 words at 5 mins), Remote." },
+            
+            { group: "B. Higher Cortical: Language (Aphasia)" },
+            { text: "Assess Spontaneous Speech (Fluency, paraphasias)." },
+            { text: "Test Comprehension (3-step midline command)." },
+            { text: "Test Repetition ('No ifs, ands, or buts')." },
+            { text: "Test Naming (Point to watch, pen)." },
+            
+            { group: "C. Higher Cortical: Praxis, Gnosia, Parietal" },
+            { text: "Test Apraxia: 'Show me how to blow out a match'." },
+            { text: "Test Agnosia: Astereognosis (eyes closed, identify object in hand)." },
+            { text: "Test Gerstmann's: Calculations (Serial 7s), Right-Left discrimination, Finger agnosia, Agraphia (writing)." }
+        ],
+        'stn2': [
+            { group: "A. CN I, II, III, IV, VI" },
+            { text: "WASH HANDS / Introduce self." },
+            { text: "CN I (Olfactory): Check nasal patency. Use non-irritating scent." },
+            { text: "CN II (Optic): Acuity (Jaeger), Visual fields (Confrontation in 4 quadrants)." },
+            { text: "CN II (Optic): Fundoscopy (Check for Red-Orange Reflex only)." },
+            { text: "CN II, III: Direct/Consensual light reflex, Swinging flashlight test (RAPD)." },
+            { text: "CN III, IV, VI: EOMs (H-pattern). Check accommodation (convergence + constriction)." },
+            
+            { group: "B. CN V, VII, VIII, IX, X, XI, XII" },
+            { text: "CN V: Palpate masseter/temporalis. Test light touch (V1, V2, V3 bilaterally)." },
+            { text: "CN V, VII: Corneal reflex (touch wisp to cornea from side)." },
+            { text: "CN VII: Raise eyebrows, shut eyes tight, puff cheeks, smile." },
+            { text: "CN VIII: Gross hearing, Weber (vertex), Rinne (mastoid)." },
+            { text: "CN IX, X: Voice quality, Say 'Ahhh' (palatal elevation), Gag reflex." },
+            { text: "CN XI: Shrug shoulders (Trapezius), turn head (SCM) vs resistance." },
+            { text: "CN XII: Tongue protrusion (check for deviation/atrophy)." }
+        ],
+        'stn3': [
+            { group: "A. Somatosensory" },
+            { text: "WASH HANDS / Introduce self." },
+            { text: "Pain/Pinprick (Spinothalamic): Proximal vs distal. 'Sharp or dull?'" },
+            { text: "Light Touch (DCML/STT): Cotton wisp dab symmetrically." },
+            { text: "Vibration (DCML): 128Hz fork on DIP of finger, IP of toe." },
+            { text: "<span class='pearl'>PEARL:</span> Proprioception (DCML): Grasp SIDES of distal phalanx. Move up/down eyes closed." },
+            { text: "<span class='pearl'>PEARL:</span> Malingering Check: Ask for sensation even if no stimulus is applied." },
+            
+            { group: "B. Cerebellar & Gait" },
+            { text: "Dysmetria: Finger-to-Nose (upper), Heel-to-Shin (lower)." },
+            { text: "Dysdiadochokinesia: Rapid alternating movements." },
+            { text: "Romberg Test: Stand feet together, close eyes 30s." },
+            { text: "Gait: Normal, Tandem (heel-to-toe), Heel walk, Toe walk." },
+
+            { group: "C. Meningeal Irritation" },
+            { text: "<span class='pearl'>PEARL:</span> Contraindication check: Ensure no cervical instability (Trauma, RA) before proceeding." },
+            { text: "Nuchal Rigidity: Passive neck flexion." },
+            { text: "Brudzinski's Sign: Hips/knees flex during neck flexion." },
+            { text: "Kernig's Sign: Extend knee from 90° hip flexion. Note resistance/pain." }
+        ],
+        'stn4': [
+            { group: "A. Inspection, Tone, Strength" },
+            { text: "WASH HANDS / Introduce self." },
+            { text: "Inspect: Atrophy, fasciculations, abnormal posture/tremors." },
+            { text: "Tone: Passive ROM. Note spasticity, rigidity, flaccidity." },
+            { text: "Strength Upper (MRC 0-5): Shoulder Abduction, Elbow Flex/Ext, Wrist Ext, Grip." },
+            { text: "Strength Lower (MRC 0-5): Hip Flex/Ext, Knee Flex/Ext, Ankle Dorsi/Plantar." },
+            
+            { group: "B. Reflexes (Deep & Superficial)" },
+            { text: "Upper DTRs: Biceps, Brachioradialis, Triceps." },
+            { text: "Lower DTRs: Patellar (Knee jerk), Achilles (Ankle jerk)." },
+            { text: "Superficial (if indicated): Abdominal, Cremasteric." },
+            { text: "Pathologic UMN: Babinski (or Chaddock/Oppenheim), Tromner/Hoffman." },
+            { text: "Clonus: Sharply dorsiflex ankle and hold." }
+        ]
+    };
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(pageId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function toggleCard(card) {
+        card.classList.toggle('open');
+    }
+
+    function initChecklists() {
+        for (const [key, items] of Object.entries(checklists)) {
+            const container = document.getElementById(`${key}-checklist`);
+            if(!container) continue;
+
+            let html = '';
+            items.forEach((item, index) => {
+                if(item.group) {
+                    html += `<div class="checklist-group"><h4>${item.group}</h4>`;
+                } else {
+                    const id = `chk_${key}_${index}`;
+                    const isChecked = localStorage.getItem(id) === 'true';
+                    const checkedAttr = isChecked ? 'checked' : '';
+                    const strikeClass = isChecked ? 'strikethrough' : '';
+                    
+                    html += `
+                        <div class="checklist-item">
+                            <input type="checkbox" id="${id}" onchange="updateCheck('${id}', '${key}')" ${checkedAttr}>
+                            <label for="${id}">
+                                <span id="lbl_${id}" class="${strikeClass}">${item.text}</span>
+                                ${item.note ? `<span class="note">${item.note}</span>` : ''}
+                            </label>
+                        </div>
+                    `;
+                }
+            });
+            if(html.includes('<div class="checklist-group">')) html += '</div>';
+            
+            container.innerHTML = html;
+        }
+        updateEquipProgress();
+    }
+
+    function updateCheck(id, key) {
+        const checkbox = document.getElementById(id);
+        const labelText = document.getElementById(`lbl_${id}`);
+        
+        localStorage.setItem(id, checkbox.checked);
+        
+        if(checkbox.checked) {
+            labelText.classList.add('strikethrough');
+        } else {
+            labelText.classList.remove('strikethrough');
+        }
+        if(key === 'equipment') updateEquipProgress();
+    }
+
+    function updateEquipProgress() {
+        const items = checklists['equipment'].filter(i => !i.group);
+        const total = items.length;
+        let checked = 0;
+        
+        checklists['equipment'].forEach((item, index) => {
+            if(!item.group && localStorage.getItem(`chk_equipment_${index}`) === 'true') checked++;
+        });
+        
+        const pct = Math.round((checked / total) * 100);
+        document.getElementById('equip-progress').style.width = pct + '%';
+    }
+
+    window.onload = initChecklists;
+</script>
+
+</body>
+</html>
