@@ -53,95 +53,95 @@
 
         // --- DATA STRUCTURES ---
 
-        // EXACT Rubric Mapping from[cite: 4]
+        // EXACT Rubric Mapping
         const exactRubric = [
             { 
                 category: "INTRODUCTION AND RAPPORT (12)", 
                 items: [
-                    { id: "i1", text: "Introduced self and role to the patient[cite: 4]", type: "demo" },
-                    { id: "i2", text: "Confirmed patient identity[cite: 4]", type: "demo" },
-                    { id: "i3", text: "Explained purpose of interview[cite: 4]", type: "demo" },
-                    { id: "i4", text: "Assured confidentiality[cite: 4]", type: "demo" },
-                    { id: "i5", text: "Obtained consent / permission to proceed[cite: 4]", type: "demo" },
-                    { id: "i6", text: "Maintained appropriate eye contact and respectful conversational tone[cite: 4]", type: "demo" }
+                    { id: "i1", text: "Introduced self and role to the patient", type: "demo" },
+                    { id: "i2", text: "Confirmed patient identity", type: "demo" },
+                    { id: "i3", text: "Explained purpose of interview", type: "demo" },
+                    { id: "i4", text: "Assured confidentiality", type: "demo" },
+                    { id: "i5", text: "Obtained consent / permission to proceed", type: "demo" },
+                    { id: "i6", text: "Maintained appropriate eye contact and respectful conversational tone", type: "demo" }
                 ] 
             },
             { 
                 category: "APPEARANCE AND BEHAVIOR (10)", 
                 items: [
-                    { id: "a1", text: "Reported on grooming and hygiene[cite: 4]", type: "report" },
-                    { id: "a2", text: "Reported on posture and psychomotor activity[cite: 4]", type: "report" },
-                    { id: "a3", text: "Reported on eye contact[cite: 4]", type: "report" },
-                    { id: "a4", text: "Reported on cooperativeness / engagement[cite: 4]", type: "report" },
-                    { id: "a5", text: "Reported on presence or absence of abnormal movements or behavior and described appropriately if present[cite: 4]", type: "report" }
+                    { id: "a1", text: "Reported on grooming and hygiene", type: "report" },
+                    { id: "a2", text: "Reported on posture and psychomotor activity", type: "report" },
+                    { id: "a3", text: "Reported on eye contact", type: "report" },
+                    { id: "a4", text: "Reported on cooperativeness / engagement", type: "report" },
+                    { id: "a5", text: "Reported on presence or absence of abnormal movements or behavior and described appropriately if present", type: "report" }
                 ] 
             },
             { 
                 category: "SPEECH (6)", 
                 items: [
-                    { id: "s1", text: "Reported on rate of speech[cite: 4]", type: "report" },
-                    { id: "s2", text: "Reported on volume[cite: 4]", type: "report" },
-                    { id: "s3", text: "Reported on tone/fluency/spontaneity[cite: 4]", type: "report" }
+                    { id: "s1", text: "Reported on rate of speech", type: "report" },
+                    { id: "s2", text: "Reported on volume", type: "report" },
+                    { id: "s3", text: "Reported on tone/fluency/spontaneity", type: "report" }
                 ] 
             },
             { 
                 category: "MOOD AND AFFECT (8)", 
                 items: [
-                    { id: "m1", text: "Asked and reported mood[cite: 4]", type: "both" },
-                    { id: "m2", text: "Reported affect[cite: 4]", type: "report" },
-                    { id: "m3", text: "Reported congruence of affect with mood[cite: 4]", type: "report" }
+                    { id: "m1", text: "Asked and reported mood", type: "both" },
+                    { id: "m2", text: "Reported affect", type: "report" },
+                    { id: "m3", text: "Reported congruence of affect with mood", type: "report" }
                 ] 
             },
             { 
                 category: "THOUGHT PROCESS AND CONTENT (26)", 
                 items: [
-                    { id: "t1", text: "Reported thought process[cite: 4]", type: "report" },
-                    { id: "t2", text: "Screened for and reported delusions and identified specific type, if present[cite: 4]", type: "both" },
-                    { id: "t3", text: "Screened for and reported obsessions or intrusive thoughts and identified specific type, if present[cite: 4]", type: "both" },
-                    { id: "t4", text: "Screened for/clarified and reported preoccupations and identified specific type, if present[cite: 4]", type: "both" },
-                    { id: "t5", text: "Screened for and reported self-harm ideations[cite: 4]", type: "both" },
-                    { id: "t6", text: "Screened for and reported suicidal ideations[cite: 4]", type: "both" },
-                    { id: "t7", text: "Screened for and reported homicidal ideations[cite: 4]", type: "both" }
+                    { id: "t1", text: "Reported thought process", type: "report" },
+                    { id: "t2", text: "Screened for and reported delusions and identified specific type, if present", type: "both" },
+                    { id: "t3", text: "Screened for and reported obsessions or intrusive thoughts and identified specific type, if present", type: "both" },
+                    { id: "t4", text: "Screened for/clarified and reported preoccupations and identified specific type, if present", type: "both" },
+                    { id: "t5", text: "Screened for and reported self-harm ideations", type: "both" },
+                    { id: "t6", text: "Screened for and reported suicidal ideations", type: "both" },
+                    { id: "t7", text: "Screened for and reported homicidal ideations", type: "both" }
                 ] 
             },
             { 
                 category: "PERCEPTION (4)", 
                 items: [
-                    { id: "p1", text: "Screened for and reported hallucinations or illusions and identified specific type, if present[cite: 4]", type: "both" }
+                    { id: "p1", text: "Screened for and reported hallucinations or illusions and identified specific type, if present", type: "both" }
                 ] 
             },
             { 
                 category: "COGNITION (44)", 
                 items: [
-                    { id: "c1", text: "Assessed and reported orientation to person[cite: 4]", type: "both" },
-                    { id: "c2", text: "Assessed and reported orientation to place[cite: 4]", type: "both" },
-                    { id: "c3", text: "Assessed and reported orientation to time[cite: 4]", type: "both" },
-                    { id: "c4", text: "Assessed and reported remote memory[cite: 4]", type: "both" },
-                    { id: "c5", text: "Assessed and reported recent memory[cite: 4]", type: "both" },
-                    { id: "c6", text: "Assessed and reported immediate recall[cite: 4]", type: "both" },
-                    { id: "c7", text: "Assessed and reported concentration[cite: 4]", type: "both" },
-                    { id: "c8", text: "Assessed and reported calculation[cite: 4]", type: "both" },
-                    { id: "c9", text: "Assessed and reported fund of knowledge[cite: 4]", type: "both" },
-                    { id: "c10", text: "Assessed and reported abstract thinking[cite: 4]", type: "both" },
-                    { id: "c11", text: "Assessed and reported judgment[cite: 4]", type: "both" },
-                    { id: "c12", text: "Assessed and reported insight[cite: 4]", type: "both" }
+                    { id: "c1", text: "Assessed and reported orientation to person", type: "both" },
+                    { id: "c2", text: "Assessed and reported orientation to place", type: "both" },
+                    { id: "c3", text: "Assessed and reported orientation to time", type: "both" },
+                    { id: "c4", text: "Assessed and reported remote memory", type: "both" },
+                    { id: "c5", text: "Assessed and reported recent memory", type: "both" },
+                    { id: "c6", text: "Assessed and reported immediate recall", type: "both" },
+                    { id: "c7", text: "Assessed and reported concentration", type: "both" },
+                    { id: "c8", text: "Assessed and reported calculation", type: "both" },
+                    { id: "c9", text: "Assessed and reported fund of knowledge", type: "both" },
+                    { id: "c10", text: "Assessed and reported abstract thinking", type: "both" },
+                    { id: "c11", text: "Assessed and reported judgment", type: "both" },
+                    { id: "c12", text: "Assessed and reported insight", type: "both" }
                 ] 
             },
             { 
                 category: "CLOSING (6)", 
                 items: [
-                    { id: "cl1", text: "Thanked the patient and ended the exam[cite: 4]", type: "demo" },
-                    { id: "cl2", text: "Demonstrated empathy and professionalism throughout interview[cite: 4]", type: "demo" },
-                    { id: "cl3", text: "Conducted interview in an organized manner (smooth flow)[cite: 4]", type: "demo" }
+                    { id: "cl1", text: "Thanked the patient and ended the exam", type: "demo" },
+                    { id: "cl2", text: "Demonstrated empathy and professionalism throughout interview", type: "demo" },
+                    { id: "cl3", text: "Conducted interview in an organized manner (smooth flow)", type: "demo" }
                 ] 
             },
             { 
                 category: "DIAGNOSIS AND MANAGEMENT (8)", 
                 items: [
-                    { id: "d1", text: "Able to give the correct COMPLETE DIAGNOSIS[cite: 4]", type: "report" },
-                    { id: "d2", text: "Able to suggest (an) appropriate medicine/s (specific compound/s)[cite: 4]", type: "report" },
-                    { id: "d3", text: "Able to suggest an appropriate psychosocial-spiritual intervention (any kind will do; no need for an explanation)[cite: 4]", type: "report" },
-                    { id: "d4", text: "Able to give appropriate disposition (whether to admit or send home)[cite: 4]", type: "report" }
+                    { id: "d1", text: "Able to give the correct COMPLETE DIAGNOSIS", type: "report" },
+                    { id: "d2", text: "Able to suggest (an) appropriate medicine/s (specific compound/s)", type: "report" },
+                    { id: "d3", text: "Able to suggest an appropriate psychosocial-spiritual intervention (any kind will do; no need for an explanation)", type: "report" },
+                    { id: "d4", text: "Able to give appropriate disposition (whether to admit or send home)", type: "report" }
                 ] 
             }
         ];
@@ -152,56 +152,56 @@
                 id: 'intro',
                 title: "1. Intro & Rapport",
                 icon: "🤝",
-                patient: "INTRODUCTIONS:\n- Magandang araw po. Ako po si Doc {Pangalan}, isang medikal student/clerk sa Department of Psychiatry, o doktor sa mga {damdamin at pag-iisip}[cite: 1, 2]. Kayo po si Ginang/Ginoong {Pangalan}?[cite: 4]\n\nPURPOSE & CONFIDENTIALITY:\n- Nandito po ako ngayon para kamustahin ang inyong {kasalukuyang nararamdaman} at pag-iisip sa pamamagitan ng ilang mga tanong[cite: 1, 5].\n- Gusto ko pong ipaalala na ang lahat ng pag-uusapan natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo, maliban na lang kung may kinalaman ito sa inyong {kaligtasan} o ng ibang tao[cite: 1, 2].\n\nCONSENT:\n- Ok lang po ba na {magsimula} tayo?[cite: 4]",
+                patient: "INTRODUCTIONS:\n- Magandang araw po. Ako po si Doc {Pangalan}, isang medikal student/clerk sa Department of Psychiatry, o doktor sa mga {damdamin at pag-iisip}. Kayo po si Ginang/Ginoong {Pangalan}?\n\nPURPOSE & CONFIDENTIALITY:\n- Nandito po ako ngayon para kamustahin ang inyong {kasalukuyang nararamdaman} at pag-iisip sa pamamagitan ng ilang mga tanong.\n- Gusto ko pong ipaalala na ang lahat ng pag-uusapan natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo, maliban na lang kung may kinalaman ito sa inyong {kaligtasan} o ng ibang tao.\n\nCONSENT:\n- Ok lang po ba na {magsimula} tayo?",
                 rubricIds: ["i1", "i2", "i3", "i4", "i5", "i6"]
             },
             {
                 id: 'observation',
                 title: "2. Appearance & Speech",
                 icon: "👁️",
-                patient: "CLINICAL OBSERVATION (No direct questions needed. Observe continuously)[cite: 1]\n\nAPPEARANCE & BEHAVIOR:\n- Grooming and hygiene: Is the patient {well-kempt} or {disheveled}?[cite: 4]\n- Posture and psychomotor activity: Are they {fidgety}, have {tremors}, or exhibit psychomotor retardation?[cite: 1, 4]\n- Eye contact: Is it {poor}, appropriate, or piercing?[cite: 1, 4]\n- Cooperativeness: Are they {guarded}, hostile, or cooperative but adamant?[cite: 1, 4]\n- Abnormal movements: Are there presence or absence of {tics, pacing}, or extrapyramidal symptoms?[cite: 4]\n\nSPEECH:\n- Rate: Is it {slow, rapid}, or pressured?[cite: 4]\n- Volume: Is it {soft, loud}, or monotonous?[cite: 1, 4]\n- Tone/Fluency: Is it {hypoproductive} or spontaneous?[cite: 1, 4]",
+                patient: "CLINICAL OBSERVATION (No direct questions needed. Observe continuously)\n\nAPPEARANCE & BEHAVIOR:\n- Grooming and hygiene: Is the patient {well-kempt} or {disheveled}?\n- Posture and psychomotor activity: Are they {fidgety}, have {tremors}, or exhibit psychomotor retardation?\n- Eye contact: Is it {poor}, appropriate, or piercing?\n- Cooperativeness: Are they {guarded}, hostile, or cooperative but adamant?\n- Abnormal movements: Are there presence or absence of {tics, pacing}, or extrapyramidal symptoms?\n\nSPEECH:\n- Rate: Is it {slow, rapid}, or pressured?\n- Volume: Is it {soft, loud}, or monotonous?\n- Tone/Fluency: Is it {hypoproductive} or spontaneous?",
                 rubricIds: ["a1", "a2", "a3", "a4", "a5", "s1", "s2", "s3"]
             },
             {
                 id: 'mood_affect',
                 title: "3. Mood & Affect",
                 icon: "🎭",
-                patient: "MOOD (SUBJECTIVE SENSE OF EMOTION)[cite: 1]\n- Ano pong {emosyon o pakiramdam} ang nararamdaman niyo ngayon?[cite: 1]\n- (If they say 'Okay lang', probe further): {Masaya} po ba kayo? {Malungkot}? Hindi masaya pero hindi rin malungkot? {Iritable}?[cite: 1]\n\nAFFECT (OBJECTIVE RANGE OF EMOTIONS)[cite: 1]\n- Observe the range (e.g., {flat, blunted}, restricted, full range)[cite: 1]\n- Determine congruence: Does their facial expression visibly match their stated mood? Are they {congruent} or {incongruent}?[cite: 4]",
+                patient: "MOOD (SUBJECTIVE SENSE OF EMOTION)\n- Ano pong {emosyon o pakiramdam} ang nararamdaman niyo ngayon?\n- (If they say 'Okay lang', probe further): {Masaya} po ba kayo? {Malungkot}? Hindi masaya pero hindi rin malungkot? {Iritable}?\n\nAFFECT (OBJECTIVE RANGE OF EMOTIONS)\n- Observe the range (e.g., {flat, blunted}, restricted, full range)\n- Determine congruence: Does their facial expression visibly match their stated mood? Are they {congruent} or {incongruent}?",
                 rubricIds: ["m1", "m2", "m3"]
             },
             {
                 id: 'thought_content',
                 title: "4. Thought Content & Risk",
                 icon: "💭",
-                patient: "THOUGHT PROCESS:\n- May mga pagkakataon bang parang nagkukulang ka ng {focus} sa iyong mga iniisip?[cite: 1]\n\nDELUSIONS (Ask specifically to classify type)[cite: 1, 4]\n- Persecutory: May nararamdaman po ba kayong parang may mga {gustong manakit} sa inyo o may gawin sa inyo?\n- Grandiose: Sa tingin mo ba meron kang {special powers} / mga talento o abilidad?\n- Referential: Kapag nanonood ka ng balita, sa tingin mo ba ay {ikaw palagi ang pinag-uusapan}?\n- Thought Broadcasting: Sa tingin mo po ba {naririnig ng mga nasa paligid mo} ang mga pinag-iisipan mo?\n\nOBSESSIONS & PREOCCUPATIONS[cite: 1, 4]\n- Preoccupations: May mga bagay bang patuloy na {bumabalik sa iyong isipan} na hindi mo kayang tanggalin o itaboy?[cite: 1]\n- Obsessions: May mga {paulit-ulit} ka bang iniisip o ginagawa na pakiramdam mo ay kailangan mong gawin (kahit ayaw mo)?[cite: 1]\n\nRISK ASSESSMENT[cite: 1, 4]\n- Self-harm: May pagkakataon po bang naisip ninyong {saktan ang sarili ninyo} (nang walang layuning mamatay)?[cite: 1]\n- Suicidal: May pagkakataon po bang naisip ninyong {tapusin ang inyong buhay}?[cite: 1] (Follow up: Paano? Nagawa mo ba? May {pumipigil} din ba sayo para gawin ito?[cite: 1])\n- Homicidal: Naiisip niyo po bang {manakit o pumatay} ng ibang tao?[cite: 1]",
+                patient: "THOUGHT PROCESS:\n- May mga pagkakataon bang parang nagkukulang ka ng {focus} sa iyong mga iniisip?\n\nDELUSIONS (Ask specifically to classify type)\n- Persecutory: May nararamdaman po ba kayong parang may mga {gustong manakit} sa inyo o may gawin sa inyo?\n- Grandiose: Sa tingin mo ba meron kang {special powers} / mga talento o abilidad?\n- Referential: Kapag nanonood ka ng balita, sa tingin mo ba ay {ikaw palagi ang pinag-uusapan}?\n- Thought Broadcasting: Sa tingin mo po ba {naririnig ng mga nasa paligid mo} ang mga pinag-iisipan mo?\n\nOBSESSIONS & PREOCCUPATIONS\n- Preoccupations: May mga bagay bang patuloy na {bumabalik sa iyong isipan} na hindi mo kayang tanggalin o itaboy?\n- Obsessions: May mga {paulit-ulit} ka bang iniisip o ginagawa na pakiramdam mo ay kailangan mong gawin (kahit ayaw mo)?\n\nRISK ASSESSMENT\n- Self-harm: May pagkakataon po bang naisip ninyong {saktan ang sarili ninyo} (nang walang layuning mamatay)?\n- Suicidal: May pagkakataon po bang naisip ninyong {tapusin ang inyong buhay}? (Follow up: Paano? Nagawa mo ba? May {pumipigil} din ba sayo para gawin ito?)\n- Homicidal: Naiisip niyo po bang {manakit o pumatay} ng ibang tao?",
                 rubricIds: ["t1", "t2", "t3", "t4", "t5", "t6", "t7"]
             },
             {
                 id: 'perception',
                 title: "5. Perception",
                 icon: "👁️‍🗨️",
-                patient: "HALLUCINATIONS (PERCEPTION WITHOUT STIMULUS)[cite: 1, 4]\n- Auditory: May time ba na may {naririnig} ka pero sabi ng iba wala silang naririnig?[cite: 1] (Delineate audible thoughts vs outside voices)[cite: 1]\n- Visual: May {nakikita} po ba kayong hindi nakikita ng iba?[cite: 1]\n- Others: May naaamoy o nararamdaman ba kayong gumagapang sa inyong balat na wala naman? (Olfactory/Tactile)[cite: 1]\n\nILLUSIONS (MISINTERPRETED STIMULUS)[cite: 1, 4]\n- Ngayon ba sa kwartong ito may {nakikita ka bang bagay} o anyo na posibleng hindi nakikita namin o ng ibang tao?[cite: 1] (e.g., interpreting a real shadow as a monster)\n- Meron po ba kayong mga nakikita na {iba sa nakikita ng ibang tao}?[cite: 1]",
+                patient: "HALLUCINATIONS (PERCEPTION WITHOUT STIMULUS)\n- Auditory: May time ba na may {naririnig} ka pero sabi ng iba wala silang naririnig? (Delineate audible thoughts vs outside voices)\n- Visual: May {nakikita} po ba kayong hindi nakikita ng iba?\n- Others: May naaamoy o nararamdaman ba kayong gumagapang sa inyong balat na wala naman? (Olfactory/Tactile)\n\nILLUSIONS (MISINTERPRETED STIMULUS)\n- Ngayon ba sa kwartong ito may {nakikita ka bang bagay} o anyo na posibleng hindi nakikita namin o ng ibang tao? (e.g., interpreting a real shadow as a monster)\n- Meron po ba kayong mga nakikita na {iba sa nakikita ng ibang tao}?",
                 rubricIds: ["p1"]
             },
             {
                 id: 'cognition_1',
                 title: "6. Sensorium (Orientation & Memory)",
                 icon: "🧠",
-                patient: "ORIENTATION TO 3 SPHERES[cite: 1, 4]\n- Person: Ano po ang {buong pangalan} niyo? Sino po ang mga kasama niyo?[cite: 1]\n- Place: Alam niyo po ba kung {nasaan po kayo} ngayon? Nasaang lugar/lungsod po tayo?[cite: 1]\n- Time: Anong {araw/petsa/oras} po ngayon?[cite: 1]\n\nMEMORY[cite: 1, 4]\n- Remote: Saan po kayo {ipinanganak}?[cite: 1]\n- Recent: Paano ka {nakarating dito} ngayon?[cite: 1]\n- Immediate: Ngayon, susuriin ko ang inyong memorya. Magsasabi ako ng tatlong bagay: {Mangga, Pera, Kotse}. Pakiulit po. Tandaan dahil tatanungin ko ulit mamaya.[cite: 1]",
+                patient: "ORIENTATION TO 3 SPHERES\n- Person: Ano po ang {buong pangalan} niyo? Sino po ang mga kasama niyo?\n- Place: Alam niyo po ba kung {nasaan po kayo} ngayon? Nasaang lugar/lungsod po tayo?\n- Time: Anong {araw/petsa/oras} po ngayon?\n\nMEMORY\n- Remote: Saan po kayo {ipinanganak}?\n- Recent: Paano ka {nakarating dito} ngayon?\n- Immediate: Ngayon, susuriin ko ang inyong memorya. Magsasabi ako ng tatlong bagay: {Mangga, Pera, Kotse}. Pakiulit po. Tandaan dahil tatanungin ko ulit mamaya.",
                 rubricIds: ["c1", "c2", "c3", "c4", "c5", "c6"]
             },
             {
                 id: 'cognition_2',
                 title: "7. Higher Functions & Closing",
                 icon: "⚖️",
-                patient: "CONCENTRATION & CALCULATION[cite: 1, 4]\n- Concentration: Paki-spell ang salitang {K-A-R-N-E}. Ngayon, paki-spell ito ng {pabaliktad} (E-N-R-A-K).[cite: 1]\n- Calculation (Serial 7s): Mula po sa 100, {magbawas po kayo ng 7}. Magbawas nang magbawas hanggang sabihin kong tumigil. (Stop after 5 answers)[cite: 1]\n\nKNOWLEDGE & ABSTRACTION[cite: 1, 4]\n- Knowledge: Sabihin sa akin ang {limang naging pangulo} ng Pilipinas.[cite: 1]\n- Abstraction: Ano ang pagkakapareho ng {upuan at mesa}?[cite: 1] (Kung sagot ay kulay 'brown' = concrete. Kung 'muwebles' = abstract)[cite: 1]\n\nJUDGMENT & INSIGHT[cite: 1, 4]\n- Judgment: Kung biglang sumigaw ng {'sunog'} sa sinehan, ano po ang gagawin ninyo?[cite: 1]\n- Insight: Ano po ang {pagkakaintindi} ninyo tungkol sa inyong sakit? Willing po ba kayong magpagamot?[cite: 1]\n\nCLOSING[cite: 1, 4]\n- Salamat po nang marami sa pagbabahagi ng inyong mga kwento at oras. Mayroon pa po ba kayong gustong itanong o linawin?[cite: 1]",
+                patient: "CONCENTRATION & CALCULATION\n- Concentration: Paki-spell ang salitang {K-A-R-N-E}. Ngayon, paki-spell ito ng {pabaliktad} (E-N-R-A-K).\n- Calculation (Serial 7s): Mula po sa 100, {magbawas po kayo ng 7}. Magbawas nang magbawas hanggang sabihin kong tumigil. (Stop after 5 answers)\n\nKNOWLEDGE & ABSTRACTION\n- Knowledge: Sabihin sa akin ang {limang naging pangulo} ng Pilipinas.\n- Abstraction: Ano ang pagkakapareho ng {upuan at mesa}? (Kung sagot ay kulay 'brown' = concrete. Kung 'muwebles' = abstract)\n\nJUDGMENT & INSIGHT\n- Judgment: Kung biglang sumigaw ng {'sunog'} sa sinehan, ano po ang gagawin ninyo?\n- Insight: Ano po ang {pagkakaintindi} ninyo tungkol sa inyong sakit? Willing po ba kayong magpagamot?\n\nCLOSING\n- Salamat po nang marami sa pagbabahagi ng inyong mga kwento at oras. Mayroon pa po ba kayong gustong itanong o linawin?",
                 rubricIds: ["c7", "c8", "c9", "c10", "c11", "c12", "cl1", "cl2", "cl3"]
             }
         ];
 
         // --- COMPONENTS ---
 
-        // Custom parser to handle bullets, headers, citations, and cloze tags smoothly without breaking React
+        // Custom parser to handle bullets, headers, and cloze tags smoothly without breaking React
         const ActiveRecallText = ({ text, isRecallMode }) => {
             const lines = text.split('\n');
             
@@ -210,7 +210,7 @@
                     {lines.map((line, lineIndex) => {
                         if (line.trim() === '') return <div key={`empty-${lineIndex}`} className="h-2"></div>;
                         
-                        const isSubheader = /^[A-Z\s&/()0-9]+:(\)?)$/.test(line.trim()) || /^[A-Z\s&/()0-9]+\[cite:/.test(line.trim());
+                        const isSubheader = /^[A-Z\s&/()0-9]+:(\)?)$/.test(line.trim());
                         const isBullet = line.trim().startsWith('- ');
                         
                         let contentLine = line;
@@ -225,7 +225,7 @@
                             lineClass = "text-[16px] text-slate-800 py-1";
                         }
 
-                        // Parse cloze deletions {word} and citations[cite: 1] safely
+                        // Parse cloze deletions {word} safely
                         const processParts = (str) => {
                             const clozeRegex = /\{(.*?)\}/g;
                             const parts = str.split(clozeRegex);
@@ -234,15 +234,7 @@
                                 if (index % 2 === 1) { 
                                     return <ClozeWord key={`cloze-${lineIndex}-${index}`} word={part} isRecallMode={isRecallMode} />;
                                 }
-                                
-                                const citeRegex = /(\]+\])/g;
-                                const textWithCitations = part.split(citeRegex);
-                                return textWithCitations.map((textPart, tIndex) => {
-                                    if (textPart.startsWith('[cite:')) {
-                                        return <sup key={`cite-${lineIndex}-${index}-${tIndex}`} className="text-slate-400 ml-0.5 font-normal tracking-tighter">{textPart}</sup>;
-                                    }
-                                    return <span key={`text-${lineIndex}-${index}-${tIndex}`}>{textPart}</span>;
-                                });
+                                return <span key={`text-${lineIndex}-${index}`}>{part}</span>;
                             });
                         };
 
@@ -277,18 +269,6 @@
                     {word}
                 </span>
             );
-        };
-
-        // Render citations purely for standard HTML text elements outside the ActiveRecall component
-        const renderTextWithCitations = (text) => {
-            const citeRegex = /(\]+\])/g;
-            const parts = text.split(citeRegex);
-            return parts.map((p, i) => {
-                if (p.startsWith('[cite:')) {
-                    return <sup key={i} className="text-slate-400 ml-0.5 font-normal tracking-tighter">{p}</sup>;
-                }
-                return <span key={i}>{p}</span>;
-            });
         };
 
         // Main App
@@ -378,7 +358,7 @@
                                 <>
                                     <div className="border-b-2 border-slate-200 pb-4">
                                         <h2 className="text-3xl font-black text-slate-800">🗣️ Script & Execution</h2>
-                                        <p className="text-slate-500 mt-2 font-medium">Do NOT take history. Ask smooth, conversational questions to comprehensively assess and elicit ALL specific findings required by the rubric.[cite: 5]</p>
+                                        <p className="text-slate-500 mt-2 font-medium">Do NOT take history. Ask smooth, conversational questions to comprehensively assess and elicit ALL specific findings required by the rubric.</p>
                                     </div>
 
                                     {/* Pagination */}
@@ -418,7 +398,7 @@
                                                         {getActiveRubricItems().map((item) => (
                                                             <li key={item.id} className="p-4 flex items-start text-sm text-slate-700 font-medium hover:bg-slate-100 transition-colors">
                                                                 <input type="checkbox" className="mt-1 mr-3 w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
-                                                                <span className="leading-snug">{renderTextWithCitations(item.text)}</span>
+                                                                <span className="leading-snug">{item.text}</span>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -443,47 +423,47 @@
                                 <div className="space-y-8 animate-fade-in">
                                     <div className="border-b-2 border-slate-200 pb-4">
                                         <h2 className="text-3xl font-black text-slate-800">📋 Formal Case Reporting</h2>
-                                        <p className="text-slate-600 mt-2 font-medium">The OSCE requires you to report findings based on 5 specific outputs. Do NOT explain your basis or give differential diagnoses.[cite: 5] State the facts clearly.</p>
+                                        <p className="text-slate-600 mt-2 font-medium">The OSCE requires you to report findings based on 5 specific outputs. Do NOT explain your basis or give differential diagnoses. State the facts clearly.</p>
                                     </div>
                                     
                                     <div className="bg-white rounded-xl shadow-lg border-t-8 border-sky-600 p-8 space-y-8">
                                         <div>
-                                            <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span> Complete MSE Findings[cite: 5]</h3>
+                                            <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span> Complete MSE Findings</h3>
                                             <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-inner">
                                                 <ActiveRecallText 
                                                     isRecallMode={isRecallMode} 
-                                                    text={`Patient is a 26-year-old male, casually dressed, with {poor grooming and hygiene}[cite: 1, 4]. He exhibits {psychomotor retardation} and {poor eye contact}[cite: 1, 4]. Speech is {slow} in pace, {soft} in volume, and {hypoproductive} in amount[cite: 1, 4].\n\nSubjective mood is {'laging malungkot'}, with a {blunted, congruent} affect[cite: 1, 4]. Thought process is {normal and goal-directed}[cite: 1, 4]. He denies {persecutory, grandiose, referential} delusions, and {thought broadcasting}[cite: 1, 4]. He denies {preoccupations and obsessions}, but admits to {active suicidal ideation}[cite: 1, 4]. He denies {homicidal ideation}[cite: 1, 4].\n\nHe denies illusions but admits to {auditory hallucinations} coming from the outside[cite: 1, 4]. He is oriented to {person, place, and time}[cite: 1, 4]. Concentration is {good}[cite: 1, 4]. Recent and remote memory are {intact}, but had {no immediate memory}[cite: 1, 4]. Abstract thinking is {good}. Judgment is {good}. Insight and planning are also {good}[cite: 1, 4].`} 
+                                                    text={`Patient is a 26-year-old male, casually dressed, with {poor grooming and hygiene}. He exhibits {psychomotor retardation} and {poor eye contact}. Speech is {slow} in pace, {soft} in volume, and {hypoproductive} in amount.\n\nSubjective mood is {'laging malungkot'}, with a {blunted, congruent} affect. Thought process is {normal and goal-directed}. He denies {persecutory, grandiose, referential} delusions, and {thought broadcasting}. He denies {preoccupations and obsessions}, but admits to {active suicidal ideation}. He denies {homicidal ideation}.\n\nHe denies illusions but admits to {auditory hallucinations} coming from the outside. He is oriented to {person, place, and time}. Concentration is {good}. Recent and remote memory are {intact}, but had {no immediate memory}. Abstract thinking is {good}. Judgment is {good}. Insight and planning are also {good}.`} 
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="grid lg:grid-cols-2 gap-8">
                                             <div>
-                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span> Complete Diagnosis[cite: 5]</h3>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span> Complete Diagnosis</h3>
                                                 <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`{Major Depressive Disorder t/c Psychosis}[cite: 1].`} />
-                                                    <span className="text-xs text-red-600 font-bold mt-3 block border-t border-red-100 pt-2">*OSCE Rule: Provide ONLY the final diagnosis. NO need to explain basis or give differential diagnoses[cite: 5].*</span>
+                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`{Major Depressive Disorder t/c Psychosis}.`} />
+                                                    <span className="text-xs text-red-600 font-bold mt-3 block border-t border-red-100 pt-2">*OSCE Rule: Provide ONLY the final diagnosis. NO need to explain basis or give differential diagnoses.*</span>
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span> Specific Medicine[cite: 5]</h3>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span> Specific Medicine</h3>
                                                 <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`I will start a specific medicine, such as {Sertraline 50mg OD}, and an {antipsychotic} for the psychotic features[cite: 4, 5].`} />
+                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`I will start a specific medicine, such as {Sertraline 50mg OD}, and an {antipsychotic} for the psychotic features.`} />
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">4</span> Psychosocial Intervention[cite: 5]</h3>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">4</span> Psychosocial Intervention</h3>
                                                 <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`I suggest an appropriate psychosocial-spiritual intervention[cite: 4], such as {Cognitive Behavioral Therapy (CBT)}[cite: 4, 5].`} />
+                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`I suggest an appropriate psychosocial-spiritual intervention, such as {Cognitive Behavioral Therapy (CBT)}.`} />
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">5</span> Patient Disposition[cite: 5]</h3>
+                                                <h3 className="text-lg font-black text-sky-900 border-b border-sky-100 pb-2 mb-3 flex items-center"><span className="bg-sky-200 text-sky-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">5</span> Patient Disposition</h3>
                                                 <div className="bg-red-50 p-5 rounded-lg border border-red-200">
-                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`Give appropriate disposition[cite: 4]. I will {ADMIT the patient to the inpatient psychiatric unit} due to the severity of the symptoms[cite: 1, 4, 5].`} />
+                                                    <ActiveRecallText isRecallMode={isRecallMode} text={`Give appropriate disposition. I will {ADMIT the patient to the inpatient psychiatric unit} due to the severity of the symptoms.`} />
                                                 </div>
                                             </div>
                                         </div>
@@ -499,7 +479,7 @@
                                     <div className="sticky top-0 z-20 bg-white/90 backdrop-blur shadow-md rounded-xl p-6 border-b-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-4">
                                         <div>
                                             <h2 className="text-2xl font-black text-slate-800">124-Point Interactive Grader</h2>
-                                            <p className="text-slate-500 font-medium text-sm">Self-assess using the exact LU5 Psychiatry Station Grading Sheet[cite: 4].</p>
+                                            <p className="text-slate-500 font-medium text-sm">Self-assess using the exact LU5 Psychiatry Station Grading Sheet.</p>
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="text-right">
@@ -523,7 +503,7 @@
                                             <table className="min-w-full text-left text-sm">
                                                 <thead className="bg-slate-800 text-white">
                                                     <tr>
-                                                        <th className="p-4 font-bold text-md w-1/2">Domains & Items[cite: 4]</th>
+                                                        <th className="p-4 font-bold text-md w-1/2">Domains & Items</th>
                                                         <th className="p-4 font-bold text-center text-sm bg-slate-700 w-1/4 leading-tight">Demonstrated / Elicited <br/><span className="text-xs font-normal opacity-70">(Max 2 Pts)</span></th>
                                                         <th className="p-4 font-bold text-center text-sm bg-slate-600 w-1/4 leading-tight">Reported <br/><span className="text-xs font-normal opacity-70">(Max 2 Pts)</span></th>
                                                     </tr>
@@ -538,7 +518,7 @@
                                                                 return (
                                                                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
                                                                         <td className="p-4 pl-6 text-sm">
-                                                                            {renderTextWithCitations(item.text)}
+                                                                            {item.text}
                                                                         </td>
                                                                         
                                                                         {/* Demonstrated / Elicited Column */}
