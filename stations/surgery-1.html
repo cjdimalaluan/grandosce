@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SURG 250 OSCE - Ultimate CBE Trainer</title>
+    <title>SURG 250 OSCE - CBE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -11,345 +11,516 @@
     <style>
         .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fdf2f8; }
-        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
-        .blank-hidden { background-color: #cbd5e1; color: transparent; user-select: none; }
-        .blank-hidden:hover { background-color: #94a3b8; color: transparent; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #fff1f2; }
+        ::-webkit-scrollbar-thumb { background: #fecdd3; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #fb7185; }
+        
+        /* Active Recall Styles */
+        .cloze-hidden {
+            background-color: #db2777; /* Pink 600 */
+            color: transparent;
+            border-radius: 0.25rem;
+            padding: 0 0.25rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cloze-hidden:hover {
+            background-color: #be185d; /* Pink 700 */
+        }
+        .cloze-revealed {
+            background-color: #fce7f3; /* Pink 100 */
+            color: #831843; /* Pink 900 */
+            border-radius: 0.25rem;
+            padding: 0 0.25rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid #db2777;
+        }
+        .cloze-revealed:hover {
+            background-color: #fbcfe8;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans">
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // --- View 1: The Interactive Script ---
-        const OSCECBEScript = () => {
-            const [activeStep, setActiveStep] = useState(0);
-            const [memorizeMode, setMemorizeMode] = useState(false);
-            const [hiddenWords, setHiddenWords] = useState(new Set());
+        // --- EXHAUSTIVE RUBRIC STRUCTURE ---
+        const exactRubric = [
+            {
+                category: "I. INSPECTION",
+                items: [
+                    { id: "i1", text: "Position – explain different maneuvers", type: "both" },
+                    { id: "i2", text: "Report the size and symmetry", type: "report" },
+                    { id: "i3", text: "Mass (report any visible mass from inspection)", type: "report" },
+                    { id: "i4", text: "Skin changes (peau d’ orange)", type: "report" },
+                    { id: "i5", text: "Nipple retraction", type: "report" },
+                    { id: "i6", text: "Rashes or ulcerations", type: "report" }
+                ]
+            },
+            {
+                category: "II. PALPATION",
+                items: [
+                    { id: "pa1", text: "Position – patient lying down, arms over head", type: "both" },
+                    { id: "pa2", text: "Perform systematic examination of both breasts (spiral or transverse using pads of 2-3 fingers of two hands)", type: "both" },
+                    { id: "pa3", text: "Left breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
+                    { id: "pa4", text: "Right breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
+                    { id: "pa5", text: "Nipple - check for nipple discharge, bilateral", type: "both" }
+                ]
+            },
+            {
+                category: "III. LYMPHATIC DRAINAGE",
+                items: [
+                    { id: "ln1", text: "Axilla - examination of axilla explained", type: "both" },
+                    { id: "ln2", text: "Supraclavicular Area - examination of supraclavicular area explained", type: "both" }
+                ]
+            },
+            {
+                category: "IV. CLINICAL IMPRESSION",
+                items: [
+                    { id: "c1", text: "Clinical Impression - Right", type: "report" },
+                    { id: "c2", text: "Clinical Impression - Left", type: "report" }
+                ]
+            }
+        ];
 
-            const steps = [
-                {
-                    id: 1,
-                    title: "Phase 1: Intro, Tools & The Chaperone",
-                    checklist: [1],
-                    patient: "Magandang umaga/hapon po, Ma’am. Ako po si Doc CJ, isang clinical clerk mula sa UP. Kailangan ko po sanang suriin ang inyong mga {suso at kili-kili}. Dahil medyo maselan po ang pagsusuring ito, kukuha po ako ng kasamang {babaeng nurse o chaperone} dito sa loob ng kwarto para sa inyong kapanatagan. Papayag po ba kayo?",
-                    preceptor: "Good morning, Doctors. I have washed my hands and introduced myself. I am verifying patient identity and gaining consent. Because I am a {male examinee}, I am explicitly requesting a {female chaperone} to be present. I have prepared my {caliper} and {marker}. I will ensure privacy and ask the patient to disrobe to the waist."
-                },
-                {
-                    id: 2,
-                    title: "Phase 2: Visual Inspection (The 4 Maneuvers)",
-                    checklist: [2, 3, 4, 5, 6, 7],
-                    patient: "Ma’am, maaari po bang maupo kayo sa gilid ng kama? Una po, ibaba niyo ang inyong mga kamay sa gilid. Pangalawa, paki-{pamewang nang mariin} para tumigas ang kalamnan sa dibdib. Pangatlo, paki-{taas ang dalawang kamay} sa likod ng ulo. At panghuli, maaari po bang {yumuko kayo} nang kaunti paharap?",
-                    preceptor: "With the patient seated, I am inspecting in 4 positions to check for {size and symmetry}, any visible {masses}, skin changes like {peau d'orange}, any {nipple retraction} or deviation, and the presence of {rashes or ulcerations}."
-                },
-                {
-                    id: 3,
-                    title: "Phase 3: Palpation (Ipsilateral Stance & Borders)",
-                    checklist: [8, 9, 10, 11, 12, 13],
-                    patient: "Ngayon po ay hihiga tayo. Ipapatong ko po itong unan sa likod ng inyong kanang balikat. Paki-taas po ang inyong {kanang kamay} at ilagay sa likod ng ulo. Kakapain ko na po ang inyong dibdib.",
-                    preceptor: "I am placing the patient {supine} with the arm raised over 90 degrees to flatten the tissue. Crucially, I am standing on the {ipsilateral side} of the breast being examined to avoid reaching over. Using the pads of my {2nd, 3rd, and 4th fingers} of {two hands}, I am palpating in a {vertical strip} pattern. I will cover the strict anatomical borders: superiorly to the {clavicle}, medially to the {mid-sternum}, laterally to the {mid-axillary line}, and inferiorly to the {inframammary fold}. I will also palpate the {axillary tail of Spence} and gently compress the areola for {nipple discharge}."
-                },
-                {
-                    id: 4,
-                    title: "Phase 4: Lymph Nodes (The Caudal Sweep)",
-                    checklist: [14, 15],
-                    patient: "Ma'am, maaari po ba kayong maupo ulit? Ipatong niyo lang po ang inyong braso sa aking braso para makapag-relax ang inyong kili-kili. Kakapain ko po ang inyong mga kulani.",
-                    preceptor: "The patient is seated. I am supporting the patient's arm to fully relax the axillary floor. I am strictly using my {contralateral hand} to examine the axilla. I push upward toward the apex, then gently bring my hand {caudally} while pressing against the chest wall to palpate the central, pectoral, subscapular, and lateral nodes. I will also palpate the {supraclavicular} and {infraclavicular} fossae."
-                },
-                {
-                    id: 5,
-                    title: "Phase 5: Reporting (The Calliper Format)",
-                    checklist: [16, 17],
-                    patient: "Tapos na po ang ating pagsusuri. Maaari na po kayong magbihis. Base po sa aking nakapa, narito po ang ating mga susunod na hakbang... Maraming salamat po sa inyong kooperasyon.",
-                    preceptor: "The examination is complete. Presenting my findings: In the Left breast, I palpated a mass at {Location/Clock-face}, measuring exactly {Size} cm using my {caliper}, described as {Shape and Consistency}. In the Right breast, {Findings}. There is no nipple discharge and no axillary or supraclavicular lymphadenopathy noted."
-                }
-            ];
+        // Step-by-step Performance Script Data
+        const oscePages = [
+            {
+                id: "intro",
+                title: "1. Setup & Rapport",
+                icon: "🤝",
+                scriptText: "INTRODUCTIONS & RAPPORT:\n- Magandang araw po, Misis. Ako po si Doc {CJ}, isang medikal student/clerk mula sa UP College of Medicine. Kayo po si Ginang {Pangalan}?\n\nEXAM PURPOSE & PRIVACY:\n- Nandito po ako ngayon para magsagawa ng {clinical breast examination} o pagsusuri sa inyong dibdib at kili-kili upang matukoy ang anumang bukol o pagbabago. Sisiguraduhin po nating sarado ang pinto at {pribado} itong kwarto.\n\nCHAPERONE & CONSENT REQUEST:\n- Dahil maselan po ang pagsusuring ito, kukuha po ako ng {babaeng nurse o chaperone} na makakasama natin dito sa loob para sa inyong kapanatagan at proteksyon. Ok lang po ba na magsimula tayo?\n\nPREPARATION VERBALIZATION (TO PRECEPTOR):\n- I have performed hand hygiene and donned non-sterile gloves. I am checking the patient's identity and confirming consent. I have prepared a {caliper} provided for accurate measurement of the sizes of the nodules.",
+                rubricIds: []
+            },
+            {
+                id: "inspection",
+                title: "2. Visual Inspection",
+                icon: "👁️",
+                scriptText: "INSTRUCTIONAL COMMANDS FOR PATIENT:\n- Ma'am, paki-upo po nang tuwid sa gilid ng examination table habang relaxed ang dalawang braso sa inyong kandungan.\n- Ngayon naman po, paki-lagay ang dalawang kamay sa inyong hips at {magpamewang nang mariin} para tumigas ang kalamnan sa inyong dibdib.\n- Sunod po, paki-{taas ang dalawang kamay} sa likod ng inyong ulo at manatili nang ilang segundo.\n- At huli po, paki-baba ng kamay at {yumuko nang kaunti paharap} patungo sa akin.\n\nCLINICAL OBSERVATIONS & REPORTING (TO PRECEPTOR):\n- I have ensured to explain the different maneuvers to the patient for position.\n- Upon visual inspection, I report the {size and symmetry} of the breasts.\n- I report that there is no visible {mass} from inspection.\n- I observe no skin changes such as {peau d’ orange} or erythema.\n- I observe no {nipple retraction} or flaking.\n- There are no visible {rashes or ulcerations}.",
+                rubricIds: ["i1", "i2", "i3", "i4", "i5", "i6"]
+            },
+            {
+                id: "palpation",
+                title: "3. Breast Palpation",
+                icon: "✋",
+                scriptText: "PATIENT POSITIONING:\n- Ma'am, maaari po ba kayong humiga nang supine? Ipapatong ko po itong maliit na unan sa ilalim ng inyong likod sa kanang bahagi, at paki-taas po ang inyong {kanang kamay} sa likod ng ulo.\n\nMETHODICAL PALPATION & REPORTING (TO PRECEPTOR):\n- The position of the patient is confirmed as {lying down, arms over head}.\n- I perform a systematic examination of both breasts using a {spiral or transverse} pattern, utilizing the pads of {2-3 fingers} of two hands.\n- For the {left breast} and {right breast}, I will systematically assess the tissue up to the axillary tail of Spence.\n- If a mass is identified, I will use the {caliper} to measure sizes, and report the precise findings: {approximate size in cm}, {location according to the face of a clock}, {distance in cm from the nipple}, whether it is {well-circumscribed or not}, {tenderness}, {shape and consistency}, and if it is {mobile or fixed to skin/chest wall}.\n- I gently compress the areola around the {nipple} to check for {nipple discharge, bilateral}.",
+                rubricIds: ["pa1", "pa2", "pa3", "pa4", "pa5"]
+            },
+            {
+                id: "lymphatics",
+                title: "4. Lymph Node Sweep",
+                icon: "🧼",
+                scriptText: "AXILLARY FLOOR RELAXATION:\n- Ma'am, maaari po ba kayong maupo muli sa gilid ng kama? Ipatong niyo po ang inyong kanang braso sa aking braso para ma-relax nang lubos ang inyong kili-kili.\n\nLYMPH NODE SWEEP REPORTING (TO PRECEPTOR):\n- I ensure that the examination of the {axilla} is fully explained, utilizing my contralateral hand to gently bring the contents caudally. If nodes are palpated, I will note if they are mobile, matted, or fixed.\n- I ensure that the examination of the {supraclavicular area} and infraclavicular area is explained and palpated for adenopathy.",
+                rubricIds: ["ln1", "ln2"]
+            },
+            {
+                id: "impression",
+                title: "5. Clinical Impression",
+                icon: "🧠",
+                scriptText: "CLINICAL ASSESSMENT (TO PRECEPTOR):\n- After evaluating the breast model, I will now provide my assessment of the masses and outline future plans for the patient.\n- My clinical impression for the {Right} breast is... [State Impression].\n- My clinical impression for the {Left} breast is... [State Impression].",
+                rubricIds: ["c1", "c2"]
+            }
+        ];
 
-            const rubric = [
-                {id: 1, text: "Intro, ID patient, Request Female Chaperone", phase: 1},
-                {id: 2, text: "INSPECT: Position - explain 4 different maneuvers", phase: 2},
-                {id: 3, text: "INSPECT: Report size and symmetry", phase: 2},
-                {id: 4, text: "INSPECT: Mass (report any visible mass)", phase: 2},
-                {id: 5, text: "INSPECT: Skin changes (peau d' orange)", phase: 2},
-                {id: 6, text: "INSPECT: Nipple retraction", phase: 2},
-                {id: 7, text: "INSPECT: Rashes or ulcerations", phase: 2},
-                {id: 8, text: "PALPATE: Patient supine, arms over head", phase: 3},
-                {id: 9, text: "PALPATE: Systematic exam (vertical strip) using 2 hands", phase: 3},
-                {id: 10, text: "PALPATE: Left breast (use CALIPER) & Describe", phase: 3},
-                {id: 11, text: "PALPATE: Right breast (use CALIPER) & Describe", phase: 3},
-                {id: 12, text: "PALPATE: Tail of Spence explicitly palpated", phase: 3},
-                {id: 13, text: "NIPPLE: Check for discharge bilaterally", phase: 3},
-                {id: 14, text: "AXILLA: Support arm, use contralateral hand, caudal sweep", phase: 4},
-                {id: 15, text: "SUPRACLAVICULAR: Palpate fossae", phase: 4},
-                {id: 16, text: "IMPRESSION: Left Breast (Location, Size, Description)", phase: 5},
-                {id: 17, text: "IMPRESSION: Right Breast (Location, Size, Description)", phase: 5}
-            ];
+        // --- COMPONENTS ---
 
-            const shuffleBlanks = (stepIdx) => {
-                const step = steps[stepIdx];
-                const newHidden = new Set();
-                const processText = (text, role) => {
-                    if (!text) return;
-                    const parts = text.split(/\{(.*?)\}/g);
-                    parts.forEach((part, i) => {
-                        if (i % 2 === 1 && Math.random() > 0.3) {
-                            newHidden.add(`${stepIdx}-${role}-${i}`);
-                        }
-                    });
-                };
-                processText(step.patient, 'patient');
-                processText(step.preceptor, 'preceptor');
-                setHiddenWords(newHidden);
-            };
-
-            useEffect(() => {
-                if (memorizeMode) shuffleBlanks(activeStep);
-                else setHiddenWords(new Set());
-            }, [activeStep, memorizeMode]);
-
-            const revealWord = (id) => {
-                setHiddenWords(prev => {
-                    const next = new Set(prev);
-                    next.delete(id);
-                    return next;
-                });
-            };
-
-            const renderText = (text, stepIndex, role) => {
-                if (!text) return null;
-                if (!memorizeMode) {
-                    const parts = text.split(/\{(.*?)\}/g);
-                    return parts.map((part, i) => i % 2 === 1 ? <strong key={i} className="text-pink-700">{part}</strong> : <span key={i}>{part}</span>);
-                }
-                const parts = text.split(/\{(.*?)\}/g);
-                return parts.map((part, i) => {
-                    if (i % 2 === 1) {
-                        const wordId = `${stepIndex}-${role}-${i}`;
-                        const isHidden = hiddenWords.has(wordId);
-                        if (isHidden) {
-                            return <span key={wordId} onClick={() => revealWord(wordId)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-inner" title="Click to reveal">{part}</span>;
-                        } else {
-                            return <span key={wordId} className="font-bold bg-pink-100 text-pink-800 px-1 rounded mx-0.5 shadow-sm">{part}</span>;
-                        }
-                    }
-                    return <span key={i}>{part}</span>;
-                });
-            };
-
+        // Inline parser for processing cloze deletions smoothly
+        const ActiveRecallText = ({ text, isRecallMode }) => {
+            const lines = text.split('\n');
+            
             return (
-                <div className="flex flex-col md:flex-row gap-6 animate-fade-in pb-10">
-                    <div className="flex-1 space-y-4">
-                        <div className="bg-slate-800 text-white p-5 rounded-xl shadow-lg mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                            <div>
-                                <h2 className="text-2xl font-black text-pink-400">The CBE Master Script</h2>
-                                <p className="text-sm text-slate-300 mt-1">Verbalize the Filipino text to the patient, and the English text to the preceptor.</p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center bg-slate-700 hover:bg-slate-600 px-3 py-2 rounded-lg transition-colors">
-                                    <input type="checkbox" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="mr-2 w-4 h-4 accent-pink-500" />
-                                    Active Recall Mode
-                                </label>
-                                {memorizeMode && (
-                                    <button onClick={() => shuffleBlanks(activeStep)} className="text-xs bg-pink-600 hover:bg-pink-500 text-white font-bold py-1.5 px-3 rounded shadow">
-                                        🔀 Shuffle Blanks
-                                    </button>
-                                )}
-                            </div>
-                        </div>
+                <div className="space-y-2">
+                    {lines.map((line, lineIndex) => {
+                        if (line.trim() === '') return <div key={`empty-${lineIndex}`} className="h-2"></div>;
+                        
+                        const isSubheader = /^[A-Z\s&/()0-9\-]+:(\)?)$/.test(line.trim());
+                        const isBullet = line.trim().startsWith('- ');
+                        
+                        let contentLine = line;
+                        let lineClass = "leading-relaxed";
+                        
+                        if (isSubheader && !isBullet) {
+                            lineClass = "font-black text-pink-800 text-sm tracking-widest mt-4 uppercase border-b border-pink-100 pb-1";
+                        } else if (isBullet) {
+                            lineClass = "pl-4 border-l-2 border-pink-200 ml-2 text-[15.5px] text-slate-700 py-1";
+                            contentLine = line.substring(2);
+                        } else {
+                            lineClass = "text-[16px] text-slate-800 py-1";
+                        }
 
-                        {memorizeMode && (
-                            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 text-amber-900 text-sm flex items-start shadow-sm">
-                                <span className="text-xl mr-3">🧠</span>
-                                <div><strong>Randomized Recall Active!</strong> Approx 70% of the clinical keywords have been hidden. Say the line out loud, then click the gray boxes to reveal.</div>
-                            </div>
-                        )}
+                        const processParts = (str) => {
+                            const clozeRegex = /\{(.*?)\}/g;
+                            const parts = str.split(clozeRegex);
+                            
+                            return parts.map((part, index) => {
+                                if (index % 2 === 1) { 
+                                    return <ClozeWord key={`cloze-${lineIndex}-${index}`} word={part} isRecallMode={isRecallMode} />;
+                                }
+                                return <span key={`text-${lineIndex}-${index}`}>{part}</span>;
+                            });
+                        };
 
-                        {steps.map((step, idx) => (
-                            <div key={step.id} className={`border-2 rounded-xl transition-all overflow-hidden ${activeStep === idx ? 'border-pink-500 shadow-md ring-4 ring-pink-50' : 'border-slate-200 hover:border-pink-300 cursor-pointer'}`}>
-                                <div className={`p-4 font-bold flex justify-between items-center ${activeStep === idx ? 'bg-pink-50 text-pink-900' : 'bg-slate-50 text-slate-700'}`} onClick={() => setActiveStep(idx)}>
-                                    <span>{step.title}</span>
-                                    {activeStep !== idx && <span className="text-xs font-normal text-slate-400">Click to expand</span>}
-                                </div>
-                                {activeStep === idx && (
-                                    <div className="p-5 space-y-5 bg-white">
-                                        {step.patient && (
-                                            <div className="bg-emerald-50 p-5 rounded-lg border border-emerald-200 relative">
-                                                <span className="absolute -top-3 left-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PATIENT (FILIPINO)</span>
-                                                <p className="text-emerald-900 font-medium leading-relaxed mt-2 text-[15px]">"{renderText(step.patient, idx, 'patient')}"</p>
-                                            </div>
-                                        )}
-                                        {step.preceptor && (
-                                            <div className="bg-pink-50 p-5 rounded-lg border border-pink-200 relative">
-                                                <span className="absolute -top-3 left-4 bg-pink-700 text-white text-xs font-bold px-3 py-1 rounded shadow-sm">TO PRECEPTOR (ENGLISH)</span>
-                                                <p className="text-pink-900 font-medium leading-relaxed mt-2 text-[15px]">"{renderText(step.preceptor, idx, 'preceptor')}"</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                        return (
+                            <div key={`line-${lineIndex}`} className={lineClass}>
+                                {isBullet && <span className="text-pink-500 mr-2 font-bold">•</span>}
+                                {processParts(contentLine)}
                             </div>
-                        ))}
-                    </div>
-
-                    <div className="w-full md:w-80 flex-shrink-0">
-                        <div className="sticky top-6 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-                            <div className="bg-slate-800 p-4 text-white flex justify-between items-center">
-                                <span className="font-bold">LU5 OSCE Checklist</span>
-                                <span className="text-xs bg-emerald-600 px-2 py-1 rounded font-bold shadow-inner">Pass: 12/17</span>
-                            </div>
-                            <div className="p-4 h-[75vh] overflow-y-auto bg-slate-50">
-                                <ul className="space-y-2">
-                                    {rubric.map(item => {
-                                        const isCovered = steps[activeStep].checklist.includes(item.id);
-                                        return (
-                                            <li key={item.id} className={`p-2.5 rounded-lg text-sm flex items-start transition-all duration-300 ${isCovered ? 'bg-pink-100 text-pink-900 border border-pink-300 font-bold shadow-sm' : 'text-slate-500 bg-white border border-slate-100'}`}>
-                                                <span className={`mr-2 ${isCovered ? 'text-pink-600' : 'text-slate-300'}`}>{isCovered ? '✔' : '○'}</span>
-                                                <span className="leading-tight">{item.text}</span>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                        );
+                    })}
                 </div>
             );
         };
 
-        // --- View 2: High-Yield Theory ---
-        const TheoryReviewer = () => (
-            <div className="space-y-8 animate-fade-in pb-10">
-                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Top-Student Preceptor Pearls</h2>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-red-700 mb-4 flex items-center"><span className="text-2xl mr-2">🚨</span> The Positioning Traps</h3>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-red-900">The Ipsilateral Stance:</strong> NEVER reach over the patient's chest. You must physically move to stand on the side of the breast being examined (ipsilateral side).</li>
-                            <li><strong className="text-red-900">The Contralateral Hand:</strong> For the axillary exam, do NOT use your left hand to examine the left axilla. Use your contralateral hand (right hand for left axilla), pushing up to the apex and sweeping <strong>caudally</strong> against the chest wall.</li>
-                        </ul>
-                    </div>
+        const ClozeWord = ({ word, isRecallMode }) => {
+            const [revealed, setRevealed] = useState(false);
 
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-emerald-700 mb-4 flex items-center"><span className="text-2xl mr-2">📍</span> The Absolute Boundaries</h3>
-                        <p className="text-sm text-slate-700 mb-4">Verbalizing "I am palpating the breast" is insufficient. You must trace and state the exact anatomical borders:</p>
-                        <div className="bg-emerald-50 p-4 rounded border border-emerald-100">
-                            <ul className="space-y-2 text-sm text-emerald-900 font-medium">
-                                <li>• <strong>Superior:</strong> Clavicle</li>
-                                <li>• <strong>Medial:</strong> Mid-sternum</li>
-                                <li>• <strong>Lateral:</strong> Mid-axillary line</li>
-                                <li>• <strong>Inferior:</strong> Inframammary fold ("bra line")</li>
-                            </ul>
-                        </div>
-                    </div>
+            useEffect(() => {
+                setRevealed(false);
+            }, [isRecallMode]);
 
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-indigo-700 mb-4 flex items-center"><span className="text-2xl mr-2">🪡</span> Prior Mastectomy Protocol</h3>
-                        <p className="text-sm text-slate-700 mb-4">If the standardized patient has a mastectomy scar, your examination priorities shift.</p>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-indigo-900">Inspect the Scar & Axilla:</strong> Look for nodularity, masses, or color changes, which are highly worrisome for local recurrence.</li>
-                            <li><strong className="text-indigo-900">Inspect the Arm:</strong> Check for swelling (Lymphedema). This is caused by disruption of lymphatic chains from prior axillary node dissection or sampling.</li>
-                        </ul>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow border border-slate-200 p-6">
-                        <h3 className="text-xl font-bold text-pink-700 mb-4 flex items-center"><span className="text-2xl mr-2">👀</span> Pathophysiology of Inspection</h3>
-                        <ul className="space-y-3 text-sm text-slate-700">
-                            <li><strong className="text-pink-900">Dimpling:</strong> Caused by tumor invasion and fibrotic shortening of the <strong>Suspensory Ligaments of Cooper</strong>.</li>
-                            <li><strong className="text-pink-900">Peau d'orange:</strong> Caused by tumor emboli obstructing the <strong>subdermal lymphatic channels</strong>, causing local lymphedema.</li>
-                            <li><strong className="text-pink-900">Tools of the Trade:</strong> Always mention using the <strong>Caliper</strong> to measure, and the <strong>Marker</strong> to mark the skin overlaying the lesion for future biopsy/surgical mapping.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        );
-
-        // --- View 3: Pathology Matrix ---
-        const PathologyMatrix = () => (
-            <div className="space-y-8 animate-fade-in pb-10">
-                <h2 className="text-3xl font-black text-slate-800 border-b-2 border-slate-300 pb-2">Clinical Impression Formulation</h2>
-
-                <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-                    <div className="bg-pink-50 p-5 border-b border-pink-200">
-                        <h3 className="font-bold text-pink-900 text-lg">Describing a Mass (The 6 Features)</h3>
-                        <p className="text-sm text-pink-800 mt-2 leading-relaxed">During the Clinical Impression portion of the rubric, you must describe lesions using these features: <strong>Location</strong> (Clock face/Quadrant & distance from nipple), <strong>Size</strong> (in cm using caliper), <strong>Shape</strong> (round, irregular), <strong>Consistency</strong> (soft, rubbery, firm, hard), <strong>Mobility</strong> (mobile, fixed to skin/muscle), and <strong>Tenderness</strong>.</p>
-                    </div>
-                    
-                    <div className="p-6 overflow-x-auto">
-                        <table className="min-w-full text-left text-sm border-collapse">
-                            <thead>
-                                <tr className="bg-slate-100 text-slate-800">
-                                    <th className="p-3 border font-bold">Etiology</th>
-                                    <th className="p-3 border font-bold">Typical Age</th>
-                                    <th className="p-3 border font-bold">Palpation Characteristics</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y text-slate-700">
-                                <tr className="hover:bg-slate-50">
-                                    <td className="p-3 border font-black text-slate-900">Fibroadenoma</td>
-                                    <td className="p-3 border font-medium">15 - 25 years</td>
-                                    <td className="p-3 border">
-                                        Single, usually 1-2 cm, round/disc-like. <span className="font-bold text-green-700">Firm and rubbery.</span> Highly mobile ("breast mouse"). Non-tender.
-                                    </td>
-                                </tr>
-                                <tr className="hover:bg-slate-50">
-                                    <td className="p-3 border font-black text-slate-900">Fibrocystic Changes</td>
-                                    <td className="p-3 border font-medium">30 - 50 years</td>
-                                    <td className="p-3 border">
-                                        Multiple/bilateral. Round, soft to firm. <span className="font-bold text-amber-600">Tender.</span> Mobile. Size and tenderness fluctuate with the menstrual cycle.
-                                    </td>
-                                </tr>
-                                <tr className="hover:bg-slate-50">
-                                    <td className="p-3 border font-black text-slate-900">Breast Malignancy</td>
-                                    <td className="p-3 border font-medium">30 - 90+ years</td>
-                                    <td className="p-3 border">
-                                        Usually single. Irregular or stellate shape. <span className="font-bold text-red-700">Hard consistency.</span> Fixed to skin or underlying tissue. Usually painless.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        );
-
-        const App = () => {
-            const [view, setView] = useState('script');
-            const tabs = [
-                { id: 'script', label: '1. CBE Interactive Script', icon: '🩺' },
-                { id: 'theory', label: '2. Preceptor Must-Knows', icon: '🧠' },
-                { id: 'pathology', label: '3. Clinical Impressions', icon: '📊' }
-            ];
+            if (!isRecallMode) {
+                return <span className="font-bold text-pink-700">{word}</span>;
+            }
 
             return (
-                <div className="min-h-screen flex flex-col md:flex-row font-sans">
-                    <nav className="w-full md:w-72 bg-slate-900 text-white p-6 shadow-2xl flex-shrink-0 z-10">
-                        <div className="mb-10">
+                <span 
+                    className={revealed ? "cloze-revealed" : "cloze-hidden"} 
+                    onClick={() => setRevealed(!revealed)}
+                    title={revealed ? "Click to hide" : "Click to reveal"}
+                >
+                    {word}
+                </span>
+            );
+        };
+
+        // Main App Container
+        const BreastOSCEApp = () => {
+            const [view, setView] = useState('script'); 
+            const [activeIndex, setActiveIndex] = useState(0);
+            const [isRecallMode, setIsRecallMode] = useState(false);
+            const [scores, setScores] = useState({});
+            
+            const handleScoreChange = (id, type, value) => {
+                setScores(prev => ({
+                    ...prev,
+                    [id]: {
+                        ...prev[id],
+                        [type]: value
+                    }
+                }));
+            };
+
+            const calculateTotal = () => {
+                let total = 0;
+                Object.values(scores).forEach(item => {
+                    if (item.demo) total += item.demo;
+                    if (item.report) total += item.report;
+                });
+                return total;
+            };
+
+            const calculateMaxPossible = () => {
+                let max = 0;
+                exactRubric.forEach(cat => {
+                    cat.items.forEach(item => {
+                        if (item.type === 'demo' || item.type === 'both') max += 2;
+                        if (item.type === 'report' || item.type === 'both') max += 2;
+                    });
+                });
+                return max;
+            };
+
+            const totalScore = calculateTotal();
+            const maxScore = calculateMaxPossible();
+            const passThreshold = maxScore * 0.70; 
+            const activePage = oscePages[activeIndex];
+            
+            const getActiveRubricItems = () => {
+                const items = [];
+                exactRubric.forEach(category => {
+                    category.items.forEach(item => {
+                        if (activePage.rubricIds.includes(item.id)) {
+                            items.push(item);
+                        }
+                    });
+                });
+                return items;
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row">
+                    
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className="w-full md:w-72 bg-slate-900 text-white shadow-2xl flex-shrink-0 z-10 flex flex-col">
+                        <div className="p-6 pb-2 border-b border-slate-800">
                             <h1 className="text-3xl font-black text-pink-400 tracking-tight">SURG 250</h1>
                             <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Breast Exam OSCE</p>
                         </div>
-                        <ul className="space-y-3">
-                            {tabs.map(tab => (
-                                <li key={tab.id}>
-                                    <button 
-                                        onClick={() => setView(tab.id)} 
-                                        className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 ${view === tab.id ? 'bg-pink-600 text-white shadow-lg transform scale-105' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}
-                                    >
-                                        <span className="mr-3 text-xl">{tab.icon}</span>
-                                        {tab.label}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                            <button onClick={() => setView('script')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'script' ? 'bg-pink-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">🗣️</span> Performance Script
+                            </button>
+                            <button onClick={() => setView('reporting')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left ${view === 'reporting' ? 'bg-pink-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">📋</span> Formal Case Reporting
+                            </button>
+                            <button onClick={() => setView('grader')} className={`w-full flex items-center p-3 rounded-lg font-bold transition-all duration-200 text-left border-t border-slate-700 mt-4 pt-4 ${view === 'grader' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800'}`}>
+                                <span className="mr-3 text-xl">💯</span> Rubric Grader
+                            </button>
+                        </div>
+                        
+                        {(view === 'script' || view === 'reporting') && (
+                            <div className="p-6 bg-slate-950 mt-auto border-t border-slate-800">
+                                <label className="text-sm font-bold text-white cursor-pointer select-none flex items-center justify-center bg-slate-800 hover:bg-slate-700 px-4 py-3 rounded-lg transition-colors border border-slate-700 shadow-inner">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={isRecallMode} 
+                                        onChange={() => setIsRecallMode(!isRecallMode)} 
+                                        className="mr-3 w-5 h-5 accent-pink-500" 
+                                    />
+                                    Active Recall Mode
+                                </label>
+                            </div>
+                        )}
                     </nav>
-                    <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-50">
-                        <div className="max-w-6xl mx-auto">
-                            {view === 'script' && <OSCECBEScript />}
-                            {view === 'theory' && <TheoryReviewer />}
-                            {view === 'pathology' && <PathologyMatrix />}
+
+                    {/* MAIN WORKSPACE CONTENT */}
+                    <main className="flex-1 p-4 md:p-8 overflow-y-auto h-screen custom-scrollbar">
+                        <div className="max-w-6xl mx-auto space-y-6 animate-fade-in pb-20">
+                            
+                            {/* VIEW 1: PERFORMANCE SCRIPT */}
+                            {view === 'script' && (
+                                <>
+                                    <div className="border-b-2 border-slate-200 pb-4">
+                                        <h2 className="text-3xl font-black text-slate-800">🗣️ Script & Practical Execution</h2>
+                                        <p className="text-slate-500 mt-2 font-medium">Coordinate dialogue seamlessly. Direct Taglish statements to the patient and report clinical parameters to your preceptor.</p>
+                                    </div>
+
+                                    {/* Pagination Controls */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {oscePages.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIndex(idx)}
+                                                className={`whitespace-nowrap px-4 py-2 rounded-full font-bold text-sm transition-all shadow-sm ${activeIndex === idx ? 'bg-pink-600 text-white ring-2 ring-pink-300' : 'bg-white text-slate-600 hover:bg-pink-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+                                        {/* Left Side: Interactive Step Script */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-pink-700 text-white p-4 font-bold flex items-center">
+                                                    <span className="text-xl mr-2">🗣️</span> Clinical Commands & Presentation
+                                                </div>
+                                                <div className="p-6 bg-pink-50">
+                                                    <ActiveRecallText text={activePage.scriptText} isRecallMode={isRecallMode} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Side: Structural Alignment Check */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white p-4 font-bold flex items-center justify-between">
+                                                    <div className="flex items-center"><span className="text-xl mr-2">📋</span> Target Rubric Domains</div>
+                                                </div>
+                                                <div className="p-0 bg-slate-50">
+                                                    <ul className="divide-y divide-slate-200">
+                                                        {getActiveRubricItems().length > 0 ? getActiveRubricItems().map((item) => (
+                                                            <li key={item.id} className="p-4 flex items-start text-sm text-slate-700 font-medium hover:bg-slate-100 transition-colors">
+                                                                <input type="checkbox" className="mt-1 mr-3 w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                                                                <span className="leading-snug">{item.text}</span>
+                                                            </li>
+                                                        )) : (
+                                                            <li className="p-4 text-sm text-slate-500 italic">No specific scored rubric items for this step. Proceed with protocol.</li>
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIndex(Math.max(0, activeIndex - 1))} disabled={activeIndex === 0} className="px-6 py-3 rounded-lg font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIndex(Math.min(oscePages.length - 1, activeIndex + 1))} disabled={activeIndex === oscePages.length - 1} className="px-6 py-3 rounded-lg font-bold text-white bg-pink-600 hover:bg-pink-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
+                                </>
+                            )}
+
+                            {/* VIEW 2: FORMAL CASE REPORTING */}
+                            {view === 'reporting' && (
+                                <div className="space-y-8 animate-fade-in">
+                                    <div className="border-b-2 border-slate-200 pb-4">
+                                        <h2 className="text-3xl font-black text-slate-800">📋 Formal Case Reporting to Preceptor</h2>
+                                        <p className="text-slate-600 mt-2 font-medium">The preceptor assessment requires an exhaustive reporting script. State all values sequentially based on the checklist criteria to capture full rubric credits.</p>
+                                    </div>
+                                    
+                                    <div className="bg-white rounded-xl shadow-lg border-t-8 border-pink-600 p-8 space-y-8">
+                                        {/* Section 1: Complete Examination Output */}
+                                        <div>
+                                            <h3 className="text-lg font-black text-pink-900 border-b border-pink-100 pb-2 mb-3 flex items-center">
+                                                <span className="bg-pink-200 text-pink-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">1</span> 
+                                                Complete Integrated CBE Findings
+                                            </h3>
+                                            <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-inner">
+                                                <ActiveRecallText 
+                                                    isRecallMode={isRecallMode} 
+                                                    text={`VISUAL INSPECTION:\nDuring visual inspection, I explain the different maneuvers for patient position. I observe and report the {size and symmetry} of the breasts. I report that there is no visible {mass} from inspection. Furthermore, there are no skin changes such as {peau d’ orange}, no {nipple retraction}, and no {rashes or ulcerations}.\n\nPALPATION:\nWith the patient {lying down, arms over head}, I perform a systematic examination of both breasts using a {spiral or transverse} pattern, utilizing the pads of {2-3 fingers} of two hands. For the left breast, using the {caliper}, I note a lesion located at the {2 o'clock position} ({Location}), at a distance of {4 cm from the nipple}. It measures {2.5 cm} ({Size}), is {not well-circumscribed}, and is {tender} upon palpation. It is {hard and irregular} ({Description}), and is {fixed to the chest wall}. For the right breast, there are no notable lesions to report. Lastly, I check the {nipple} for {nipple discharge, bilateral}.\n\nLYMPHATIC DRAINAGE:\nI ensure that the examination of the {axilla} is explained and the examination of the {supraclavicular area} is explained.\n\nCLINICAL IMPRESSION:\nBased on these findings, my clinical impression for the {Right} breast is normal. My clinical impression for the {Left} breast is Breast Malignancy.`} 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Section 2: Clinical Matrix Scenario Outputs */}
+                                        <div className="grid lg:grid-cols-2 gap-8">
+                                            <div>
+                                                <h3 className="text-lg font-black text-pink-900 border-b border-pink-100 pb-2 mb-3 flex items-center">
+                                                    <span className="bg-pink-200 text-pink-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">2</span> 
+                                                    Mass Finding Variant Script
+                                                </h3>
+                                                <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                                                    <ActiveRecallText 
+                                                        isRecallMode={isRecallMode} 
+                                                        text={`In the left breast, I palpate a discrete mass. Utilizing the {caliper}, the approximate size is {2.5 cm}. Its location is at the {2 o'clock position} and is located at a distance of {4 cm from the nipple}. It is described as {not well-circumscribed} with noted {tenderness}. Its shape is {irregular} and has a {hard} consistency. The mass is {fixed to the chest wall}.`} 
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-lg font-black text-pink-900 border-b border-pink-100 pb-2 mb-3 flex items-center">
+                                                    <span className="bg-pink-200 text-pink-800 w-8 h-8 rounded-full flex items-center justify-center mr-3">3</span> 
+                                                    Clinical Impression Formulation
+                                                </h3>
+                                                <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                                                    <ActiveRecallText 
+                                                        isRecallMode={isRecallMode} 
+                                                        text={`Based on the comprehensive evaluation of the breast model and precise measurement parameters, my {clinical impression} for the {Left} breast is {Breast Malignancy}, while the {Right} breast is unremarkable.`} 
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: INTERACTIVE RUBRIC GRADER */}
+                            {view === 'grader' && (
+                                <div className="space-y-6 animate-fade-in">
+                                    
+                                    {/* Score Tracking Header */}
+                                    <div className="sticky top-0 z-20 bg-white/90 backdrop-blur shadow-md rounded-xl p-6 border-b-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-800">CBE Interactive Checklist Grader</h2>
+                                            <p className="text-slate-500 font-medium text-sm">Self-assess skills using objective criteria based on the OSCE LU V Evaluation Form.</p>
+                                        </div>
+                                        <div className="flex items-center gap-6">
+                                            <div className="text-right">
+                                                <div className="text-sm font-bold text-slate-400 uppercase tracking-widest">Calculated Score</div>
+                                                <div className="text-4xl font-black text-emerald-600">{totalScore} <span className="text-xl text-slate-400">/ {maxScore}</span></div>
+                                            </div>
+                                            <div className="w-32 h-3 bg-slate-200 rounded-full overflow-hidden">
+                                                <div 
+                                                    className={`h-full transition-all duration-500 ${totalScore >= passThreshold ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                                                    style={{ width: `${Math.min(100, (totalScore/maxScore)*100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-sm font-bold">
+                                                {totalScore >= passThreshold ? <span className="text-emerald-600">PASSING GRADE (>=70%)</span> : <span className="text-amber-600">Target: 70%</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Grading Grid Sheet */}
+                                    <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm">
+                                                <thead className="bg-slate-800 text-white">
+                                                    <tr>
+                                                        <th className="p-4 font-bold text-md w-1/2">Skill Performance Domains</th>
+                                                        <th className="p-4 font-bold text-center text-sm bg-slate-700 w-1/4 leading-tight">Demonstrated / Elicited <br/><span className="text-xs font-normal opacity-70">(0 - 2 Pts)</span></th>
+                                                        <th className="p-4 font-bold text-center text-sm bg-slate-600 w-1/4 leading-tight">Reported to Preceptor <br/><span className="text-xs font-normal opacity-70">(0 - 2 Pts)</span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-200 text-slate-700 font-medium">
+                                                    {exactRubric.map((category, catIdx) => (
+                                                        <React.Fragment key={catIdx}>
+                                                            <tr className="bg-rose-50/70 border-t-2 border-rose-100">
+                                                                <td colSpan="3" className="p-3 px-4 font-black text-slate-900 text-sm tracking-wide">{category.category}</td>
+                                                            </tr>
+                                                            {category.items.map((item) => {
+                                                                return (
+                                                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                                                        <td className="p-4 pl-6 text-sm text-slate-800 font-medium">
+                                                                            {item.text}
+                                                                        </td>
+                                                                        
+                                                                        {/* Performance Column */}
+                                                                        <td className="p-3 text-center border-l border-slate-200 bg-slate-50/50">
+                                                                            {(item.type === 'demo' || item.type === 'both') ? (
+                                                                                <div className="flex justify-center gap-1">
+                                                                                    {[0, 1, 2].map(val => (
+                                                                                        <button 
+                                                                                            key={val}
+                                                                                            onClick={() => handleScoreChange(item.id, 'demo', val)}
+                                                                                            className={`w-7 h-7 rounded-full font-bold transition-all text-xs border ${scores[item.id]?.demo === val ? 'bg-emerald-600 text-white border-emerald-700 shadow-md' : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400'}`}
+                                                                                        >
+                                                                                            {val}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
+                                                                            ) : <span className="text-slate-300">—</span>}
+                                                                        </td>
+
+                                                                        {/* Reporting Column */}
+                                                                        <td className="p-3 text-center border-l border-slate-200 bg-slate-50/30">
+                                                                            {(item.type === 'report' || item.type === 'both') ? (
+                                                                                <div className="flex justify-center gap-1">
+                                                                                    {[0, 1, 2].map(val => (
+                                                                                        <button 
+                                                                                            key={val}
+                                                                                            onClick={() => handleScoreChange(item.id, 'report', val)}
+                                                                                            className={`w-7 h-7 rounded-full font-bold transition-all text-xs border ${scores[item.id]?.report === val ? 'bg-emerald-600 text-white border-emerald-700 shadow-md' : 'bg-white text-slate-400 border-slate-300 hover:border-emerald-400'}`}
+                                                                                        >
+                                                                                            {val}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
+                                                                            ) : <span className="text-slate-300">—</span>}
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </React.Fragment>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-end pt-2">
+                                        <button 
+                                            onClick={() => setScores({})} 
+                                            className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg transition-colors shadow-sm"
+                                        >
+                                            Reset Grid Scores
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     </main>
                 </div>
@@ -357,7 +528,7 @@
         };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(<BreastOSCEApp />);
     </script>
 </body>
 </html>
