@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPCM Pediatrics Grand OSCE</title>
+    <title>UPCM Pediatrics OSCE - 2026 Master Reviewer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -27,12 +27,121 @@
         const MasterReference = () => (
             <div className="space-y-10 animate-fade-in pb-10">
                 
-                {/* Reporting & Scripts */}
+                {/* Anthropometrics & Vital Signs */}
                 <div>
-                    <h2 className="text-2xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-4">OSCE Execution & Patient Counseling Scripts</h2>
+                    <h2 className="text-3xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-6">1. Clinical Anthropometrics & Vital Signs</h2>
+                    
+                    {/* Full Vital Signs Table */}
+                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
+                        <h3 className="font-bold text-teal-800 border-b pb-2 mb-4 text-lg">Normal Vital Signs According to Age (Table 79.1)</h3>
+                        <div className="overflow-x-auto shadow rounded border border-slate-200 mb-4">
+                            <table className="min-w-full text-left text-sm bg-white divide-y divide-slate-200">
+                                <thead className="bg-teal-50 text-teal-900">
+                                    <tr>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/4">Age Category</th>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/4">Heart Rate (beats/min)</th>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/4">Blood Pressure (mm Hg)</th>
+                                        <th className="p-3 font-bold w-1/4">Respiratory Rate (breaths/min)</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200">
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Premature</td><td className="p-3 border-r border-slate-200 text-slate-700">120-205*</td><td className="p-3 border-r border-slate-200 text-slate-700">60-76 / 31-45</td><td className="p-3 text-slate-700">40-70</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Neonate</td><td className="p-3 border-r border-slate-200 text-slate-700">100-205*</td><td className="p-3 border-r border-slate-200 text-slate-700">67-84 / 35-53</td><td className="p-3 text-slate-700">35-55</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Infant</td><td className="p-3 border-r border-slate-200 text-slate-700">100-180</td><td className="p-3 border-r border-slate-200 text-slate-700">72-104 / 37-56</td><td className="p-3 text-slate-700">30-53</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Toddler</td><td className="p-3 border-r border-slate-200 text-slate-700">98-140</td><td className="p-3 border-r border-slate-200 text-slate-700">86-106 / 42-63</td><td className="p-3 text-slate-700">22-37</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Preschooler</td><td className="p-3 border-r border-slate-200 text-slate-700">80-120</td><td className="p-3 border-r border-slate-200 text-slate-700">89-112 / 46-72</td><td className="p-3 text-slate-700">20-28</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">School-age child</td><td className="p-3 border-r border-slate-200 text-slate-700">75-118</td><td className="p-3 border-r border-slate-200 text-slate-700">97-120 / 57-80</td><td className="p-3 text-slate-700">18-25</td></tr>
+                                    <tr className="hover:bg-slate-50"><td className="p-3 font-semibold border-r border-slate-200">Adolescent</td><td className="p-3 border-r border-slate-200 text-slate-700">60-100</td><td className="p-3 border-r border-slate-200 text-slate-700">110-131 / 64-83</td><td className="p-3 text-slate-700">12-20</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul className="text-xs text-slate-700 space-y-2 bg-slate-50 p-4 rounded border border-slate-200">
+                            <li><strong>* Heart Rate:</strong> In sleep, HR may be significantly lower. If perfusion is maintained, no intervention is required. Count for a full minute.</li>
+                            <li><strong>† Blood Pressure:</strong> Cuff should cover ~2/3 of the arm and 80-100% of circumference. Values are systolic/diastolic and assume 50th percentile for height for children &ge; 1 year. Obtain in all 4 extremities if screening.</li>
+                            <li><strong>+ Respiratory Rate:</strong> Expected to increase in the presence of fever and stress. Count for a full minute.</li>
+                        </ul>
+                    </div>
+
+                    {/* Anthropometric Rules */}
+                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
+                        <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">Anthropometric Techniques (Nelson & PEDIA 250)</h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-sm text-slate-700">
+                            
+                            {/* Core Measurements */}
+                            <div>
+                                <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Weight, Length/Height & BMI</h4>
+                                <ul className="space-y-3">
+                                    <li><strong className="text-slate-900">Weight:</strong> Taken in kg to one-tenths (0.0). The infant must be <strong>naked</strong> or wearing a dry diaper (subtract diaper weight). Remove heavy clothing and shoes for older children.</li>
+                                    <li><strong className="text-slate-900">Length (&lt; 2 years old):</strong> Measured in the recumbent position. <strong>Requires two examiners</strong> (one to position the head, one to extend legs). Head must touch the inflexible board.</li>
+                                    <li><strong className="text-slate-900">Height (&ge; 2 years old):</strong> Measured standing unassisted using a stadiometer. Shoes off. The back of the head, thoracic spine, buttocks, and heels must approximate the vertical axis.</li>
+                                    <li><strong className="text-slate-900">Frankfurt Plane (Crucial for Length/Height):</strong> The outer canthi of the eyes must be inline with the external auditory meatus, perpendicular to the long axis of the trunk.</li>
+                                    <li><strong className="text-slate-900">Body Mass Index (BMI):</strong> Calculated as Weight (kg) / Height (m)². Plotted for children &ge; 2 years old (or &ge; 5 depending on specific WHO charts used).</li>
+                                </ul>
+                            </div>
+                            
+                            {/* Circumferences & Proportions */}
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Circumferences</h4>
+                                    <ul className="space-y-2">
+                                        <li><strong className="text-slate-900">Head (HC):</strong> Measured with a flexible tape starting at the <strong>supraorbital ridge</strong> around to the <strong>occipital prominence</strong> to find the maximal circumference. Routine for &le; 3 years old. <em>(Term avg: 34-35 cm; 1 year: 47 cm).</em></li>
+                                        <li><strong className="text-slate-900">Chest (CC):</strong> Tape placed at the level of the xiphoid process, measured at mid-inspiration. <em>(At birth, HC &gt; CC. By 1 year of age, CC catches up and overtakes HC).</em></li>
+                                        <li><strong className="text-slate-900">Abdomen (AC):</strong> Tape placed level against the umbilicus. Applied snugly but not compressing the skin.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Body Proportions</h4>
+                                    <ul className="space-y-1">
+                                        <li><strong className="text-slate-900">U/L Ratio:</strong> Upper to Lower body segment ratio. Normal: ~1.7 at birth, 1.3 at 3 years, 1.0 after 7 years.</li>
+                                        <li><strong className="text-slate-900">Arm Span:</strong> Distance between tips of middle fingers with arms outstretched at 90°. Should roughly equal height.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* WHO Z-Score Table & MUAC */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                        <div className="lg:col-span-2 bg-white shadow rounded border border-slate-200 p-5">
+                            <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">WHO Z-Score Growth Matrix</h3>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-left text-xs bg-white divide-y divide-slate-200">
+                                    <thead className="bg-indigo-50 text-indigo-900">
+                                        <tr>
+                                            <th className="p-2 font-bold w-1/6">Z-score</th>
+                                            <th className="p-2 font-bold w-1/5">Length/Height</th>
+                                            <th className="p-2 font-bold w-1/5">Weight-for-age</th>
+                                            <th className="p-2 font-bold w-1/5">Weight-for-length</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-200">
+                                        <tr><td className="p-2 font-bold bg-slate-50">&gt; +3</td><td className="p-2 text-slate-500">Very Tall</td><td className="p-2 text-slate-500">Assess via BMI</td><td className="p-2 font-bold text-red-600">Obese</td></tr>
+                                        <tr><td className="p-2 font-bold bg-slate-50">&gt; +2</td><td className="p-2"></td><td className="p-2 font-bold text-orange-600">Overweight</td><td className="p-2 font-bold text-orange-600">Overweight</td></tr>
+                                        <tr><td className="p-2 font-bold bg-slate-50">&gt; +1</td><td className="p-2"></td><td className="p-2 font-semibold text-amber-600">Risk of Overweight</td><td className="p-2 font-semibold text-amber-600">Risk of Overweight</td></tr>
+                                        <tr><td className="p-2 font-bold bg-slate-50">0 (Median)</td><td className="p-2">Normal</td><td className="p-2">Normal</td><td className="p-2">Normal</td></tr>
+                                        <tr><td className="p-2 font-bold bg-slate-50">&lt; -2</td><td className="p-2 font-bold text-amber-600">Stunted</td><td className="p-2 font-bold text-amber-600">Underweight</td><td className="p-2 font-bold text-amber-600">Wasted (MAM)</td></tr>
+                                        <tr><td className="p-2 font-bold bg-slate-50">&lt; -3</td><td className="p-2 font-bold text-red-600">Severely Stunted</td><td className="p-2 font-bold text-red-600">Severely Underwt.</td><td className="p-2 font-bold text-red-600">Severely Wasted (SAM)</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div className="bg-white shadow rounded border border-slate-200 p-5">
+                            <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">MUAC (6-59 months)</h3>
+                            <ul className="space-y-4 text-sm text-slate-800">
+                                <li className="flex items-center"><span className="w-4 h-4 bg-green-500 mr-3 rounded-full flex-shrink-0"></span><span><strong>&ge; 12.5 cm:</strong> Normal</span></li>
+                                <li className="flex items-center"><span className="w-4 h-4 bg-yellow-400 mr-3 rounded-full flex-shrink-0"></span><span><strong>11.5 to &lt; 12.5 cm:</strong> MAM (Moderate Acute Malnutrition)</span></li>
+                                <li className="flex items-start"><span className="w-4 h-4 bg-red-600 mr-3 rounded-full flex-shrink-0 mt-1"></span><span><strong className="text-red-700">&lt; 11.5 cm:</strong> SAM (Severe Acute Malnutrition) - Requires immediate admission. Overrides WFH Z-scores.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {/* OSCE Scripts */}
+                <div>
+                    <h2 className="text-3xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-6">2. OSCE Execution Scripts</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
-                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">1. Consultant Reporting & 7 Rights</h3>
+                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">Consultant Reporting & 7 Rights</h3>
                             <ul className="text-sm space-y-3 text-slate-800">
                                 <li><strong>Pre-Admin Checks:</strong> "Good [morning] Doc, presenting my patient, a [Age]-old [Gender]. Vitals are normal per Table 79.1. I have checked the <strong>7 Rights</strong>: Right patient, drug, dose, route, time, technique, and documentation."</li>
                                 <li><strong>Vaccine Plan:</strong> "The patient is missing [Vaccines]. My plan is to administer [A, B] today via [Routes]. I will give oral vaccines before injectables to keep the infant calm."</li>
@@ -40,7 +149,7 @@
                             </ul>
                         </div>
                         <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
-                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">2. Patient Counseling & Administration</h3>
+                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">Patient Counseling & Administration</h3>
                             <ul className="text-sm space-y-3 text-slate-800">
                                 <li><strong>Intro & Rights:</strong> "Magandang araw po Mommy. Ako po si Dok, titingin kay baby. Ito po ba si [Pangalan], [Edad]? Ngayon po ay bibigyan natin siya ng bakuna laban sa [Sakit]."</li>
                                 <li><strong>Administration (PO):</strong> "Siguraduhin po natin na hindi nakadede si baby 2 oras bago ngayon. Uunahin po natin ipatak ang Rotavirus, bago ang Polio. Dahan-dahan po natin ipapatak sa gilid ng pisngi para hindi mabulunan."</li>
@@ -50,162 +159,10 @@
                     </div>
                 </div>
 
-                {/* Specific Side Effects */}
-                <div>
-                    <h2 className="text-2xl font-bold text-amber-900 border-b-2 border-amber-200 pb-2 mb-4">Vaccine-Specific Side Effects (Must Verbalize)</h2>
-                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-800">
-                            <div><strong>BCG:</strong> "Asahan po ang pag-umbok (2 weeks), pagnanana (1 month), at mag-iiwan ito ng peklat (2-3 months). <span className="text-red-600 font-bold">Huwag pipisain at HINDI po lalagyan ng alcohol.</span> Linisin lang po ng cotton at sterile water."</div>
-                            <div><strong>Pentavalent & PCV (IM):</strong> "Maaaring magkalagnat (high grade within 48h for Penta), mamula, at sumakit ang hita ni baby. Pwede pong punasan ng maligamgam na tubig at painumin ng paracetamol kung kailangan."</div>
-                            <div><strong>Measles (MCV) / MMR (SC):</strong> "Ang lagnat o banayad na pantal (mild rash) ay maaaring lumabas pagkalipas pa ng 6 hanggang 12 araw. Sa MMR, baka mamaga rin nang bahagya ang pisngi (lymphadenopathy)."</div>
-                            <div><strong>Rotavirus (RV):</strong> "Baka maging iritable o mag-iba ang dumi. <span className="text-red-600 font-bold">RED FLAG:</span> Kung umiiyak nang matindi at ang dumi ay mukhang 'strawberry jelly', dalhin agad sa ER (Intussusception)."</div>
-                            <div><strong>OPV / IPV:</strong> "Walang malalang side effect ang OPV bukod sa pagiging iritable. Sa IPV, maaaring mangawit ang hita."</div>
-                            <div><strong>Td / HPV (School Age):</strong> "Maaaring mangawit ang braso. Dahil ang mga teenager ay madalas mahilo o himatayin (syncope) sa takot, <span className="font-bold">oobserbahan muna natin siya ng 15-20 minuto habang nakaupo o nakahiga</span> bago umuwi."</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Anthropometrics & WHO Matrix */}
-                <div>
-                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Clinical Anthropometrics & Growth Cutoffs</h2>
-                    
-                    {/* Anthropometric Rules - NELSON TEXTBOOK UPDATES */}
-                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">Anthropometric Techniques & Proportions (Nelson Textbook)</h3>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-sm text-slate-700">
-                            <div>
-                                <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Weight, Length & Height</h4>
-                                <ul className="list-disc pl-5 space-y-2">
-                                    <li><strong>Weight:</strong> Taken with the infant <strong>naked</strong>. Remove hair ornaments and hairstyles that interfere with positioning.</li>
-                                    <li><strong>Length (&lt; 2 years old):</strong> Requires <strong>two examiners</strong> (one to position). Head positioned against inflexible board in the <strong>Frankfurt plane</strong> (outer canthi of eyes inline with external auditory meatus, perpendicular to trunk). Legs fully extended, feet perpendicular to plane. <br/><span className="text-red-600 font-semibold italic">Trap: Marking exam paper at the head/foot or using a loose tape measure is inaccurate and useless.</span></li>
-                                    <li><strong>Height (&ge; 2 years old):</strong> Standing unassisted without shoes using a stadiometer. Head in Frankfurt plane. The <strong>back of the head, thoracic spine, buttocks, and heels</strong> must approximate the vertical axis of the stadiometer.</li>
-                                    <li><strong>BMI:</strong> For children &ge; 5 years old. Weight (kg) / Height (m)².</li>
-                                </ul>
-                            </div>
-                            <div className="space-y-4">
-                                <div>
-                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Body Proportions (U/L Ratio)</h4>
-                                    <p className="mb-2"><strong>Lower Segment (L):</strong> Top of symphysis pubis to floor. <br/><strong>Upper Segment (U):</strong> Total height minus Lower Segment.</p>
-                                    <ul className="list-disc pl-5 space-y-1 mb-2">
-                                        <li><strong>Normal Ratios:</strong> ~1.7 at birth $\rightarrow$ 1.3 at 3 years $\rightarrow$ 1.0 after 7 years.</li>
-                                        <li><strong className="text-amber-700">High U/L Ratio:</strong> Short-limb dwarfism (Turner syndrome, bone disorders).</li>
-                                        <li><strong className="text-emerald-700">Low U/L Ratio:</strong> Hypogonadism, Marfan syndrome.</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Circumferences & Arm Span</h4>
-                                    <ul className="list-disc pl-5 space-y-1">
-                                        <li><strong>Head Circumference:</strong> Measure with a flexible tape starting at the <strong>supraorbital ridge</strong> around to the <strong>occipital prominence</strong> to find the maximal circumference.</li>
-                                        <li><strong>Arm Span:</strong> Distance between tips of middle fingers with back against wall and arms at 90° angle. Should be close to height.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* WHO Z-Score Table */}
-                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">WHO Growth Indicators (Z-Score Matrix)</h3>
-                        <div className="overflow-x-auto shadow rounded border border-slate-200 mb-4">
-                            <table className="min-w-full text-left text-sm bg-white divide-y divide-slate-200">
-                                <thead className="bg-indigo-50 text-indigo-900">
-                                    <tr>
-                                        <th className="p-3 font-bold border-r border-slate-200 w-1/6">Z-score</th>
-                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Length/height-for-age</th>
-                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Weight-for-age</th>
-                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Weight-for-length/height</th>
-                                        <th className="p-3 font-bold w-1/5">BMI-for-age</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-200">
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 3</td>
-                                        <td className="p-3 border-r border-slate-200 italic text-slate-600">See note 1</td>
-                                        <td className="p-3 border-r border-slate-200 italic text-slate-600" rowSpan="3" style={{verticalAlign: 'top'}}>See note 2</td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Obese</td>
-                                        <td className="p-3 font-semibold text-red-600">Obese</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 2</td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-orange-600">Overweight</td>
-                                        <td className="p-3 font-semibold text-orange-600">Overweight</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 1</td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Possible risk of overweight <span className="text-xs font-normal text-slate-500"><br/>(See note 3)</span></td>
-                                        <td className="p-3 font-semibold text-amber-600">Possible risk of overweight <span className="text-xs font-normal text-slate-500"><br/>(See note 3)</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">0 (median)</td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 bg-slate-100"></td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;1</td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
-                                        <td className="p-3 bg-slate-100"></td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;2</td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Stunted <span className="text-xs font-normal text-slate-500"><br/>(See note 4)</span></td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Underweight</td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Wasted</td>
-                                        <td className="p-3 font-semibold text-amber-600">Wasted</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;3</td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely stunted <span className="text-xs font-normal text-slate-500"><br/>(See note 4)</span></td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely underweight <span className="text-xs font-normal text-slate-500"><br/>(See note 5)</span></td>
-                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely wasted</td>
-                                        <td className="p-3 font-semibold text-red-600">Severely wasted</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="bg-indigo-50 p-4 rounded text-xs text-slate-700 space-y-2 border border-indigo-100">
-                            <p className="font-bold text-sm text-indigo-900 mb-2">Notes:</p>
-                            <ol className="list-decimal pl-5 space-y-2">
-                                <li>A child in this range is very tall. Tallness is rarely a problem, unless it is so excessive that it may indicate an endocrine disorder.</li>
-                                <li>A child whose weight-for-age falls in this range may have a growth problem, but this is better assessed from weight-for-length/height or BMI-for-age.</li>
-                                <li>A plotted point above 1 shows possible risk. A trend towards the 2 z-score line shows definite risk.</li>
-                                <li>It is possible for a stunted or severely stunted child to become overweight.</li>
-                                <li>This is referred to as very low weight in IMCI training modules.</li>
-                            </ol>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-white shadow rounded border border-slate-200 p-5">
-                            <h3 className="font-bold text-indigo-800 border-b pb-1 mb-3">MUAC (6 to 59 months)</h3>
-                            <ul className="text-sm space-y-3">
-                                <li><span className="inline-block w-4 h-4 bg-green-500 mr-2 rounded-full align-middle"></span><strong>&ge; 12.5 cm:</strong> Normal</li>
-                                <li><span className="inline-block w-4 h-4 bg-yellow-400 mr-2 rounded-full align-middle"></span><strong>11.5 to &lt; 12.5 cm:</strong> MAM (Moderate Acute Malnutrition)</li>
-                                <li><span className="inline-block w-4 h-4 bg-red-600 mr-2 rounded-full align-middle"></span><strong className="text-red-700">&lt; 11.5 cm:</strong> SAM (Immediate admission criteria)</li>
-                            </ul>
-                        </div>
-                        <div className="bg-white shadow rounded border border-slate-200 p-5">
-                            <h3 className="font-bold text-teal-800 border-b pb-1 mb-3">Pediatric Vitals (HR | RR) - Table 79.1</h3>
-                            <ul className="text-sm text-slate-700 space-y-2">
-                                <li><strong>Neonate:</strong> 100-205 bpm | 35-55 cpm</li>
-                                <li><strong>Infant:</strong> 100-180 bpm | 30-53 cpm</li>
-                                <li><strong>Toddler:</strong> 98-140 bpm | 22-37 cpm</li>
-                                <li><strong>Preschool:</strong> 80-120 bpm | 20-29 cpm</li>
-                                <li><strong>School Age:</strong> 75-118 bpm | 18-25 cpm</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
                 {/* VACCINE MATRIX */}
                 <div>
-                    <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-4">Complete 2026 Vaccine Reference Matrix</h2>
-                    <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6 text-sm text-blue-900">
+                    <h2 className="text-3xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-6">3. Complete 2026 Vaccine Reference Matrix</h2>
+                    <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6 text-sm text-blue-900 shadow-sm">
                         <strong>Live Spacing Rule:</strong> Two parenteral live vaccines not administered simultaneously must be spaced by exactly <strong>4 weeks (28 days)</strong>. Delay live vaccines for 11 months post-Kawasaki IVIG and 4 months post-RIG.
                     </div>
                     <div className="overflow-x-auto shadow rounded border border-slate-200">
@@ -290,7 +247,7 @@
 
             const cases = {
                 1: { title: "1. The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Severe Wasting (SAM)" }, pearl: "Toddler (1-3y) normal HR is 98-140 per Table 79.1. A HR of 145 in an 18mo is tachycardic. WFH < -3 is classic SAM." },
-                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschooler normal RR is 20-29 per Table 79.1. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
+                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschooler normal RR is 20-28 per Table 79.1. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
                 3: { title: "3. MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM - Override)" }, pearl: "Regardless of a MAM WFH Z-score, a MUAC < 11.5cm is an independent, immediate diagnostic criterion for SAM." },
                 4: { title: "4. The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" }, pearl: "WFH > +2 is Overweight. WFH > +3 is Obese. Standing height using a stadiometer is strictly used for children >= 2 years old (Nelson)." },
                 5: { title: "5. Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 18. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" }, pearl: "Toddler normal RR is 22-37 per Table 79.1. RR 18 is bradypneic. HFA < -3 defines Severe Stunting." },
