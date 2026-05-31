@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURG 250 OSCE - Ultimate CBE Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #db2777; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #db2777; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #db2777; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-pink-200 selection:text-pink-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- EXHAUSTIVE RUBRIC STRUCTURE ---
+        const exactRubric = [
+            {
+                category: "I. INSPECTION",
+                items: [
+                    { id: "i1", text: "Position – explain different maneuvers", type: "both" },
+                    { id: "i2", text: "Report the size and symmetry", type: "report" },
+                    { id: "i3", text: "Mass (report any visible mass from inspection)", type: "report" },
+                    { id: "i4", text: "Skin changes (peau d’ orange)", type: "report" },
+                    { id: "i5", text: "Nipple retraction", type: "report" },
+                    { id: "i6", text: "Rashes or ulcerations", type: "report" }
+                ]
+            },
+            {
+                category: "II. PALPATION",
+                items: [
+                    { id: "pa1", text: "Position – patient lying down, arms over head", type: "both" },
+                    { id: "pa2", text: "Perform systematic examination (lawnmower pattern, 2-3 finger pads, 3 pressure levels, full anatomical boundaries)", type: "both" },
+                    { id: "pa3", text: "Left breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
+                    { id: "pa4", text: "Right breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
+                    { id: "pa5", text: "Nipple - check for nipple discharge, bilateral", type: "both" }
+                ]
+            },
+            {
+                category: "III. LYMPHATIC DRAINAGE",
+                items: [
+                    { id: "ln1", text: "Axilla - examination of axilla explained (all 4 node groups)", type: "both" },
+                    { id: "ln2", text: "Supraclavicular Area - examination of supraclavicular area explained", type: "both" }
+                ]
+            },
+            {
+                category: "IV. CLINICAL IMPRESSION",
+                items: [
+                    { id: "c1", text: "Clinical Impression - Right", type: "report" },
+                    { id: "c2", text: "Clinical Impression - Left", type: "report" }
+                ]
+            }
+        ];
+
+        const PAGES = [
+            {
+                id: "intro",
+                title: "Setup & Rapport",
+                icon: "🤝",
+                rubricIds: [],
+                script: [
+                    { type: "section", text: "Standardized Introduction & Consent" },
+                    { type: "patient", text: "Magandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan at edad}?" },
+                    { type: "patient", text: "Nandito po ako ngayon para {magsagawa ng pagsusuri sa inyong dibdib at kili-kili} upang matukoy kung mayroong anumang bukol, pananakit, o pagbabago." },
+                    { type: "patient", text: "Para po sa inyong proteksyon at pagiging komportable, mayroon po tayong kasamang {nurse (chaperone)} na mananatili dito sa loob habang nag-eeksamin tayo." },
+                    { type: "patient", text: "Gusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo, maliban na lang kung may kinalaman ito sa inyong {kaligtasan} o ng ibang tao." },
+                    { type: "patient", text: "{Okay lang po ba} na magsimula tayo?" },
+                    { type: "section", text: "Preparation Verbalization" },
+                    { type: "action", text: "'I have performed {hand hygiene} and donned non-sterile {gloves}. I am checking the patient's identity and confirming consent. I have prepared the {caliper} provided for accurate measurement of any nodules.'" }
+                ]
+            },
+            {
+                id: "inspection",
+                title: "Visual Inspection",
+                icon: "👁️",
+                rubricIds: ["i1", "i2", "i3", "i4", "i5", "i6"],
+                script: [
+                    { type: "section", text: "Instructional Commands for Patient" },
+                    { type: "patient", text: "Ma'am, paki-upo po nang tuwid sa gilid ng examination table habang relaxed ang dalawang braso sa inyong kandungan." },
+                    { type: "patient", text: "Ngayon naman po, paki-lagay ang dalawang kamay sa inyong hips at {magpamewang nang mariin} para tumigas ang kalamnan sa inyong dibdib." },
+                    { type: "patient", text: "Sunod po, paki-{taas ang dalawang kamay} sa likod ng inyong ulo at manatili nang ilang segundo." },
+                    { type: "patient", text: "At huli po, paki-baba ng kamay at {yumuko nang kaunti paharap} patungo sa akin." },
+                    { type: "section", text: "Clinical Observations & Reporting" },
+                    { type: "action", text: "'I have ensured to explain the different maneuvers to the patient for optimal positioning.'" },
+                    { type: "report", text: "Upon visual inspection, the {size and symmetry} of the breasts are normal/unremarkable." },
+                    { type: "report", text: "There is no visible {mass} from inspection." },
+                    { type: "report", text: "There are no skin changes such as {peau d’ orange} or erythema." },
+                    { type: "report", text: "There is no {nipple retraction} or flaking." },
+                    { type: "report", text: "There are no visible {rashes or ulcerations}." }
+                ]
+            },
+            {
+                id: "palpation",
+                title: "Breast Palpation",
+                icon: "✋",
+                rubricIds: ["pa1", "pa2", "pa3", "pa4", "pa5"],
+                script: [
+                    { type: "section", text: "Patient Positioning" },
+                    { type: "patient", text: "Ma'am, maaari po ba kayong humiga nang supine? Ipapatong ko po itong maliit na unan sa ilalim ng inyong likod sa kanang bahagi, at paki-taas po ang inyong {kanang kamay} sa likod ng ulo." },
+                    { type: "section", text: "Methodical Palpation & Reporting" },
+                    { type: "action", text: "'The position of the patient is confirmed as {lying down, arms over head}.'" },
+                    { type: "action", text: "'I perform a systematic examination of both breasts using a {lawnmower or vertical strip} pattern, utilizing the pads of {2-3 fingers} of two hands, and applying {three levels of pressure: light, medium, and deep} at each palpation point.'" },
+                    { type: "action", text: "'I ensure to palpate within the complete anatomical boundaries: from the {clavicle} superiorly to the {inframammary fold} inferiorly, and from the {mid-sternal line} medially to the {mid-axillary line} laterally, specifically including the {axillary tail of Spence}.'" },
+                    { type: "report", text: "[If a mass is identified]: Utilizing the {caliper}, the approximate size is {2.5 cm}. Its location is at the {2 o'clock position} and is located at a distance of {4 cm from the nipple}. It is described as {not well-circumscribed} with noted {tenderness}. Its shape is {irregular} and has a {hard} consistency. The mass is {fixed to the chest wall}." },
+                    { type: "action", text: "'I gently compress the areola around the {nipple} to check for {nipple discharge, bilateral}.'" }
+                ]
+            },
+            {
+                id: "lymphatics",
+                title: "Lymph Node Sweep",
+                icon: "🧼",
+                rubricIds: ["ln1", "ln2"],
+                script: [
+                    { type: "section", text: "Axillary Floor Relaxation" },
+                    { type: "patient", text: "Ma'am, maaari po ba kayong maupo muli sa gilid ng kama? Ipatong niyo po ang inyong kanang braso sa aking braso para ma-relax nang lubos ang inyong kili-kili." },
+                    { type: "section", text: "Lymph Node Sweep Reporting" },
+                    { type: "action", text: "'I ensure that the examination of the {axilla} is fully explained, utilizing my contralateral hand to gently bring the contents caudally. I systematically palpate the {central, pectoral, subscapular, and lateral} axillary node groups.'" },
+                    { type: "report", text: "There are no palpable, matted, or fixed axillary lymph nodes." },
+                    { type: "action", text: "'I ensure that the examination of the {supraclavicular area} and infraclavicular area is explained and palpated for adenopathy.'" }
+                ]
+            },
+            {
+                id: "impression",
+                title: "Clinical Impression",
+                icon: "🧠",
+                rubricIds: ["c1", "c2"],
+                script: [
+                    { type: "section", text: "Clinical Assessment" },
+                    { type: "action", text: "'After evaluating the breast model, I will now provide my assessment of the masses and outline future plans for the patient.'" },
+                    { type: "report", text: "My clinical impression for the {Right} breast is {normal/unremarkable}." },
+                    { type: "report", text: "My clinical impression for the {Left} breast is {Breast Malignancy / Fibroadenoma / Fibrocystic change}." }
+                ]
+            }
+        ];
+
+        const REPORT_SECTIONS = [
+            {
+                label: "VISUAL INSPECTION",
+                content: "During visual inspection, I explain the different maneuvers for patient position. I observe and report the {size and symmetry} of the breasts. I report that there is no visible {mass} from inspection. Furthermore, there are no skin changes such as {peau d’ orange}, no {nipple retraction}, and no {rashes or ulcerations}."
+            },
+            {
+                label: "PALPATION",
+                content: "With the patient {lying down, arms over head}, I perform a systematic examination of both breasts using a {lawnmower or vertical strip} pattern, applying {light, medium, and deep pressure} utilizing the pads of {2-3 fingers} of two hands. I cover the complete anatomical boundaries from the {clavicle} to the {inframammary fold}, and from the {mid-sternal line} to the {mid-axillary line}, including the {axillary tail of Spence}. For the left breast, using the {caliper}, I note a lesion located at the {2 o'clock position}, at a distance of {4 cm from the nipple}. It measures {2.5 cm}, is {not well-circumscribed}, and is {tender} upon palpation. It is {hard and irregular}, and is {fixed to the chest wall}. For the right breast, there are no notable lesions. Lastly, I check the {nipple} for {nipple discharge, bilateral}."
+            },
+            {
+                label: "LYMPHATIC DRAINAGE",
+                content: "I ensure that the examination of the {axilla} is explained, systematically assessing the {central, pectoral, subscapular, and lateral} nodes, and the examination of the {supraclavicular area} is explained."
+            },
+            {
+                label: "CLINICAL IMPRESSION",
+                content: "Based on these findings, my clinical impression for the {Right} breast is {normal}. My clinical impression for the {Left} breast is {Breast Malignancy}."
+            }
+        ];
+
+        // --- COMPONENTS ---
+
+        const ClozeWord = ({ word, isRecallMode }) => {
+            const [revealed, setRevealed] = useState(false);
+
+            useEffect(() => {
+                setRevealed(false);
+            }, [isRecallMode]);
+
+            if (!isRecallMode) {
+                return <span className="font-bold text-pink-700 bg-pink-50 px-1 rounded">{word}</span>;
+            }
+
+            return (
+                <span 
+                    className={revealed ? "font-bold bg-pink-100 text-pink-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block cursor-pointer transition-colors" : "blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block"} 
+                    onClick={() => setRevealed(!revealed)}
+                    title={revealed ? "Click to hide" : "Click to reveal"}
+                >
+                    {word}
+                </span>
+            );
+        };
+
+        const processCloze = (str, isRecallMode) => {
+            const clozeRegex = /\{(.*?)\}/g;
+            const parts = str.split(clozeRegex);
+            
+            return parts.map((part, index) => {
+                if (index % 2 === 1) { 
+                    return <ClozeWord key={`cloze-${index}`} word={part} isRecallMode={isRecallMode} />;
+                }
+                return <span key={`text-${index}`}>{part}</span>;
+            });
+        };
+
+        const ScriptLine = ({ item, isRecallMode }) => {
+            if (item.type === "section") {
+                return <div className="font-bold text-slate-800 text-xs tracking-wider mt-6 mb-3 uppercase border-b border-slate-200 pb-1 opacity-80">{item.text}</div>;
+            }
+            
+            let badgeClass = "bg-slate-100 text-slate-800 border-slate-200";
+            let badgeText = "Action";
+            
+            if (item.type === "action") {
+                badgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+                badgeText = "Narration";
+            } else if (item.type === "patient") {
+                badgeClass = "bg-pink-100 text-pink-800 border-pink-200";
+                badgeText = "Script";
+            } else if (item.type === "report") {
+                badgeClass = "bg-indigo-100 text-indigo-800 border-indigo-200";
+                badgeText = "Report";
+            }
+
+            return (
+                <div className="flex items-start gap-3 py-2 text-[15px] text-slate-700 leading-relaxed font-medium">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex-shrink-0 mt-1 border shadow-sm ${badgeClass}`}>
+                        {badgeText}
+                    </span>
+                    <div className="flex-1">
+                        {processCloze(item.text, isRecallMode)}
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App Container
+        const BreastOSCEApp = () => {
+            const [view, setView] = useState('script'); 
+            const [activeIdx, setActiveIdx] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            const [scores, setScores] = useState({});
+            
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s6) {
+                    setIsCompleted(true);
+                }
+            }, []);
+
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s6 = true; // s6 matches Breast CBE in index.html
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const handleScoreChange = (id, type, value) => {
+                setScores(prev => ({
+                    ...prev,
+                    [id]: {
+                        ...prev[id],
+                        [type]: value
+                    }
+                }));
+            };
+
+            const calculateTotal = () => {
+                let total = 0;
+                Object.values(scores).forEach(item => {
+                    if (item.demo !== undefined) total += item.demo;
+                    if (item.report !== undefined) total += item.report;
+                });
+                return total;
+            };
+
+            const calculateMaxPossible = () => {
+                let max = 0;
+                exactRubric.forEach(cat => {
+                    cat.items.forEach(item => {
+                        if (item.type === 'demo' || item.type === 'both') max += 2;
+                        if (item.type === 'report' || item.type === 'both') max += 2;
+                    });
+                });
+                return max;
+            };
+
+            const totalScore = calculateTotal();
+            const maxScore = calculateMaxPossible();
+            const passThreshold = Math.round(maxScore * 0.70); 
+            const activePage = PAGES[activeIdx];
+            
+            const getActiveRubricItems = () => {
+                const items = [];
+                exactRubric.forEach(category => {
+                    category.items.forEach(item => {
+                        if (activePage.rubricIds.includes(item.id)) {
+                            items.push(item);
+                        }
+                    });
+                });
+                return items;
+            };
+
+            const tabs = [
+                { id: 'script', label: '1. Exam Script & Demo', icon: '🗣️' },
+                { id: 'reporting', label: '2. Formal Report', icon: '📋' },
+                { id: 'grader', label: '3. Rubric Grader', icon: '💯' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-pink-400">SURG 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400 tracking-tight">SURG 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Breast Exam OSCE</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-pink-600 text-white shadow-lg shadow-pink-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-emerald-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN WORKSPACE CONTENT */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row */}
+                        <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                    <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                    {tabs.find(t => t.id === view).label}
+                                </h2>
+                                <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics, clinical frameworks, and reporting structures.</p>
+                            </div>
+                            
+                            {/* Active Recall Toggle (Hidden in Grader) */}
+                            {view !== 'grader' && (
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`max-w-6xl mx-auto space-y-8 animate-fade-in pb-24 pt-8 px-6 md:px-12`}>
+                            
+                            {/* VIEW 1: PERFORMANCE SCRIPT */}
+                            {view === 'script' && (
+                                <div className="space-y-6">
+                                    
+                                    {/* Pagination Controls */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {PAGES.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIdx(idx)}
+                                                className={`whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${activeIdx === idx ? 'bg-pink-600 text-white ring-2 ring-pink-300' : 'bg-white text-slate-600 hover:bg-pink-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        {/* Left Side: Interactive Step Script */}
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                            <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center gap-3">
+                                                <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">{activePage.icon}</div> 
+                                                <h3 className="font-bold text-slate-800 text-lg">{activePage.title} — Actions & Script</h3>
+                                            </div>
+                                            <div className="p-8 overflow-y-auto max-h-[65vh] custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                                                <div className="bg-white/90 backdrop-blur-sm p-2 rounded-xl">
+                                                    {activePage.script.map((item, i) => (
+                                                        <ScriptLine key={i} item={item} isRecallMode={memorizeMode} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Side: Structural Alignment Check */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white px-6 py-4 font-bold flex items-center gap-3">
+                                                    <span className="text-xl">📋</span> Target Rubric Domains
+                                                </div>
+                                                <div className="p-0 bg-slate-50">
+                                                    <ul className="divide-y divide-slate-200">
+                                                        {getActiveRubricItems().length > 0 ? getActiveRubricItems().map((item) => (
+                                                            <li key={item.id} className="p-5 flex items-start text-sm text-slate-700 font-medium hover:bg-slate-100 transition-colors">
+                                                                <input type="checkbox" className="mt-1 mr-4 w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                                                                <span className="leading-relaxed text-[15px]">{item.text}</span>
+                                                            </li>
+                                                        )) : (
+                                                            <li className="p-6 text-sm text-slate-500 italic text-center bg-white">No specific scored rubric items for this step. Execute standardized introduction.</li>
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0} className="px-6 py-3 rounded-xl font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIdx(Math.min(PAGES.length - 1, activeIdx + 1))} disabled={activeIdx === PAGES.length - 1} className="px-6 py-3 rounded-xl font-bold text-white bg-pink-600 hover:bg-pink-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 2: FORMAL CASE REPORTING */}
+                            {view === 'reporting' && (
+                                <div className="space-y-8">
+                                    <div className="bg-white rounded-2xl shadow-sm border-t-8 border-pink-600 p-8 space-y-8">
+                                        <div className="bg-amber-50 rounded-2xl border border-amber-200 p-6 shadow-sm mb-8 flex items-start gap-4">
+                                            <span className="text-2xl mt-0.5">⚠️</span> 
+                                            <div>
+                                                <strong className="block text-amber-900 mb-1 text-lg">Preceptor Assessment Strategy</strong>
+                                                <span className="text-amber-800 text-[15px] leading-relaxed font-medium">The preceptor assessment requires an exhaustive reporting script. State all values sequentially based on the checklist criteria to capture full rubric credits.</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-2 gap-8">
+                                            {REPORT_SECTIONS.map((sec, i) => (
+                                                <div key={i} className="flex flex-col">
+                                                    <h3 className="text-sm font-black text-pink-900 border-b border-pink-100 pb-2 mb-3 uppercase tracking-wider flex items-center gap-2">
+                                                        <span className="bg-pink-200 text-pink-800 w-6 h-6 rounded-full flex items-center justify-center text-xs">{i+1}</span> {sec.label}
+                                                    </h3>
+                                                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex-1 shadow-sm">
+                                                        <div className="text-[15px] text-slate-700 font-medium leading-relaxed">
+                                                            {processCloze(sec.content, memorizeMode)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: INTERACTIVE RUBRIC GRADER */}
+                            {view === 'grader' && (
+                                <div className="space-y-8">
+                                    
+                                    {/* Score Tracking Header */}
+                                    <div className="bg-white shadow-md rounded-2xl p-8 border-b-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-6">
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-800">{maxScore}-Point Interactive Grader</h2>
+                                            <p className="text-slate-500 font-medium mt-1">Self-assess skills using objective criteria based on the OSCE LU V Evaluation Form.</p>
+                                        </div>
+                                        <div className="flex items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                            <div className="text-right">
+                                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Calculated Score</div>
+                                                <div className="text-4xl font-black text-emerald-600">{totalScore} <span className="text-xl text-slate-400 font-bold">/ {maxScore}</span></div>
+                                            </div>
+                                            <div className="w-32 h-3 bg-slate-200 rounded-full overflow-hidden">
+                                                <div 
+                                                    className={`h-full transition-all duration-500 ${totalScore >= passThreshold ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                                                    style={{ width: `${Math.min(100, (totalScore/maxScore)*100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-sm font-bold w-24 text-center">
+                                                {totalScore >= passThreshold ? <span className="text-emerald-600 bg-emerald-100 px-2 py-1 rounded">PASSED</span> : <span className="text-amber-600">Needs {passThreshold}</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Grading Grid Sheet */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm">
+                                                <thead className="bg-slate-900 text-white">
+                                                    <tr>
+                                                        <th className="px-6 py-5 font-bold text-sm uppercase tracking-wider w-1/2">Skill Performance Domains</th>
+                                                        <th className="px-6 py-5 font-bold text-center text-sm uppercase tracking-wider bg-slate-800 w-1/4 leading-tight">Demonstrated <br/><span className="text-[10px] font-medium opacity-70 ml-1">(0-2 Pts)</span></th>
+                                                        <th className="px-6 py-5 font-bold text-center text-sm uppercase tracking-wider bg-slate-700 w-1/4 leading-tight">Reported <br/><span className="text-[10px] font-medium opacity-70 ml-1">(0-2 Pts)</span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                                    {exactRubric.map((category, catIdx) => (
+                                                        <React.Fragment key={catIdx}>
+                                                            <tr className="bg-pink-50 border-t-2 border-pink-200">
+                                                                <td colSpan="3" className="px-6 py-4 font-black text-pink-900 text-[15px] tracking-wide uppercase">{category.category}</td>
+                                                            </tr>
+                                                            {category.items.map((item) => {
+                                                                return (
+                                                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                                                        <td className="px-6 py-4 text-[15px] text-slate-800">
+                                                                            {item.text}
+                                                                        </td>
+                                                                        
+                                                                        {/* Performance Column */}
+                                                                        <td className="px-6 py-4 text-center border-l border-slate-100 bg-slate-50/50">
+                                                                            {(item.type === 'demo' || item.type === 'both') ? (
+                                                                                <div className="flex justify-center gap-1.5">
+                                                                                    {[0, 1, 2].map(val => (
+                                                                                        <button 
+                                                                                            key={val}
+                                                                                            onClick={() => handleScoreChange(item.id, 'demo', val)}
+                                                                                            className={`w-9 h-9 rounded-xl font-bold transition-all text-sm border shadow-sm ${scores[item.id]?.demo === val ? 'bg-emerald-500 text-white border-emerald-600 shadow-inner scale-95' : 'bg-white text-slate-500 border-slate-300 hover:border-emerald-400 hover:text-emerald-600'}`}
+                                                                                        >
+                                                                                            {val}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
+                                                                            ) : <span className="text-slate-300">—</span>}
+                                                                        </td>
+
+                                                                        {/* Reporting Column */}
+                                                                        <td className="px-6 py-4 text-center border-l border-slate-100 bg-slate-50/30">
+                                                                            {(item.type === 'report' || item.type === 'both') ? (
+                                                                                <div className="flex justify-center gap-1.5">
+                                                                                    {[0, 1, 2].map(val => (
+                                                                                        <button 
+                                                                                            key={val}
+                                                                                            onClick={() => handleScoreChange(item.id, 'report', val)}
+                                                                                            className={`w-9 h-9 rounded-xl font-bold transition-all text-sm border shadow-sm ${scores[item.id]?.report === val ? 'bg-emerald-500 text-white border-emerald-600 shadow-inner scale-95' : 'bg-white text-slate-500 border-slate-300 hover:border-emerald-400 hover:text-emerald-600'}`}
+                                                                                        >
+                                                                                            {val}
+                                                                                        </button>
+                                                                                    ))}
+                                                                                </div>
+                                                                            ) : <span className="text-slate-300">—</span>}
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </React.Fragment>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Preceptor Form */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                                        <h3 className="text-xl font-black text-slate-800 border-b border-slate-200 pb-3 mb-6 flex items-center gap-3">
+                                            <span className="text-2xl">📝</span> Preceptor Section
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Name of Learner</label>
+                                                <input className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all font-medium" placeholder="Student name" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Date</label>
+                                                <input type="date" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all font-medium text-slate-700" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Name & Signature of Preceptor</label>
+                                                <input className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all font-medium" placeholder="Preceptor name" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Comments (Feedback)</label>
+                                                <textarea rows="4" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all resize-y font-medium text-slate-700" placeholder="Write feedback here..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div className="mt-8 bg-slate-900 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between shadow-inner">
+                                            <span className="font-bold text-slate-400 uppercase tracking-widest text-sm">TOTAL PERFECT SCORE: {maxScore}</span>
+                                            <span className={`text-4xl font-black mt-2 md:mt-0 ${totalScore >= passThreshold ? 'text-emerald-400' : 'text-amber-400'}`}>{totalScore} <span className="text-xl text-slate-500">/ {maxScore}</span></span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-end pt-4">
+                                        <button 
+                                            onClick={() => setScores({})} 
+                                            className="px-8 py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-600 font-bold rounded-xl transition-colors shadow-sm"
+                                        >
+                                            Reset Grid Scores
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<BreastOSCEApp />);
+    </script>
+</body>
+</html>

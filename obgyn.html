@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OB-GYN 250 — Grand OSCE 2025 Station 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #e11d48; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #e11d48; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #e11d48; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-rose-200 selection:text-rose-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- DATA STRUCTURES (OB-GYN CONTENT) ---
+
+        const RUBRIC = [
+            {
+                id: "pelvic", label: "PELVIC EXAMINATION",
+                items: [
+                { id:"pe1", text:"Checked that instruments and supplies are available including droplight" },
+                { id:"pe2", text:"Washed hands" },
+                { id:"pe3", text:"Introduced self to patient" },
+                { id:"pe4", text:"Counseled patient as to the examination" },
+                { id:"pe5", text:"Properly draped patient" },
+                { id:"pe6", text:"Put on gloves properly" },
+                { id:"pe7", text:"Inspected external genitalia, vulva, perineum" },
+                ]
+            },
+            {
+                id: "speculum", label: "SPECULUM EXAMINATION",
+                items: [
+                { id:"se1", text:"Informed patient regarding this step" },
+                { id:"se2", text:"Applied downward pressure on the introitus to relax the vagina" },
+                { id:"se3", text:"Inserted the speculum (lubricated with water or gel) on a 45-degree angle" },
+                { id:"se4", text:"Inserted blades slowly and gently pointing downward" },
+                { id:"se5", text:"Opened the blades fully after the cervix has been identified" },
+                { id:"se6", text:"Tightened screw to lock the speculum" },
+                { id:"se7", text:"Inspected vaginal canal and noted findings" },
+                { id:"se8", text:"Inspected cervix and os. Noted color, position, smoothness +/- discharge" },
+                ]
+            },
+            {
+                id: "pap", label: "PAP SMEAR",
+                items: [
+                { id:"ps1", text:"Informed patient re this exam" },
+                { id:"ps2", text:"Carefully collected specimens from the ectocervix, endocervix (spatula, endocervix brush)" },
+                { id:"ps3", text:"Properly applied spatula smear, brush smear to previously labeled glass slide respectively" },
+                { id:"ps4", text:"Fixed slide in 95% ethyl alcohol" },
+                { id:"ps5", text:"Informed patient that speculum will be removed" },
+                { id:"ps6", text:"Unlocked speculum and slowly withdrew speculum slowly closing blades" },
+                ]
+            },
+            {
+                id: "hpv", label: "HPV DNA TEST",
+                items: [
+                { id:"hv1", text:"Carefully collected samples from the ectocervix and endocervix using a cervix broom" },
+                { id:"hv2", text:"Inserted the brush so that the central bristles went into the endocervical canal" },
+                { id:"hv3", text:"Applied sufficient pressure and gently bent the lateral bristles against the ectocervix and rotated completely 3–5 times in a clockwise manner" },
+                { id:"hv4", text:"Rinsed the brush in the solution by pushing it down against the bottom 10 times" },
+                { id:"hv5", text:"Discarded the collection device" },
+                { id:"hv6", text:"Tightened the cap and recorded the patient's name and date of birth on the vial" },
+                ]
+            },
+            {
+                id: "bimanual", label: "BIMANUAL EXAMINATION",
+                items: [
+                { id:"bm1", text:"Informed patient re this step" },
+                { id:"bm2", text:"Applied lubricant to examination fingers" },
+                { id:"bm3", text:"Inserted examination fingers properly" },
+                { id:"bm4", text:"Palpated vagina, cervix and uterus with note of size, shape, location, consistency, mobility and tenderness" },
+                { id:"bm5", text:"Palpated ovaries and determined size, mobility, consistency, and tenderness, presence of masses" },
+                ]
+            },
+            {
+                id: "rectovag", label: "RECTOVAGINAL EXAMINATION",
+                items: [
+                { id:"rv1", text:"Informed patient re this step" },
+                { id:"rv2", text:"Re-applied lubricant to examination fingers" },
+                { id:"rv3", text:"Slowly inserted middle examination finger into the rectum with the index finger in the vaginal canal" },
+                { id:"rv4", text:"Checked for tenderness or masses in the cul de sac and parametria" },
+                ]
+            },
+            {
+                id: "post", label: "POST EXAMINATION TASK AND COUNSELLING",
+                items: [
+                { id:"pt1", text:"Slide packed in pap smear form provided (proper folding technique)" },
+                { id:"pt2", text:"HPV Vial packed and checked proper label" },
+                { id:"pt3", text:"Informed the patient regarding the findings of the pelvic exam" },
+                ]
+            }
+        ];
+
+        const MAX_SCORE = RUBRIC.reduce((a, c) => a + c.items.length * 2, 0); // = 78
+
+        const PAGES = [
+            {
+                id: "intro",
+                title: "Introduction & Prep",
+                icon: "👋",
+                rubricIds: ["pe1","pe2","pe3","pe4","pe5","pe6"],
+                script: [
+                { type:"section", text:"Equipment Check" },
+                { type:"action", text:"'I am inspecting and arranging all materials on the tray: vaginal {speculum} (appropriate size), {Ayre's spatula}, {cytobrush/cotton pledgets}, {cervix broom}, pre-labeled {glass slides}, {95% ethanol} fixative, {liquid-based broth vial} for HPV DNA, {KY jelly}, clean {gloves}, {drape/linens}, {tissues}, and the {droplight}. I am confirming the droplight is working.'" },
+                { type:"action", text:"'I am now performing proper {handwashing}, and I will don {clean gloves}.'" },
+
+                { type:"section", text:"Standardized Introduction & Consent" },
+                { type:"patient", text:"Magandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan at edad}?" },
+                { type:"patient", text:"Nandito po ako ngayon para {magsagawa ng eksaminasyon sa inyong pwerta at matres} upang masuri kung may impeksyon, at para {kumuha ng sample para sa cervical cancer screening}. Kukuha din po ako ng kasamang nurse (chaperone) na mananatili sa loob ng kwarto para sa inyong kapanatagan." },
+                { type:"patient", text:"Gusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo, maliban na lang kung may kinalaman ito sa inyong {kaligtasan} o ng ibang tao." },
+                { type:"patient", text:"{Okay lang po ba} na magsimula tayo?" },
+                { type:"patient", text:"Ilang beses na po kayo {nabuntis at nanganak}? (to guide specimen label and speculum choice)" },
+
+                { type:"section", text:"Clinical History & Preparation" },
+                { type:"patient", text:"Sa nakaraang 2 araw po ba kayo ay {nakipagtalik}, {gumamit ng suppository} sa pwerta, o {gumamit ng feminine wash} o {nagmenstruate}? (These affect test accuracy)" },
+                { type:"patient", text:"{Umihi na po ba kayo?} Kailangan pong umihi bago ang eksaminasyon." },
+                { type:"patient", text:"Pakitanggal na lang po ng {pangbaba at panty}. Humiga na po sa kama, itupi ang mga hita, at ipatong ang mga binti sa {tuntungan/stirrups}. Iusog po ninyo ang pwet {malapit sa gilid ng kama}." },
+                { type:"action", text:"'I am draping the patient from the waist down and adjusting the {droplight} for proper visualization. I am ensuring my {chaperone} is present in the room.'" },
+                { type:"patient", text:"Komportable na po ba kayo? Pakisabi lamang po kung {nasasaktan} kayo o hindi kayo komportable habang ginagawa ko ang eksaminasyon." },
+                ]
+            },
+            {
+                id: "external",
+                title: "External Genitalia",
+                icon: "🔍",
+                rubricIds: ["pe7"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Magsisimula na po tayo. Sisilipin ko muna ang {labas ng inyong pwerta}. May hawakan na po ako." },
+
+                { type:"section", text:"Inspection" },
+                { type:"action", text:"'Using my non-dominant hand, specifically the thumb and ring finger, I will now {separate the labia} to inspect the external genitalia systematically.'" },
+                { type:"report", text:"I am now inspecting the external genitalia. The {pubic hair} distribution is normal/abnormal. The {mons pubis} is unremarkable." },
+                { type:"report", text:"The {labia majora and minora} are normal in size/enlarged/atrophied, with no redness, swelling, or lesions. The {clitoris} shows no clitoromegaly or lesions." },
+                { type:"report", text:"The {urethral meatus} shows no redness, masses, or prolapse. The {introitus} is nulliparous/multiparous; hymenal ring is intact/parous. No discharge, swelling, or lesions at the {introitus and perineum}." },
+
+                { type:"section", text:"Palpation" },
+                { type:"patient", text:"Hahawakan ko po ngayon ang pwerta ninyo. Medyo pipisilin ko lang ang labi ng pwerta. Pakisabi lang po kung {may masakit}. May masakit po ba?" },
+                { type:"action", text:"'I am now milking the {Skene's glands} (periurethral) by inserting my index and middle finger along the undersurface of the urethra through the anterior vaginal wall.'" },
+                { type:"report", text:"Skene's glands: {no discharge, no swelling, nontender}." },
+                { type:"action", text:"'I am palpating the {Bartholin's glands} at the 4 and 8 o'clock positions by placing my thumb on the posterior labia majora and my index finger pad inside the vaginal orifice.'" },
+                { type:"report", text:"Bartholin's glands: {no enlargement, no discharge, nontender}." },
+                ]
+            },
+            {
+                id: "speculum",
+                title: "Speculum Exam",
+                icon: "🔎",
+                rubricIds: ["se1","se2","se3","se4","se5","se6","se7","se8"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Ngayon po ay gagawin naman natin ang {speculum exam}. Ito po ay para masipat ang kwelyo ng inyong matres (cervix) at para makita kung may mga bukol sa inyong pwerta." },
+                { type:"action", text:"'I am showing the speculum to the patient and gently tapping the handle on her inner thigh so she is not surprised by the sensation or temperature.'" },
+                { type:"patient", text:"Magpapasok po ako ng isang instrumento — ito po. {Medyo malamig at hindi komportable} pero hindi naman ito masakit. Hinga lang po nang malalim." },
+
+                { type:"section", text:"Speculum Insertion" },
+                { type:"action", text:"'I have selected the appropriate speculum: {Graves} for multiparous, {Pedersen} for nulliparous. I am lubricating it with {warm water only}—avoiding gel to prevent Pap smear inaccuracy. I am positioning myself at eye level with the vulva.'" },
+                { type:"action", text:"'Using my dominant hand, I am applying {downward pressure on the introitus} (depressing posteriorly) to relax the vagina and avoid painful anterior urethral pressure.'" },
+                { type:"action", text:"'With my non-dominant hand, I am inserting the speculum at a {45-degree oblique angle}. I am inserting the blades slowly and gently, {pointing downward}.'" },
+                { type:"action", text:"'Once past the introitus, I am rotating the speculum {horizontally} and advancing it fully. I am opening the blades {only after the cervix has been identified}, and tightening the {screw to lock} it into place.'" },
+
+                { type:"section", text:"Inspection" },
+                { type:"action", text:"'I am adjusting the droplight to fully illuminate the vaginal canal and cervix for visual inspection.'" },
+                { type:"report", text:"Vaginal canal: {pink, smooth, and parous/nulliparous rugae}. No lesions, masses, or abnormal discharge noted." },
+                { type:"report", text:"Cervix: {pink, smooth}. Os is {circular (nulliparous)/curvilinear or slit-like (multiparous)}. Directed {anteriorly/posteriorly}. No visible masses, lesions, or abnormal discharge from cervical os." },
+                ]
+            },
+            {
+                id: "pap",
+                title: "Pap Smear",
+                icon: "🧪",
+                rubricIds: ["ps1","ps2","ps3","ps4","ps5","ps6"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Ang susunod naman po nating gagawin ay ang {Pap smear}. Ito po ay screening test para sa {cervical cancer}. Kukuha lang po ako ng sample cells sa inyong cervix gamit itong cotton swab/brush." },
+                { type:"action", text:"'For the examiner: Per PHEx 2022 guidelines, I am screening this patient (between {30–65} years old). Interval is a Pap smear every {3 years} OR HPV DNA every {5 years}.'" },
+
+                { type:"section", text:"Ectocervix Sampling (First)" },
+                { type:"action", text:"'With the speculum locked in place, I am taking the {Ayre's spatula}. I am inserting the pointed tip into the cervical os and rotating it {360 degrees clockwise}, maintaining contact with the {ectocervix / transformation zone}. I sample the ectocervix FIRST to minimize bleeding contamination.'" },
+                { type:"action", text:"'I am smearing the sample on the {top half of the pre-labeled glass slide} in one continuous rolling motion.'" },
+
+                { type:"section", text:"Endocervix Sampling (Second)" },
+                { type:"action", text:"'I am now taking the {cytobrush / cotton pledget}. I am inserting it into the {endocervical canal} and rotating it {180 degrees clockwise}.'" },
+                { type:"action", text:"'I am smearing this sample on the {bottom half of the same glass slide}, making sure NOT to overlap the smears.'" },
+
+                { type:"section", text:"Fix & Remove" },
+                { type:"action", text:"'I am immediately immersing/spraying the slide in {95% ethyl alcohol} and allowing it to air dry.'" },
+                { type:"patient", text:"Tatanggalin ko na po ang speculum. {1, 2, 3.} Huminga lang po nang malalim." },
+                { type:"action", text:"'I am unscrewing the lock. I will {partially close the blades} as I slowly withdraw the speculum to avoid pinching the vaginal walls or cervix.'" },
+                ]
+            },
+            {
+                id: "hpv",
+                title: "HPV DNA Test",
+                icon: "🧬",
+                rubricIds: ["hv1","hv2","hv3","hv4","hv5","hv6"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Ang Pap smear po ay tapos na. Kukunan pa po natin ng isa pang sample para sa {HPV DNA test}. Ito po ay mas sensitive na screening para sa cervical cancer at gagawin din ito gamit ang isang maliit na brush." },
+                { type:"action", text:"'I will now demonstrate the HPV DNA Test collection, simulating a co-testing or alternative screening scenario.'" },
+
+                { type:"section", text:"Cervix Broom Technique" },
+                { type:"action", text:"'I am taking the {cervix broom}. I am inserting the {central bristles into the endocervical canal} while allowing the lateral bristles to rest against the ectocervix.'" },
+                { type:"action", text:"'I am applying {sufficient pressure} to gently bend the lateral bristles against the ectocervix, and rotating the brush {completely 3–5 times in a clockwise manner}.'" },
+                { type:"action", text:"'I am removing the brush and rinsing it in the {liquid transport vial}, pushing it down against the {bottom 10 times} to thoroughly transfer the cellular material.'" },
+                { type:"action", text:"'I will now {snap off or discard the collection device} into the vial or a waste container, depending on the specific device type.'" },
+                { type:"action", text:"'I am securely {tightening the cap} and verbally confirming that the patient's {name and date of birth} are correctly recorded on the vial label.'" },
+
+                { type:"section", text:"Labeling & Packaging" },
+                { type:"action", text:"'I am double-checking the HPV vial label for accuracy: patient name, DOB, date of collection, and requesting physician before setting it aside for transport.'" },
+                ]
+            },
+            {
+                id: "bimanual",
+                title: "Bimanual Exam",
+                icon: "👐",
+                rubricIds: ["bm1","bm2","bm3","bm4","bm5"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Susunod po ay ang {bimanual exam}. Ipapasok ko po ang aking daliri sa inyong pwerta at kakapain ko rin ang inyong tiyan. Sabihin niyo lang po kung may masakit. Ipapasok ko na po ang aking daliri." },
+                { type:"action", text:"'I am changing my gloves if soiled and applying {lubricating gel} (acceptable now since the Pap smear is complete). I am ensuring I am at a comfortable standing or sitting height.'" },
+
+                { type:"section", text:"Technique" },
+                { type:"action", text:"'I am separating the labia and inserting my {index then middle finger} into the vaginal canal, one at a time. I place my fingers {palmar-side down} initially, and then rotate them palmar-side up, maintaining {downward pressure toward the perineum} to avoid the urethral meatus.'" },
+
+                { type:"section", text:"Vaginal Canal" },
+                { type:"report", text:"Vagina is {smooth and parous/nulliparous}. No masses or abnormal tenderness." },
+
+                { type:"section", text:"Cervix" },
+                { type:"action", text:"'I am advancing my fingers to palpate the cervix, assessing its characteristics with my fingertips.'" },
+                { type:"report", text:"Cervix is {firm / soft and rubbery (early pregnancy)}, {smooth and closed / open}, measuring approximately {3×3 cm (normal) / 2×2 cm (postmenopausal)}. {No cervical motion tenderness (CMT).} [Note: soft/doughy/rubbery cervix suggests early pregnancy]" },
+
+                { type:"section", text:"Uterus" },
+                { type:"action", text:"'I am placing my external hand on the lower abdomen just above the {symphysis pubis}. I push my pelvic hand upward and my abdominal hand downward to {sandwich} the uterus.'" },
+                { type:"report", text:"Uterus is {anteverted} (normal), {normal in size} (small/non-gravid corpus), {smooth surface}, {non-tender}. [If enlarged: report as equivalent AOG size — e.g., 12-week size if fundus above pubis]" },
+
+                { type:"section", text:"Adnexa" },
+                { type:"action", text:"'I am moving my vaginal fingers to the right lateral fornix and sweeping my abdominal hand to the right lower quadrant to assess the right adnexa. I will now repeat this maneuver for the left side.'" },
+                { type:"report", text:"Both adnexa: {no palpable masses}, {non-tender}. [Normal ovaries 3–4 cm are usually not palpable; masses >5 cm may be felt]" },
+                ]
+            },
+            {
+                id: "rectovag",
+                title: "Rectovaginal Exam",
+                icon: "🩺",
+                rubricIds: ["rv1","rv2","rv3","rv4"],
+                script: [
+                { type:"section", text:"Inform Patient" },
+                { type:"patient", text:"Ma'am, ngayon naman po ay ipapasok ko pa ang isa kong daliri sa inyong {pwet} habang mananatili yung isa kong daliri sa inyong pwerta. Hindi po ito komportable sa pakiramdam. Ire lang po kayo — push down as if you are having a bowel movement to relax the muscle." },
+
+                { type:"section", text:"Technique — \"Clean to Dirty\"" },
+                { type:"action", text:"'I am re-applying {lubricant} to my gloved fingers. I am strictly following the guiding principle of {'clean to dirty'}: vaginal canal first, then anal canal, to prevent infection.'" },
+                { type:"action", text:"'I am retracting my middle finger from the vagina and gently inserting it into the {anal canal}, while my index finger remains in the vaginal canal. I am instructing the patient to {strain down} to relax the anal sphincter.'" },
+                { type:"action", text:"'With my abdominal hand, I am bringing the uterus and adnexa toward my rectovaginal hand. I am sweeping side to side to assess the {rectovaginal septum, posterior uterine wall, and adnexa}. I am also palpating the {parametria} bilaterally.'" },
+
+                { type:"section", text:"Findings" },
+                { type:"report", text:"Good {sphincter tone}. Intact smooth {rectal vault}. {No intraluminal masses}." },
+                { type:"report", text:"Rectovaginal septum is {smooth / obliterated (mass present)}. Bilateral parametria are {smooth and pliable / obliterated or nodular}. {No masses or free fluid in the cul-de-sac}." },
+                { type:"report", text:"Upon withdrawal of examining finger: {no blood or stool noted}." },
+                ]
+            },
+            {
+                id: "post",
+                title: "Post-Exam & Counseling",
+                icon: "✅",
+                rubricIds: ["pt1","pt2","pt3"],
+                script: [
+                { type:"section", text:"Patient Comfort" },
+                { type:"action", text:"'The physical exam is complete. I am removing my gloves, performing {handwashing}, and providing tissues for the patient to clean up excess lubricant. I am assisting her in removing her legs from the stirrups and allowing her privacy to dress.'" },
+                { type:"patient", text:"Sige po ma'am, {pwede na po tayo magbihis}." },
+
+                { type:"section", text:"Slide Packaging (Checklist Item)" },
+                { type:"action", text:"'I am now filling out the {Pap smear request form} with the patient's name, age, DOB, LMP, OB score, date, and requesting physician. I will demonstrate the {proper folding technique}: (1) Fill form; (2) Fold backside in half; (3) Fold bottom section up to reveal patient name; (4) Flip and fold paper into 3 equal sections; (5) Tuck one fold over the other to 'lock' and create a pocket; (6) Turn around and slide the air-dried slide securely into the pocket.'" },
+
+                { type:"section", text:"HPV Vial Check" },
+                { type:"action", text:"'I am confirming once again that the HPV vial label has the correct patient {name, date of birth, and date of collection}, and that the cap is tightly closed for laboratory transport.'" },
+
+                { type:"section", text:"Inform Patient of Findings" },
+                { type:"patient", text:"Hello ma'am, base po sa eksaminasyon na ginawa natin: Wala naman po akong nakita na {kahit anong bukol, sugat, o kabaha-bahala} sa may pwerta ninyo. Ang kwelyo ng inyong matres ay {normal ang kulay at maayos}. Nakapa ko po ang inyong cervix at matres, at {parehong tama lang} sila sa inaasahan natin." },
+                { type:"patient", text:"Ito na po ang mga samples na ipapadala natin sa laboratoryo. Lalabas po ang resulta ng {Pap smear} sa loob ng {2 weeks hanggang 1 buwan} mula ngayon, at ang {HPV DNA result} bago mag-{5 years}. {Tatawagan na lang po namin kayo}. May mga katanungan pa po ba kayo? Salamat po." },
+                { type:"action", text:"'For the examiner: This concludes my examination. TOTAL PERFECT SCORE = {78}.'" },
+                ]
+            }
+        ];
+
+        const REPORT_SECTIONS = [
+            {
+                label: "INSPECTION OF EXTERNAL GENITALIA",
+                content: "After thorough inspection of the labia, clitoris, and perineum, there were no appreciable {masses, discharge, discoloration, or deformities}. Hair is well distributed and of good volume. There were no palpable cysts, masses, or other lesions, and there was no tenderness upon palpation of the meatal and introital area. Skene's and Bartholin's glands show {no enlargement and no discharge upon milking}. No labial varicosities, rectoceles, nor cystoceles were noted."
+            },
+            {
+                label: "SPECULUM EXAMINATION",
+                content: "The vaginal walls are {smooth and parous/nulliparous}. There are no masses or lesions and no vaginal discharge. The cervix is {pink, smooth, and closed}, approximately {2×2 cm (postmenopausal) / 3×3 cm (premenopausal)}. There are no lesions and no discharge from the cervical os. Pap smear {was obtained} from the ectocervix and endocervix."
+            },
+            {
+                label: "BIMANUAL EXAMINATION",
+                content: "Vagina is {smooth and parous}. The cervix is {firm, closed, and smooth}, measuring {3×3 cm}, with {no cervical motion tenderness}. The uterus is {anteverted}, normal in size, {smooth surface}, and {non-tender}. Both adnexa are {without palpable masses} and {non-tender}."
+            },
+            {
+                label: "RECTOVAGINAL EXAMINATION",
+                content: "Good {sphincter tone}. Intact smooth rectal vault. {No intraluminal masses}. Rectovaginal septum is {smooth}. The bilateral parametria are {smooth and pliable}. There are no masses nor free-fluid collection in the {cul-de-sac}. {No blood noted} upon removing the examining finger."
+            }
+        ];
+
+        // --- COMPONENTS ---
+
+        const ClozeWord = ({ word, isRecallMode }) => {
+            const [revealed, setRevealed] = useState(false);
+
+            useEffect(() => {
+                setRevealed(false);
+            }, [isRecallMode]);
+
+            if (!isRecallMode) {
+                return <span className="font-bold text-rose-700 bg-rose-50 px-1 rounded">{word}</span>;
+            }
+
+            return (
+                <span 
+                    className={revealed ? "font-bold bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block cursor-pointer transition-colors" : "blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block"} 
+                    onClick={() => setRevealed(!revealed)}
+                    title={revealed ? "Click to hide" : "Click to reveal"}
+                >
+                    {word}
+                </span>
+            );
+        };
+
+        const processCloze = (str, isRecallMode) => {
+            const clozeRegex = /\{(.*?)\}/g;
+            const parts = str.split(clozeRegex);
+            
+            return parts.map((part, index) => {
+                if (index % 2 === 1) { 
+                    return <ClozeWord key={`cloze-${index}`} word={part} isRecallMode={isRecallMode} />;
+                }
+                return <span key={`text-${index}`}>{part}</span>;
+            });
+        };
+
+        const ScriptLine = ({ item, isRecallMode }) => {
+            if (item.type === "section") {
+                return <div className="font-bold text-slate-800 text-xs tracking-wider mt-6 mb-3 uppercase border-b border-slate-200 pb-1 opacity-80">{item.text}</div>;
+            }
+            
+            let badgeClass = "bg-slate-100 text-slate-800 border-slate-200";
+            let badgeText = "Action";
+            
+            if (item.type === "action") {
+                badgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+                badgeText = "Narration";
+            } else if (item.type === "patient") {
+                badgeClass = "bg-rose-100 text-rose-800 border-rose-200";
+                badgeText = "Script";
+            } else if (item.type === "report") {
+                badgeClass = "bg-indigo-100 text-indigo-800 border-indigo-200";
+                badgeText = "Report";
+            }
+
+            return (
+                <div className="flex items-start gap-3 py-2 text-[15px] text-slate-700 leading-relaxed font-medium">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex-shrink-0 mt-1 border shadow-sm ${badgeClass}`}>
+                        {badgeText}
+                    </span>
+                    <div className="flex-1">
+                        {processCloze(item.text, isRecallMode)}
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App
+        const ObgynApp = () => {
+            const [view, setView] = useState('script'); 
+            const [activeIdx, setActiveIdx] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [scores, setScores] = useState({});
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s4) {
+                    setIsCompleted(true);
+                }
+            }, []);
+
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s4 = true; // s4 matches OBGYN in index.html
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const handleScoreChange = (id, value) => {
+                setScores(prev => ({ ...prev, [id]: value }));
+            };
+
+            const totalScore = Object.values(scores).reduce((a, v) => a + (v || 0), 0);
+            const passThreshold = Math.round(MAX_SCORE * 0.70); // 55
+            const activePage = PAGES[activeIdx];
+            
+            const getActiveRubricItems = () => {
+                const items = [];
+                RUBRIC.forEach(category => {
+                    category.items.forEach(item => {
+                        if (activePage.rubricIds.includes(item.id)) {
+                            items.push(item);
+                        }
+                    });
+                });
+                return items;
+            };
+
+            const tabs = [
+                { id: 'script', label: '1. Exam Script & Demo', icon: '🗣️' },
+                { id: 'reporting', label: '2. Formal Report', icon: '📋' },
+                { id: 'grader', label: '3. Rubric Grader', icon: '💯' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-rose-400">OB-GYN 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400 tracking-tight">OB-GYN 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE Mastery</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-rose-600 text-white shadow-lg shadow-rose-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-emerald-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row */}
+                        <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                    <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                    {tabs.find(t => t.id === view).label}
+                                </h2>
+                                <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics, clinical frameworks, and reporting structures.</p>
+                            </div>
+                            
+                            {/* Active Recall Toggle (Hidden in Grader) */}
+                            {view !== 'grader' && (
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`max-w-6xl mx-auto space-y-8 animate-fade-in pb-24 pt-8 px-6 md:px-12`}>
+                            
+                            {/* VIEW 1: SCRIPT */}
+                            {view === 'script' && (
+                                <div className="space-y-6">
+                                    
+                                    {/* Pagination */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {PAGES.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIdx(idx)}
+                                                className={`whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${activeIdx === idx ? 'bg-rose-600 text-white ring-2 ring-rose-300' : 'bg-white text-slate-600 hover:bg-rose-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        {/* Left Col: Script */}
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                            <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center gap-3">
+                                                <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">{activePage.icon}</div> 
+                                                <h3 className="font-bold text-slate-800 text-lg">{activePage.title} — Actions & Script</h3>
+                                            </div>
+                                            <div className="p-8 overflow-y-auto max-h-[65vh] custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                                                <div className="bg-white/90 backdrop-blur-sm p-2 rounded-xl">
+                                                    {activePage.script.map((item, i) => (
+                                                        <ScriptLine key={i} item={item} isRecallMode={memorizeMode} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Col: Rubric Alignment */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white px-6 py-4 font-bold flex items-center gap-3">
+                                                    <span className="text-xl">📋</span> Target Checklist Items
+                                                </div>
+                                                <div className="p-0 bg-slate-50">
+                                                    <ul className="divide-y divide-slate-200">
+                                                        {getActiveRubricItems().map((item) => (
+                                                            <li key={item.id} className="p-5 flex items-start text-sm text-slate-700 font-medium hover:bg-slate-100 transition-colors">
+                                                                <input type="checkbox" className="mt-1 mr-4 w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                                                                <span className="leading-relaxed">{item.text}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            
+                                            {activePage.id === 'hpv' && (
+                                                <div className="bg-amber-50 border border-amber-200 text-amber-800 p-5 rounded-2xl shadow-sm flex items-start gap-3">
+                                                    <span className="text-xl mt-0.5">⚠️</span> 
+                                                    <div>
+                                                        <strong className="block mb-1">Preceptor Prompt Warning</strong>
+                                                        <span className="text-sm">If only a Pap smear is completed, the preceptor will likely prompt: "Please demonstrate the HPV Test." Be prepared to pivot smoothly.</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0} className="px-6 py-3 rounded-xl font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIdx(Math.min(PAGES.length - 1, activeIdx + 1))} disabled={activeIdx === PAGES.length - 1} className="px-6 py-3 rounded-xl font-bold text-white bg-rose-600 hover:bg-rose-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 2: FORMAL REPORTING */}
+                            {view === 'reporting' && (
+                                <div className="space-y-8">
+                                    <div className="bg-white rounded-2xl shadow-sm border-t-8 border-rose-600 p-8 space-y-8">
+                                        
+                                        <div>
+                                            <h3 className="text-xl font-black text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-3">
+                                                <div className="bg-rose-100 text-rose-600 p-2 rounded-lg text-lg">👋</div> Summary to Patient (Post-Exam)
+                                            </h3>
+                                            <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner">
+                                                <div className="text-[16px] text-slate-800 leading-relaxed font-medium">
+                                                    {processCloze(`Hello po ma'am, base sa eksaminasyon na ginawa natin, wala naman po akong nakita na {kahit anong bukol, sugat, o kabaha-bahala} sa may pwerta ninyo. Nakapa ko po ang inyong cervix at matres, at {parehong tama lang sila sa inaasahan po natin}. Ito na po yung samples na ipapadala natin sa laboratoryo — {Pap smear} results ay lalabas sa {2 weeks to 1 month}; {HPV DNA} results ay depende sa laboratoryo. {Tatawagan na lang po namin kayo}. May mga katanungan pa po ba kayo? Salamat po.`, memorizeMode)}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-2 gap-8">
+                                            {REPORT_SECTIONS.map((sec, i) => (
+                                                <div key={i} className="flex flex-col">
+                                                    <h3 className="text-sm font-black text-rose-900 border-b border-rose-100 pb-2 mb-3 uppercase tracking-wider flex items-center gap-2">
+                                                        <span className="bg-rose-200 text-rose-800 w-6 h-6 rounded-full flex items-center justify-center text-xs">{i+1}</span> {sec.label}
+                                                    </h3>
+                                                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex-1 shadow-sm">
+                                                        <div className="text-[15px] text-slate-700 font-medium leading-relaxed">
+                                                            {processCloze(sec.content, memorizeMode)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        
+                                        <div className="bg-amber-50 rounded-2xl border border-amber-200 p-8 shadow-sm">
+                                            <h3 className="text-lg font-black text-amber-900 border-b border-amber-200 pb-3 mb-5 flex items-center gap-3">
+                                                <span className="text-2xl">📌</span> Key Clinical Notes
+                                            </h3>
+                                            <ul className="space-y-4">
+                                                {[
+                                                    "Screen women aged 30–65 yrs: Pap smear every 3 yrs OR HPV DNA every 5 yrs OR VIA every 3 yrs (PHEx 2022).",
+                                                    "Sample ectocervix BEFORE endocervix (minimizes bleeding contamination).",
+                                                    "Use water — NOT lubricating gel — during speculum insertion for Pap smear.",
+                                                    "Cervix broom: rotate 3–5× clockwise; rinse 10× in vial. Discard device. Label vial with name + DOB.",
+                                                    "Slide packaging (OSCE item): fill form → fold → create pocket → insert air-dried slide.",
+                                                    "Cervical motion tenderness (CMT) → noted in PID or adhesions. Soft/doughy cervix → early pregnancy.",
+                                                    "Rectovaginal: 'clean to dirty' principle. Parametrial obliteration/nodularity → consider cervical cancer Stage IIIb.",
+                                                    "Chaperone protocol: Ensure a chaperone is present for all intimate exams, regardless of provider gender.",
+                                                ].map((t, i) => (
+                                                    <li key={i} className="flex items-start text-[15px] text-slate-800 font-medium">
+                                                        <span className="text-amber-500 mr-4 font-black mt-0.5">→</span>
+                                                        <span className="leading-relaxed">{t}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: RUBRIC GRADER */}
+                            {view === 'grader' && (
+                                <div className="space-y-8">
+                                    
+                                    {/* Score Tracking Header */}
+                                    <div className="bg-white shadow-md rounded-2xl p-8 border-b-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-6">
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-800">78-Point Interactive Grader</h2>
+                                            <p className="text-slate-500 font-medium mt-1">Self-assess using the exact OBGYN 250 OSCE Checklist.</p>
+                                        </div>
+                                        <div className="flex items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                            <div className="text-right">
+                                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Calculated Score</div>
+                                                <div className="text-4xl font-black text-emerald-600">{totalScore} <span className="text-xl text-slate-400 font-bold">/ {MAX_SCORE}</span></div>
+                                            </div>
+                                            <div className="w-32 h-3 bg-slate-200 rounded-full overflow-hidden">
+                                                <div 
+                                                    className={`h-full transition-all duration-500 ${totalScore >= passThreshold ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                                                    style={{ width: `${Math.min(100, (totalScore/MAX_SCORE)*100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-sm font-bold w-24 text-center">
+                                                {totalScore >= passThreshold ? <span className="text-emerald-600 bg-emerald-100 px-2 py-1 rounded">PASSED</span> : <span className="text-amber-600">Needs {passThreshold}</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm">
+                                                <thead className="bg-slate-900 text-white">
+                                                    <tr>
+                                                        <th className="px-6 py-5 font-bold text-sm uppercase tracking-wider w-2/3">Domains & Items</th>
+                                                        <th className="px-6 py-5 font-bold text-center text-sm uppercase tracking-wider bg-slate-800 w-1/3">Score <span className="text-[10px] font-medium opacity-70 ml-1">(0-2 Pts)</span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                                    {RUBRIC.map((category, catIdx) => (
+                                                        <React.Fragment key={catIdx}>
+                                                            <tr className="bg-rose-50 border-t-2 border-rose-200">
+                                                                <td colSpan="2" className="px-6 py-4 flex justify-between items-center w-full">
+                                                                    <span className="font-black text-rose-900 text-[15px] tracking-wide uppercase">{category.label}</span>
+                                                                    <span className="text-xs font-bold text-rose-600 bg-white px-2 py-1 rounded shadow-sm">Max: {category.items.length * 2}</span>
+                                                                </td>
+                                                            </tr>
+                                                            {category.items.map((item) => {
+                                                                return (
+                                                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                                                        <td className="px-6 py-4 text-[15px] text-slate-800">
+                                                                            {item.text}
+                                                                        </td>
+                                                                        
+                                                                        <td className="px-6 py-4 text-center border-l border-slate-100 bg-slate-50/50">
+                                                                            <div className="flex justify-center gap-2">
+                                                                                {[0, 1, 2].map(val => (
+                                                                                    <button 
+                                                                                        key={val}
+                                                                                        onClick={() => handleScoreChange(item.id, val)}
+                                                                                        className={`w-10 h-10 rounded-xl font-bold transition-all text-sm border shadow-sm ${scores[item.id] === val ? 'bg-emerald-500 text-white border-emerald-600 shadow-inner scale-95' : 'bg-white text-slate-500 border-slate-300 hover:border-emerald-400 hover:text-emerald-600'}`}
+                                                                                    >
+                                                                                        {val}
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </React.Fragment>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Preceptor Form */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                                        <h3 className="text-xl font-black text-slate-800 border-b border-slate-200 pb-3 mb-6 flex items-center gap-3">
+                                            <span className="text-2xl">📝</span> Preceptor Section
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Name of Learner</label>
+                                                <input className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all font-medium" placeholder="Student name" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Date</label>
+                                                <input type="date" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all font-medium text-slate-700" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Name & Signature of Preceptor</label>
+                                                <input className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all font-medium" placeholder="Preceptor name" />
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Comments (Feedback)</label>
+                                                <textarea rows="4" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all resize-y font-medium text-slate-700" placeholder="Write feedback here..."></textarea>
+                                            </div>
+                                        </div>
+                                        <div className="mt-8 bg-slate-900 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between shadow-inner">
+                                            <span className="font-bold text-slate-400 uppercase tracking-widest text-sm">TOTAL PERFECT SCORE: {MAX_SCORE}</span>
+                                            <span className={`text-4xl font-black mt-2 md:mt-0 ${totalScore >= passThreshold ? 'text-emerald-400' : 'text-amber-400'}`}>{totalScore} <span className="text-xl text-slate-500">/ {MAX_SCORE}</span></span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-end pt-4">
+                                        <button 
+                                            onClick={() => setScores({})} 
+                                            className="px-8 py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-600 font-bold rounded-xl transition-colors shadow-sm"
+                                        >
+                                            Reset Scores
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ObgynApp />);
+    </script>
+</body>
+</html>

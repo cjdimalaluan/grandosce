@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORL OSCE Master - Stepwise Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #7c3aed; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #7c3aed; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #7c3aed; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-violet-200 selection:text-violet-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- DATA STRUCTURES (ORL CONTENT) ---
+
+        const RUBRIC = [
+            {
+                id: "prep", label: "0. INTRO & PREPARATION",
+                items: [
+                { id:"p1", text:"Introduce as an LU5 student/ICC and ask for permission" },
+                { id:"p2", text:"Explain the exam in vernacular and layman's terms" },
+                { id:"p3", text:"Hand hygiene (40-60s) & don gloves" },
+                { id:"p4", text:"Head mirror on DOMINANT eye, light focused on palm" },
+                { id:"p5", text:"Patient upright, leaning forward. DO NOT straddle" }
+                ]
+            },
+            {
+                id: "hn", label: "1. HEAD & NECK MAPPING",
+                items: [
+                { id:"hn1", text:"Inspect head symmetry and anterior neck in extension" },
+                { id:"hn2", text:"Stand behind the patient and palpate LNs using 'Piano fingers'" },
+                { id:"hn3", text:"Palpate Levels IA (submental) & IB (submandibular)" },
+                { id:"hn4", text:"Palpate Levels II, III, & IV along the SCM borders" },
+                { id:"hn5", text:"Palpate Level V (posterior triangle) and Level VI (anterior compartment)" },
+                { id:"hn6", text:"Palpate Level VII (superior mediastinal) and supraclavicular areas" },
+                { id:"hn7", text:"Palpate trachea for midline position and thyroid gland mobility" }
+                ]
+            },
+            {
+                id: "otoscopy", label: "2. OTOSCOPY",
+                items: [
+                { id:"o1", text:"Inspect auricle for deformities, discharge, or erythema" },
+                { id:"o2", text:"Palpate tragus and mastoid process for tenderness" },
+                { id:"o3", text:"Pull auricle UP and BACK (for adults)" },
+                { id:"o4", text:"Select the LARGEST possible speculum" },
+                { id:"o5", text:"Insert speculum only near the tip/opening (avoid degloving)" }
+                ]
+            },
+            {
+                id: "ant_rhin", label: "3. ANTERIOR RHINOSCOPY",
+                items: [
+                { id:"ar1", text:"Inspect external nose and palpate sinuses" },
+                { id:"ar2", text:"Hold speculum in non-dominant hand, index finger anchors ala" },
+                { id:"ar3", text:"Insert with PINCERS CLOSED, point downward" },
+                { id:"ar4", text:"Withdraw gently with PINCERS OPEN" }
+                ]
+            },
+            {
+                id: "post_rhin", label: "4. POSTERIOR RHINOSCOPY",
+                items: [
+                { id:"pr1", text:"Depress anterior 1/3 of tongue" },
+                { id:"pr2", text:"Warm the Number 0 mirror & test on hand or wipe on buccal mucosa" },
+                { id:"pr3", text:"Instruct patient to breathe through the NOSE" },
+                { id:"pr4", text:"Avoid hitting tonsils or posterior pharyngeal wall to prevent gagging" }
+                ]
+            },
+            {
+                id: "oral", label: "5. ORAL CAVITY",
+                items: [
+                { id:"oc1", text:"Remove dentures if present" },
+                { id:"oc2", text:"Inspect all 7 oral cavity subsites systematically" },
+                { id:"oc3", text:"Perform bimanual palpation with a gloved hand" },
+                { id:"oc4", text:"Note dentition and caries (nidus for infection)" }
+                ]
+            },
+            {
+                id: "laryng", label: "6. INDIRECT LARYNGOSCOPY",
+                items: [
+                { id:"il1", text:"Instruct patient to lean forward, neck slightly flexed" },
+                { id:"il2", text:"Grasp tongue with gauze (do not press against lower incisors)" },
+                { id:"il3", text:"Use the larger laryngeal mirror, pressing UPWARD against soft palate" },
+                { id:"il4", text:"Instruct patient to breathe through MOUTH and phonate high-pitched 'Eeee'" }
+                ]
+            }
+        ];
+
+        const MAX_SCORE = RUBRIC.reduce((a, c) => a + c.items.length * 2, 0); // = 66
+
+        const PAGES = [
+            {
+                id: "intro",
+                title: "Introduction & Prep",
+                icon: "👋",
+                rubricIds: ["p1","p2","p3","p4","p5"],
+                script: [
+                { type:"section", text:"Standardized Introduction & Consent" },
+                { type:"patient", text:"Magandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan at edad}?" },
+                { type:"patient", text:"Nandito po ako ngayon para {suriin ang inyong ulo at leeg}, kasama na ang inyong mga {tenga, bibig, at ilong}. Gagamit po ako ng ilaw at ilang maliliit na instrumento upang makita kung mayroong pamamaga o anumang problema sa loob." },
+                { type:"patient", text:"Gusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo. {Okay lang po ba} na magsimula tayo?" },
+                { type:"section", text:"Ergonomic Setup & Preparation" },
+                { type:"action", text:"'I am performing proper {hand washing technique} for {40-60 seconds} and wearing my gloves.'" },
+                { type:"action", text:"'I wear the head mirror on my {dominant eye} and adjust the light source so that my eye looks through the hole, maintaining {good depth perception}.'" },
+                { type:"action", text:"'I ensure the patient is sitting {upright, leaning forward}. I will {not straddle} the patient's legs.'" },
+                { type:"action", text:"'Throughout the exam, I will move the mirror angle, the light source, and the patient's head, but {not my own body}.'" }
+                ]
+            },
+            {
+                id: "hn",
+                title: "Head & Neck Mapping",
+                icon: "🦒",
+                rubricIds: ["hn1","hn2","hn3","hn4","hn5","hn6","hn7"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Sisimulan ko po ang pagsusuri sa inyong ulo, leeg, at mga kulani. Maaari po bang tumingala kayo nang kaunti? Paki-{lunok} po... Ngayon naman po, maaari po bang {ilabas ninyo ang inyong dila}? Paki-lingon din po sa tagiliran para makapa ko nang maayos ang inyong leeg." },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I inspect the head and anterior neck in {extension}. I stand {behind the patient} and ask them to {look sideways} to hook my fingers along the tense SCM.'" },
+                { type:"action", text:"'I palpate the thyroid gland. Movement with {deglutition} = thyroid/pretracheal mass; movement with {tongue protrusion} = thyroglossal duct cyst.'" },
+                { type:"action", text:"'I map {Level I}: {Level IA} (submental) and {Level IB} (submandibular).'" },
+                { type:"action", text:"'I map the jugular chain: {Level II} (upper), {Level III} (middle), and {Level IV} (lower jugular).'" },
+                { type:"action", text:"'I map {Level V} (posterior triangle) ensuring I check the {supraclavicular area}, {Level VI} (anterior compartment), and {Level VII} (superior mediastinal).'" },
+                { type:"report", text:"The head is {symmetrical}. The trachea is {midline}. The thyroid gland is {not enlarged}. There is {no cervical lymphadenopathy} across Levels I through VII and the supraclavicular fossae bilaterally." }
+                ]
+            },
+            {
+                id: "otoscopy",
+                title: "Otoscopy",
+                icon: "👂",
+                rubricIds: ["o1","o2","o3","o4","o5"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Susunod po ay ang pagsusuri sa inyong mga tenga. Kakapain ko po muna ang labas ng tenga ninyo, pati na rin sa unahan at likuran nito. May masakit po ba 'pag pinipindot ko ito?" },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I am inspecting the external auricle. I palpate the {tragus} and the {mastoid process} to elicit any tenderness.'" },
+                { type:"action", text:"'To straighten the canal for an adult, I pull the auricle {upward and backward}.'" },
+                { type:"action", text:"'I will select the {largest possible} ear speculum to avoid poking the eardrum.'" },
+                { type:"action", text:"'I insert the speculum {only near the tip/opening}. I will almost never insert the entire length to avoid a {degloving injury} to the external ear canal.'" },
+                { type:"report", text:"There are {no external ear deformities} and {no tragal or mastoid tenderness}. The external auditory canal is {patent}. The tympanic membrane is {intact} with a {positive cone of light} directed anteroinferiorly. There is {no discharge or cerumen}." }
+                ]
+            },
+            {
+                id: "ant_rhin",
+                title: "Anterior Rhinoscopy",
+                icon: "👃",
+                rubricIds: ["ar1","ar2","ar3","ar4"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Ngayon po, sisilip lang po tayo sa ilong ninyo. Gagamit po ako ng instrumento na may ilaw para masilip natin ang loob. Pakilapit po ng bahagya ang ulo sa akin." },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I inspect and palpate the external nose and sinuses, checking for tenderness.'" },
+                { type:"action", text:"'I hold the nasal speculum with my {non-dominant hand}, thumb resting on the fulcrum, and anchor my {index finger} on the ala of the nose.'" },
+                { type:"action", text:"'I insert the speculum with the {pincers closed}, moving posteriorly and pointing downward.'" },
+                { type:"action", text:"'I withdraw the instrument gently with the {pincers open} to avoid plucking vibrissae (nasal hairs).'" },
+                { type:"report", text:"The nasal septum is {midline}. The nasal mucosa is {pink and smooth}, not pale and boggy. The {inferior and middle turbinates} are visualized. There are {no polyps, masses, or discharge} noted." }
+                ]
+            },
+            {
+                id: "post_rhin",
+                title: "Posterior Rhinoscopy",
+                icon: "🪞",
+                rubricIds: ["pr1","pr2","pr3","pr4"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Ibubuka po natin ang inyong bibig. Ididiin ko nang bahagya ang inyong dila at may ilalagay akong maliit na salamin sa likod ng lalamunan. Huwag po kayong mag-alala, huminga lang po kayo nang maluwag gamit ang inyong ilong." },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I use a tongue depressor in my {non-dominant hand} to firmly press the {anterior 1/3} of the tongue to avoid eliciting the gag reflex.'" },
+                { type:"action", text:"'I warm the {Number 0 nasopharyngeal mirror} and check the temperature on the dorsum of my hand, or I wipe it against the buccal mucosa to prevent fogging.'" },
+                { type:"action", text:"'I instruct the patient to breathe through their {nose} to drop the soft palate.'" },
+                { type:"action", text:"'I slide the mirror, avoiding the {tonsils and posterior pharyngeal wall} to prevent the gag reflex.'" },
+                { type:"report", text:"The {inferior, middle, and superior turbinates} are visualized. The {torus tubarius} and {Eustachian tube orifices} are appreciated. There are no masses, bleeding, or {postnasal drip} noted." }
+                ]
+            },
+            {
+                id: "oral",
+                title: "Oral Cavity",
+                icon: "👅",
+                rubricIds: ["oc1","oc2","oc3","oc4"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Paki-nganga po nang malaki. Kung may pustiso po, maaari po bang tanggalin muna natin? Ipakita po ang inyong mga ngipin. Ngayon po, ilabas ang dila, itaas sa ngala-ngala, at igilid sa kaliwa't kanan." },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I ask the patient to {remove their dentures} if applicable. Using two tongue depressors, I systematically inspect the {7 oral cavity subsites}.'" },
+                { type:"action", text:"'1. {Lips}. 2. {Buccal mucosa} (Stensen's duct). 3. {Alveolar ridges} (dentition and caries). 4. {Retromolar trigone}. 5. {Hard palate}. 6. {Floor of the mouth} (Wharton's duct). 7. {Anterior 2/3 of the tongue}.'" },
+                { type:"action", text:"'I perform {bimanual palpation} using a gloved hand on the inside and outside simultaneously to check for salivary masses.'" },
+                { type:"report", text:"The oral cavity was examined across all {7 subsites}. Dentition is complete with {no caries}. The tongue and uvula are {midline}. Tonsils are {Grade 1 bilaterally}. On bimanual palpation, there are {no masses}." }
+                ]
+            },
+            {
+                id: "laryng",
+                title: "Indirect Laryngoscopy",
+                icon: "🗣️",
+                rubricIds: ["il1","il2","il3","il4"],
+                script: [
+                { type:"section", text:"Patient Instructions" },
+                { type:"patient", text:"Huling bahagi na po. Maaari po bang umusad kayo nang kaunti at iyuko nang bahagya ang inyong leeg? Ilalabas po natin nang buo ang inyong dila at hahawakan ko gamit ang malinis na gasa. Huminga lang po kayo sa pamamagitan ng inyong bibig. Pagkatapos, sabihin niyo po ang letrang 'Eeeeee' nang mataas." },
+                { type:"section", text:"Execution & Narration" },
+                { type:"action", text:"'I ask the patient to stick out their tongue and grasp it with {sterile gauze}. I am careful {not to grasp just the tip} and {not to press it against the lower incisors}.'" },
+                { type:"action", text:"'I warm the {larger laryngeal mirror}. I insert it and press gently {upward} against the soft palate.'" },
+                { type:"action", text:"'I instruct the patient to breathe through their {mouth} to avoid gagging, then to phonate a high-pitched {'Eeeee'}.'" },
+                { type:"report", text:"The {lingual tonsils, epiglottis, and vocal folds are visualized}. The vocal folds are in an {upright triangle conformation}. Upon phonation, the vocal folds move {symmetrically} and have a {full range of motion}. There is {no pooling of saliva} in the pyriform sinuses." }
+                ]
+            }
+        ];
+
+        const REPORT_SECTIONS = [
+            {
+                label: "HEAD & NECK MAPPING",
+                content: "The head is {symmetrical} with no gross deformities. The trachea is {midline}. The thyroid gland is {not enlarged} and moves normally with deglutition. There are no anterior neck masses. On systematic palpation, there is {no cervical lymphadenopathy} across Levels I through VII and the supraclavicular fossae bilaterally."
+            },
+            {
+                label: "OTOSCOPY",
+                content: "Bilaterally, there are {no external ear deformities} and {no tragal or mastoid tenderness}. The external auditory canal is {patent}. The tympanic membrane is {intact} with a {positive cone of light} directed anteroinferiorly. There is {no discharge, bleeding, or cerumen}."
+            },
+            {
+                label: "ANTERIOR & POSTERIOR RHINOSCOPY",
+                content: "The external nose is symmetric. The nasal septum is {midline}. The nasal mucosa is {pink and smooth}, not pale and boggy. The {inferior, middle, and superior turbinates} are visualized. The {torus tubarius} and {Eustachian tube orifices} are appreciated. There are {no polyps, masses, or postnasal drip} noted."
+            },
+            {
+                label: "ORAL CAVITY & INDIRECT LARYNGOSCOPY",
+                content: "The oral cavity was examined across all {7 subsites}. Dentition is complete with {no caries}. The tongue and uvula are {midline}. Tonsils are {Grade 1 bilaterally}. On bimanual palpation, there are {no masses}. On indirect laryngoscopy, the {vocal folds are visualized} in an {upright triangle conformation}. Upon phonation, the vocal folds move {symmetrically} with a {full range of motion}. There are {no masses or pooling of saliva}."
+            }
+        ];
+
+        // --- COMPONENTS ---
+
+        const ClozeWord = ({ word, isRecallMode }) => {
+            const [revealed, setRevealed] = useState(false);
+
+            useEffect(() => {
+                setRevealed(false);
+            }, [isRecallMode]);
+
+            if (!isRecallMode) {
+                return <span className="font-bold text-violet-700 bg-violet-50 px-1 rounded">{word}</span>;
+            }
+
+            return (
+                <span 
+                    className={revealed ? "font-bold bg-violet-100 text-violet-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block cursor-pointer transition-colors" : "blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block"} 
+                    onClick={() => setRevealed(!revealed)}
+                    title={revealed ? "Click to hide" : "Click to reveal"}
+                >
+                    {word}
+                </span>
+            );
+        };
+
+        const processCloze = (str, isRecallMode) => {
+            const clozeRegex = /\{(.*?)\}/g;
+            const parts = str.split(clozeRegex);
+            
+            return parts.map((part, index) => {
+                if (index % 2 === 1) { 
+                    return <ClozeWord key={`cloze-${index}`} word={part} isRecallMode={isRecallMode} />;
+                }
+                return <span key={`text-${index}`}>{part}</span>;
+            });
+        };
+
+        const ScriptLine = ({ item, isRecallMode }) => {
+            if (item.type === "section") {
+                return <div className="font-bold text-slate-800 text-xs tracking-wider mt-6 mb-3 uppercase border-b border-slate-200 pb-1 opacity-80">{item.text}</div>;
+            }
+            
+            let badgeClass = "bg-slate-100 text-slate-800 border-slate-200";
+            let badgeText = "Action";
+            
+            if (item.type === "action") {
+                badgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+                badgeText = "Narration";
+            } else if (item.type === "patient") {
+                badgeClass = "bg-violet-100 text-violet-800 border-violet-200";
+                badgeText = "Script";
+            } else if (item.type === "report") {
+                badgeClass = "bg-indigo-100 text-indigo-800 border-indigo-200";
+                badgeText = "Report";
+            }
+
+            return (
+                <div className="flex items-start gap-3 py-2 text-[15px] text-slate-700 leading-relaxed font-medium">
+                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded flex-shrink-0 mt-1 border shadow-sm ${badgeClass}`}>
+                        {badgeText}
+                    </span>
+                    <div className="flex-1">
+                        {processCloze(item.text, isRecallMode)}
+                    </div>
+                </div>
+            );
+        };
+
+        // Main App
+        const OrlApp = () => {
+            const [view, setView] = useState('script'); 
+            const [activeIdx, setActiveIdx] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [scores, setScores] = useState({});
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s7) {
+                    setIsCompleted(true);
+                }
+            }, []);
+
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s7 = true; // s7 matches ORL in index.html
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const handleScoreChange = (id, value) => {
+                setScores(prev => ({ ...prev, [id]: value }));
+            };
+
+            const totalScore = Object.values(scores).reduce((a, v) => a + (v || 0), 0);
+            const passThreshold = Math.round(MAX_SCORE * 0.70); 
+            const activePage = PAGES[activeIdx];
+            
+            const getActiveRubricItems = () => {
+                const items = [];
+                RUBRIC.forEach(category => {
+                    category.items.forEach(item => {
+                        if (activePage.rubricIds.includes(item.id)) {
+                            items.push(item);
+                        }
+                    });
+                });
+                return items;
+            };
+
+            const tabs = [
+                { id: 'script', label: '1. Exam Script & Demo', icon: '🗣️' },
+                { id: 'reporting', label: '2. Formal Report', icon: '📋' },
+                { id: 'grader', label: '3. Rubric Grader', icon: '💯' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-violet-400">ORL 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400 tracking-tight">ORL 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE Mastery</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-violet-600 text-white shadow-lg shadow-violet-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-violet-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row */}
+                        <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                    <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                    {tabs.find(t => t.id === view).label}
+                                </h2>
+                                <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics, clinical frameworks, and reporting structures.</p>
+                            </div>
+                            
+                            {/* Active Recall Toggle (Hidden in Grader) */}
+                            {view !== 'grader' && (
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`max-w-6xl mx-auto space-y-8 animate-fade-in pb-24 pt-8 px-6 md:px-12`}>
+                            
+                            {/* VIEW 1: SCRIPT */}
+                            {view === 'script' && (
+                                <div className="space-y-6">
+                                    
+                                    {/* Pagination */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {PAGES.map((page, idx) => (
+                                            <button 
+                                                key={page.id}
+                                                onClick={() => setActiveIdx(idx)}
+                                                className={`whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${activeIdx === idx ? 'bg-violet-600 text-white ring-2 ring-violet-300' : 'bg-white text-slate-600 hover:bg-violet-50 border border-slate-200'}`}
+                                            >
+                                                {page.icon} {page.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        {/* Left Col: Script */}
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                            <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center gap-3">
+                                                <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">{activePage.icon}</div> 
+                                                <h3 className="font-bold text-slate-800 text-lg">{activePage.title} — Actions & Script</h3>
+                                            </div>
+                                            <div className="p-8 overflow-y-auto max-h-[65vh] custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                                                <div className="bg-white/90 backdrop-blur-sm p-2 rounded-xl">
+                                                    {activePage.script.map((item, i) => (
+                                                        <ScriptLine key={i} item={item} isRecallMode={memorizeMode} />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Col: Rubric Alignment */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                                <div className="bg-slate-800 text-white px-6 py-4 font-bold flex items-center gap-3">
+                                                    <span className="text-xl">📋</span> Target Checklist Items
+                                                </div>
+                                                <div className="p-0 bg-slate-50">
+                                                    <ul className="divide-y divide-slate-200">
+                                                        {getActiveRubricItems().map((item) => (
+                                                            <li key={item.id} className="p-5 flex items-start text-sm text-slate-700 font-medium hover:bg-slate-100 transition-colors">
+                                                                <input type="checkbox" className="mt-1 mr-4 w-5 h-5 accent-emerald-500 rounded cursor-pointer" />
+                                                                <span className="leading-relaxed">{item.text}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            
+                                            {activePage.id === 'post_rhin' && (
+                                                <div className="bg-amber-50 border border-amber-200 text-amber-800 p-5 rounded-2xl shadow-sm flex items-start gap-3">
+                                                    <span className="text-xl mt-0.5">⚠️</span> 
+                                                    <div>
+                                                        <strong className="block mb-1">Preceptor Pearl</strong>
+                                                        <span className="text-sm">Your FIRST attempt in a mirror exam is your BEST one. If the patient gags early, they will develop a psychological tendency to gag just at the sight of the mirror.</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0} className="px-6 py-3 rounded-xl font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIdx(Math.min(PAGES.length - 1, activeIdx + 1))} disabled={activeIdx === PAGES.length - 1} className="px-6 py-3 rounded-xl font-bold text-white bg-violet-600 hover:bg-violet-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 2: FORMAL REPORTING */}
+                            {view === 'reporting' && (
+                                <div className="space-y-8">
+                                    <div className="bg-white rounded-2xl shadow-sm border-t-8 border-violet-600 p-8 space-y-8">
+                                        
+                                        <div>
+                                            <h3 className="text-xl font-black text-slate-800 border-b border-slate-100 pb-3 mb-4 flex items-center gap-3">
+                                                <div className="bg-violet-100 text-violet-600 p-2 rounded-lg text-lg">👋</div> Summary to Patient (Post-Exam)
+                                            </h3>
+                                            <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner">
+                                                <div className="text-[16px] text-slate-800 leading-relaxed font-medium">
+                                                    {processCloze(`Hello po, base sa eksaminasyon na ginawa natin, wala naman po akong nakita na {kahit anong bukol, sugat, o kabaha-bahala} sa inyong ulo, leeg, at mga kulani. Ang inyong mga tenga, ilong, at lalamunan ay {parehong tama lang sa inaasahan po natin}. May mga katanungan pa po ba kayo? Salamat po.`, memorizeMode)}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid lg:grid-cols-2 gap-8">
+                                            {REPORT_SECTIONS.map((sec, i) => (
+                                                <div key={i} className="flex flex-col">
+                                                    <h3 className="text-sm font-black text-violet-900 border-b border-violet-100 pb-2 mb-3 uppercase tracking-wider flex items-center gap-2">
+                                                        <span className="bg-violet-200 text-violet-800 w-6 h-6 rounded-full flex items-center justify-center text-xs">{i+1}</span> {sec.label}
+                                                    </h3>
+                                                    <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 flex-1 shadow-sm">
+                                                        <div className="text-[15px] text-slate-700 font-medium leading-relaxed">
+                                                            {processCloze(sec.content, memorizeMode)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: RUBRIC GRADER */}
+                            {view === 'grader' && (
+                                <div className="space-y-8">
+                                    
+                                    {/* Score Tracking Header */}
+                                    <div className="bg-white shadow-md rounded-2xl p-8 border-b-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-6">
+                                        <div>
+                                            <h2 className="text-2xl font-black text-slate-800">{MAX_SCORE}-Point Interactive Grader</h2>
+                                            <p className="text-slate-500 font-medium mt-1">Self-assess using the exact ORL 250 OSCE Checklist.</p>
+                                        </div>
+                                        <div className="flex items-center gap-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                            <div className="text-right">
+                                                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Calculated Score</div>
+                                                <div className="text-4xl font-black text-emerald-600">{totalScore} <span className="text-xl text-slate-400 font-bold">/ {MAX_SCORE}</span></div>
+                                            </div>
+                                            <div className="w-32 h-3 bg-slate-200 rounded-full overflow-hidden">
+                                                <div 
+                                                    className={`h-full transition-all duration-500 ${totalScore >= passThreshold ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                                                    style={{ width: `${Math.min(100, (totalScore/MAX_SCORE)*100)}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="text-sm font-bold w-24 text-center">
+                                                {totalScore >= passThreshold ? <span className="text-emerald-600 bg-emerald-100 px-2 py-1 rounded">PASSED</span> : <span className="text-amber-600">Needs {passThreshold}</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm">
+                                                <thead className="bg-slate-900 text-white">
+                                                    <tr>
+                                                        <th className="px-6 py-5 font-bold text-sm uppercase tracking-wider w-2/3">Domains & Items</th>
+                                                        <th className="px-6 py-5 font-bold text-center text-sm uppercase tracking-wider bg-slate-800 w-1/3">Score <span className="text-[10px] font-medium opacity-70 ml-1">(0-2 Pts)</span></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                                    {RUBRIC.map((category, catIdx) => (
+                                                        <React.Fragment key={catIdx}>
+                                                            <tr className="bg-violet-50 border-t-2 border-violet-200">
+                                                                <td colSpan="2" className="px-6 py-4 flex justify-between items-center w-full">
+                                                                    <span className="font-black text-violet-900 text-[15px] tracking-wide uppercase">{category.label}</span>
+                                                                    <span className="text-xs font-bold text-violet-600 bg-white px-2 py-1 rounded shadow-sm">Max: {category.items.length * 2}</span>
+                                                                </td>
+                                                            </tr>
+                                                            {category.items.map((item) => {
+                                                                return (
+                                                                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                                                        <td className="px-6 py-4 text-[15px] text-slate-800">
+                                                                            {item.text}
+                                                                        </td>
+                                                                        
+                                                                        <td className="px-6 py-4 text-center border-l border-slate-100 bg-slate-50/50">
+                                                                            <div className="flex justify-center gap-2">
+                                                                                {[0, 1, 2].map(val => (
+                                                                                    <button 
+                                                                                        key={val}
+                                                                                        onClick={() => handleScoreChange(item.id, val)}
+                                                                                        className={`w-10 h-10 rounded-xl font-bold transition-all text-sm border shadow-sm ${scores[item.id] === val ? 'bg-emerald-500 text-white border-emerald-600 shadow-inner scale-95' : 'bg-white text-slate-500 border-slate-300 hover:border-emerald-400 hover:text-emerald-600'}`}
+                                                                                    >
+                                                                                        {val}
+                                                                                    </button>
+                                                                                ))}
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                );
+                                                            })}
+                                                        </React.Fragment>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-end pt-4">
+                                        <button 
+                                            onClick={() => setScores({})} 
+                                            className="px-8 py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-600 font-bold rounded-xl transition-colors shadow-sm"
+                                        >
+                                            Reset Scores
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<OrlApp />);
+    </script>
+</body>
+</html>

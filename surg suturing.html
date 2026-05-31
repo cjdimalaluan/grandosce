@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURG 250 OSCE Master - Basic Suturing & Lidocaine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #0284c7; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #0284c7; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #0284c7; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-sky-200 selection:text-sky-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- DATA STRUCTURES (SURGERY CONTENT) ---
+
+        const steps = [
+            {
+                id: 0,
+                title: "0. Intro & Consent",
+                icon: "🤝",
+                checklist: [],
+                patient: "Magandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan at edad}?\n\nNandito po ako ngayon para {linisin at tahiin ang inyong sugat} upang masiguro na ito ay mabilis na maghihilom, hindi maimpeksyon, at mabawasan ang pagpepeklat.\n\nGusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team. {Okay lang po ba} na magsimula tayo?",
+                preceptor: "Good morning, Doctors. Treating this kit as my patient, I am {verifying their identity} and explaining the procedure and its benefits. I am securing {explicit consent} before proceeding."
+            },
+            {
+                id: 1,
+                title: "1. Materials & Antisepsis",
+                icon: "🧤",
+                checklist: [1, 2, 3],
+                patient: "Mayroon po ba kayong {allergy} sa mga gamot o anesthesia? Lilinisin ko po muna itong sugat ninyo gamit ang Betadine. Baka makaramdam po kayo ng kakaunting {hapdi}. Kung kinakailangan, {gugupitin} din po natin ang buhok sa paligid ng sugat.",
+                preceptor: "I am checking for {allergies}. I begin with {handwashing} and put on {clean gloves}. I scrub and clean the wound and its surrounding area with {betadine-soaked cotton} in a {circular manner}, going outward, {three times}. I then {remove} my clean gloves and perform hand hygiene.\n\nFor local anesthesia preparation, I put a {sterile glove} on my {right hand} to hold the sterile syringe and remove the needle cap. Using my clean ungloved {left hand}, I hold the lidocaine vial. I extract lidocaine from the vial using a {25 or 27-gauge needle} and a {6 or 10 cc syringe}. I {replace} the needle cap and put the syringe containing lidocaine in the {sterile kidney basin}.\n\nNext, I don the second {sterile glove} on my {left hand}. Now that both hands are sterile, I apply the {sterile drape} over the operative field to complete the setup."
+            },
+            {
+                id: 2,
+                title: "2. Local Anesthesia",
+                icon: "💉",
+                checklist: [4],
+                patient: "Ma’am/Sir, mag-i-inject po ako ngayon ng {anesthesia} dito sa sugat ninyo para po wala kayong maramdaman habang tinatahi po natin ito. Okay lang po ba? Sige po, tutusok na po ako. ... (Wait 1 minute) ... Ma’am/Sir, may {nararamdaman} po ba kayo?",
+                preceptor: "Picking up my {pre-drawn syringe} with my sterile gloves, I am inserting the {entire length} of the needle into the {periphery} of the wound, {parallel} to the skin. Crucially, I am {aspirating first} to ensure the needle is not in the {intravascular} compartment. Since no blood was aspirated, I am slowly injecting the agent while slowly {retracting the needle}. I will {reposition} the needle without completely pulling it out to infiltrate another area, repeating this until the entire wound area is anesthetized. I wait approximately {1 minute} for it to take effect, then verify by lightly poking the area with a {sharp probe} or pinching it with {forceps}."
+            },
+            {
+                id: 3,
+                title: "3. Instrument Handling",
+                icon: "🪡",
+                checklist: [5, 6, 7, 8, 9, 10, 11],
+                patient: "Susubukan ko po muna kung umepekto na ang pampamanhid. May nararamdaman po ba kayong {matulis o masakit} kapag kinukurot ko ito? ... Dahil wala na po, magsisimula na po tayong manahi.",
+                preceptor: "Assuming the anesthesia has taken effect, I am holding the needle holder with my {dominant hand} using a {tripod grip}, resting my index finger on the pivot. I am holding the {toothed forceps} in my {non-dominant hand} using a {pencil grip}. I load the needle at the junction of the {proximal and middle thirds}. I do the first bite by inserting the needle into the skin at a {90-degree angle}. It helps to {lift the skin edge} with the forceps to ensure that the needle enters {perpendicularly} into the skin. I {pull the needle fully} before biting again to the other side."
+            },
+            {
+                id: 4,
+                title: "4. Knot Tying",
+                icon: "🧵",
+                checklist: [12, 13],
+                patient: null,
+                preceptor: "I pull the suture through, leaving a {short tail}. I am performing an {instrument tie} for a simple interrupted stitch. I begin with {two throws forward} for a surgeon's knot, pulling the strands {horizontally} in opposite directions to lay it flat. I follow with {one throw backward}, and a final {throw forward} to lock it. I am offsetting the knot to the {side of the incision line} so it does not rest directly over the wound. I will cut the suture leaving {5-6 mm} tails. I will space my subsequent knots approximately {5-10 mm apart} to prevent ischemia and tissue {necrosis}."
+            },
+            {
+                id: 5,
+                title: "5. Post-Op Care",
+                icon: "🩹",
+                checklist: [14],
+                patient: "Tapos na po nating tahiin ang inyong sugat. Tatakpan po natin ito ng malinis na gasa. Upang masiguro na ito ay maghihilom nang walang komplikasyon, mahalagang panatilihing {malinis at tuyo} ang inyong sugat. Iwasang magbabad sa tubig hangga’t hindi pa naaalis ang tahi. Kung makaramdam ng kirot, maaari kayong uminom ng {Paracetamol}. Kung makaranas kayo ng matinding pamamaga, {pagnanana}, o lagnat, bumalik po agad sa ospital. Dahil ang inyong sugat ay nasa katawan, bumalik po kayo makalipas ang {7 hanggang 10 araw} para tanggalin ang tahi.",
+                preceptor: "I am now instructing my simulated patient on post-op care. I will advise them on suture removal timings based on anatomy: {3-5 days} for the face, {7-10 days} for the trunk, {10-12 days} for upper extremities, and {12-14 days} for lower extremities."
+            },
+            {
+                id: 6,
+                title: "6. Suture Removal",
+                icon: "✂️",
+                checklist: [15, 16, 17, 18],
+                patient: "Ma’am/Sir, tatanggalin na po natin ang inyong tahi ngayon. Lilinisin ko po muna ulit ang paligid ng inyong sugat.",
+                preceptor: "To remove the sutures from the kit, I will prep the wound again with an {antiseptic solution}. I use the forceps to pick up {one end} of the suture by the knot. I slide the scissors around the suture and cut as {close to the skin} as possible, directly {under the knot}. I gently pull the suture {straight up} and out. I ensure that I do not pull the {contaminated} exposed portion of the suture back through the healing sterile {suture tract}."
+            }
+        ];
+
+        const rubric = [
+            {id: 1, text: "Painting of the wound with antiseptic", phase: 1},
+            {id: 2, text: "Putting on sterile gloves", phase: 1},
+            {id: 3, text: "Antisepsis (sterile cloth over operative field)", phase: 1},
+            {id: 4, text: "Infiltration of local anesthesia", phase: 2},
+            {id: 5, text: "Holding of forceps (pencil grip)", phase: 3},
+            {id: 6, text: "Holding needle holder (dominant hand)", phase: 3},
+            {id: 7, text: "Placement of needle on needle holder tip", phase: 3},
+            {id: 8, text: "Lifting edge of skin with forceps", phase: 3},
+            {id: 9, text: "Piercing needle perpendicular (90°) to skin", phase: 3},
+            {id: 10, text: "Using curve of needle to move through skin", phase: 3},
+            {id: 11, text: "Correct distance of suture from wound edges", phase: 3},
+            {id: 12, text: "Instrument knot tying (Surgeon's knot)", phase: 4},
+            {id: 13, text: "Proper spacing between knots", phase: 4},
+            {id: 14, text: "When do you remove sutures?", phase: 5},
+            {id: 15, text: "Preparation of the wound with antiseptic", phase: 6},
+            {id: 16, text: "Using forceps to pick up one end of suture", phase: 6},
+            {id: 17, text: "Sliding scissors and cutting close to skin", phase: 6},
+            {id: 18, text: "Pulling suture to remove (avoid tract contamination)", phase: 6}
+        ];
+
+        // --- COMPONENTS ---
+
+        const ClozeWord = ({ word, isRecallMode }) => {
+            const [revealed, setRevealed] = useState(false);
+
+            useEffect(() => {
+                setRevealed(false);
+            }, [isRecallMode]);
+
+            if (!isRecallMode) {
+                return <span className="font-bold text-sky-700 bg-sky-50 px-1 rounded">{word}</span>;
+            }
+
+            return (
+                <span 
+                    className={revealed ? "font-bold bg-sky-100 text-sky-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block cursor-pointer transition-colors" : "blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block"} 
+                    onClick={() => setRevealed(!revealed)}
+                    title={revealed ? "Click to hide" : "Click to reveal"}
+                >
+                    {word}
+                </span>
+            );
+        };
+
+        const processCloze = (str, isRecallMode) => {
+            if (!str) return null;
+            const clozeRegex = /\{(.*?)\}/g;
+            const parts = str.split(clozeRegex);
+            
+            return parts.map((part, index) => {
+                if (index % 2 === 1) { 
+                    return <ClozeWord key={`cloze-${index}`} word={part} isRecallMode={isRecallMode} />;
+                }
+                return <span key={`text-${index}`}>{part}</span>;
+            });
+        };
+
+        // View 2: High-Yield Theory
+        const TheoryReviewer = () => (
+            <div className="space-y-8 animate-fade-in pb-10">
+                <div className="grid md:grid-cols-2 gap-8">
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                        <h3 className="text-xl font-black text-red-700 mb-5 flex items-center border-b border-slate-100 pb-3"><span className="text-2xl mr-3">💉</span> Local Anesthesia Limits</h3>
+                        <p className="text-[15px] text-slate-700 mb-5 font-medium leading-relaxed">You will fail the station if you do not verbalize <strong>aspiration</strong> before injection.</p>
+                        <div className="bg-red-50 p-5 rounded-xl border border-red-100">
+                            <ul className="space-y-3 text-[15px] text-red-900 font-medium">
+                                <li className="flex items-start"><span className="mr-2 mt-0.5">•</span> <span><strong>Lidocaine WITHOUT Epinephrine:</strong> Max safe dose is <span className="font-black text-lg bg-red-200 px-2 py-0.5 rounded shadow-sm mx-1">4.5 mg/kg</span>.</span></li>
+                                <li className="flex items-start"><span className="mr-2 mt-0.5">•</span> <span><strong>Lidocaine WITH Epinephrine:</strong> Max safe dose is <span className="font-black text-lg bg-red-200 px-2 py-0.5 rounded shadow-sm mx-1">7.0 mg/kg</span>.</span></li>
+                                <li className="flex items-start"><span className="mr-2 mt-0.5">•</span> <span>Inject using a small needle (G25 or G27) and inject slowly to minimize pain.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                        <h3 className="text-xl font-black text-sky-700 mb-5 flex items-center border-b border-slate-100 pb-3"><span className="text-2xl mr-3">✂️</span> Suture Removal Timings</h3>
+                        <p className="text-[15px] text-slate-700 mb-5 font-medium leading-relaxed">Never say "remove in 1 to 2 weeks." You must give the exact protocol based on the anatomical region.</p>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-[15px] text-left border-collapse">
+                                <thead className="bg-sky-50 text-sky-900 uppercase text-xs tracking-wider">
+                                    <tr><th className="p-3 border-b border-sky-100 font-bold">Anatomical Area</th><th className="p-3 border-b border-sky-100 font-bold">Duration</th></tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                    <tr className="hover:bg-slate-50 transition-colors"><td className="p-3">Face & Neck</td><td className="p-3 font-bold text-sky-700">3 - 5 days</td></tr>
+                                    <tr className="hover:bg-slate-50 transition-colors"><td className="p-3">Trunk / Body</td><td className="p-3 font-bold text-sky-700">7 - 10 days</td></tr>
+                                    <tr className="hover:bg-slate-50 transition-colors"><td className="p-3">Upper Extremities</td><td className="p-3 font-bold text-sky-700">10 - 12 days</td></tr>
+                                    <tr className="hover:bg-slate-50 transition-colors"><td className="p-3">Lower Extremities</td><td className="p-3 font-bold text-sky-700">12 - 14 days</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                        <h3 className="text-xl font-black text-indigo-700 mb-5 flex items-center border-b border-slate-100 pb-3"><span className="text-2xl mr-3">🪡</span> Knot Tying Principles</h3>
+                        <ul className="space-y-4 text-[15px] text-slate-700 font-medium leading-relaxed">
+                            <li className="bg-indigo-50 p-4 rounded-xl border border-indigo-100"><strong className="text-indigo-900 block mb-1">Why alternate directions?</strong> Reversing hand directions for each throw allows the knot to lie flat and prevents creating a series of unstable "half-hitches".</li>
+                            <li className="bg-indigo-50 p-4 rounded-xl border border-indigo-100"><strong className="text-indigo-900 block mb-1">Do more throws equal more strength?</strong> NO. Extra knots do not add strength to a properly tied knot. Too many throws makes the knot bulky and can become a nidus for infection.</li>
+                        </ul>
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                        <h3 className="text-xl font-black text-emerald-700 mb-5 flex items-center border-b border-slate-100 pb-3"><span className="text-2xl mr-3">📐</span> Excision Planning</h3>
+                        <ul className="space-y-4 text-[15px] text-slate-700 font-medium leading-relaxed">
+                            <li className="bg-emerald-50 p-4 rounded-xl border border-emerald-100"><strong className="text-emerald-900 block mb-1">The 3:1 Ratio:</strong> When designing an excision, the Length-to-Width (L:W) ratio must be 3:1. This prevents extra skin (dog ear formation) at the edges when closing.</li>
+                            <li className="bg-emerald-50 p-4 rounded-xl border border-emerald-100"><strong className="text-emerald-900 block mb-1">RSTL:</strong> Incisions must be placed parallel to Relaxed Skin Tension Lines (RSTL). These are normal lines perpendicular to the action of the underlying muscle.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // View 3: Materials Matrix
+        const MaterialsMatrix = () => (
+            <div className="space-y-8 animate-fade-in pb-10">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div className="bg-amber-50 p-6 border-b border-amber-200 flex items-start gap-4">
+                        <div className="text-3xl mt-1">⚠️</div>
+                        <div>
+                            <h3 className="font-black text-amber-900 text-lg uppercase tracking-wider mb-2">1. The Needle (Reverse Cutting)</h3>
+                            <p className="text-[15px] text-amber-800 leading-relaxed font-medium">For skin suturing in the OSCE, you MUST specify a <strong>Reverse Cutting</strong> needle. Why? Because the cutting wedge faces the <em>outside</em> of the wound edge, creating a tract away from the skin edge. This significantly lessens the chances of the suture cutting through the skin margin when pulled tight.</p>
+                        </div>
+                    </div>
+                    
+                    <div className="p-8 space-y-8">
+                        <div>
+                            <h3 className="font-black text-slate-800 text-lg mb-4 border-b border-slate-100 pb-2 uppercase tracking-wider">2. Suture Sizing Rules</h3>
+                            <div className="flex flex-col md:flex-row gap-6">
+                                <div className="flex-1 bg-sky-50 p-6 rounded-xl border border-sky-100 shadow-sm">
+                                    <span className="block font-black text-sky-900 mb-2 text-lg">Face & Neck</span>
+                                    <p className="text-[15px] text-sky-800 mb-4 font-medium">Requires finer sutures to minimize surface scarring.</p>
+                                    <div className="text-sky-700 font-black text-xl bg-white px-4 py-3 rounded-lg text-center border border-sky-200 shadow-sm">Use 5-0 or 6-0</div>
+                                </div>
+                                <div className="flex-1 bg-emerald-50 p-6 rounded-xl border border-emerald-100 shadow-sm">
+                                    <span className="block font-black text-emerald-900 mb-2 text-lg">Trunk & Extremities</span>
+                                    <p className="text-[15px] text-emerald-800 mb-4 font-medium">Requires higher tensile strength due to tension and movement.</p>
+                                    <div className="text-emerald-700 font-black text-xl bg-white px-4 py-3 rounded-lg text-center border border-emerald-200 shadow-sm">Use 3-0 or 4-0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 className="font-black text-slate-800 text-lg mb-4 border-b border-slate-100 pb-2 uppercase tracking-wider">3. Absorbable Suture Selection</h3>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-left text-[15px] border-collapse">
+                                    <thead className="bg-slate-800 text-white uppercase text-xs tracking-wider">
+                                        <tr>
+                                            <th className="p-4 font-bold border-b border-slate-700">Suture Type</th>
+                                            <th className="p-4 font-bold border-b border-slate-700">Structure</th>
+                                            <th className="p-4 font-bold border-b border-slate-700">Pros / Cons</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                        <tr className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-5 border-r border-slate-100 font-black text-slate-900 bg-slate-50/50">Poliglecaprone<br/><span className="text-sm font-bold text-slate-500">(Monocryl)</span></td>
+                                            <td className="p-5 border-r border-slate-100">Monofilament</td>
+                                            <td className="p-5 leading-relaxed">
+                                                <span className="text-emerald-700 font-black uppercase text-xs tracking-wider bg-emerald-100 px-2 py-0.5 rounded mr-2">Pro</span> Less inflammatory reaction, less prone to infection. Ideal for the face.<br/>
+                                                <div className="mt-2"><span className="text-rose-700 font-black uppercase text-xs tracking-wider bg-rose-100 px-2 py-0.5 rounded mr-2">Con</span> Less stability (needs more knots due to high memory).</div>
+                                            </td>
+                                        </tr>
+                                        <tr className="hover:bg-slate-50 transition-colors">
+                                            <td className="p-5 border-r border-slate-100 font-black text-slate-900 bg-slate-50/50">Polyglactin 910<br/><span className="text-sm font-bold text-slate-500">(Vicryl)</span></td>
+                                            <td className="p-5 border-r border-slate-100">Braided (Multifilament)</td>
+                                            <td className="p-5 leading-relaxed">
+                                                <span className="text-emerald-700 font-black uppercase text-xs tracking-wider bg-emerald-100 px-2 py-0.5 rounded mr-2">Pro</span> Better stability, does not loosen on its own. Ideal for high-tension areas.<br/>
+                                                <div className="mt-2"><span className="text-rose-700 font-black uppercase text-xs tracking-wider bg-rose-100 px-2 py-0.5 rounded mr-2">Con</span> Braid spaces can serve as a nidus for infection.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // View 4: Lidocaine Simulator
+        const LidocaineSimulator = () => {
+            const [mode, setMode] = useState('calc');
+            const [weight, setWeight] = useState(60);
+            const [conc, setConc] = useState(1);
+            const [hasEpi, setHasEpi] = useState(false);
+
+            const generateDrill = () => {
+                const w = Math.floor(Math.random() * 50) + 40;
+                const c = Math.random() > 0.5 ? 1 : 2;
+                const e = Math.random() > 0.5;
+                const maxMgPerKg = e ? 7 : 4.5;
+                const totalMg = w * maxMgPerKg;
+                const mgPerMl = c * 10;
+                const maxMl = (totalMg / mgPerMl).toFixed(1);
+                return { weight: w, conc: c, hasEpi: e, correctMl: parseFloat(maxMl) };
+            };
+            
+            const [drill, setDrill] = useState(generateDrill());
+            const [userAns, setUserAns] = useState("");
+            const [feedback, setFeedback] = useState(null);
+
+            const maxMgPerKg = hasEpi ? 7 : 4.5;
+            const totalMg = weight * maxMgPerKg;
+            const mgPerMl = conc * 10;
+            const maxMl = (totalMg / mgPerMl).toFixed(1);
+
+            const handleDrillSubmit = (e) => {
+                e.preventDefault();
+                const ans = parseFloat(userAns);
+                if (isNaN(ans)) return;
+                
+                if (Math.abs(ans - drill.correctMl) <= 0.2) {
+                    setFeedback({ type: 'success', msg: `Correct! ${drill.correctMl} mL is the maximum safe dose.` });
+                } else {
+                    setFeedback({ type: 'error', msg: `Incorrect. The correct answer is ${drill.correctMl} mL.`,
+                        rationale: `Formula: (${drill.weight} kg × ${drill.hasEpi ? 7 : 4.5} mg/kg) / ${drill.conc * 10} mg/mL = ${drill.correctMl} mL`
+                    });
+                }
+            };
+
+            const nextDrill = () => {
+                setDrill(generateDrill());
+                setUserAns("");
+                setFeedback(null);
+            };
+
+            return (
+                <div className="space-y-6 animate-fade-in pb-10">
+                    <div className="flex flex-wrap gap-3 pb-4 border-b border-slate-200 mb-6">
+                        <button 
+                            onClick={() => setMode('calc')} 
+                            className={`px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm text-sm ${mode === 'calc' ? 'bg-sky-600 text-white ring-2 ring-sky-300' : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'}`}
+                        >
+                            🧮 Interactive Calculator
+                        </button>
+                        <button 
+                            onClick={() => {setMode('drill'); nextDrill();}} 
+                            className={`px-6 py-2.5 rounded-xl font-bold transition-all shadow-sm text-sm ${mode === 'drill' ? 'bg-sky-600 text-white ring-2 ring-sky-300' : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'}`}
+                        >
+                            🧠 OSCE Mental Math Drill
+                        </button>
+                    </div>
+
+                    {mode === 'calc' ? (
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-center">
+                                <h3 className="text-xl font-black text-slate-800 mb-6 uppercase tracking-wider border-b border-slate-100 pb-3">Patient Parameters</h3>
+                                
+                                <div className="space-y-8">
+                                    <div>
+                                        <label className="block text-[15px] font-black text-slate-700 mb-4 flex justify-between">
+                                            <span>Patient Weight</span> 
+                                            <span className="text-sky-600 bg-sky-50 px-2 py-0.5 rounded">{weight} kg</span>
+                                        </label>
+                                        <input type="range" min="20" max="120" value={weight} onChange={(e) => setWeight(parseInt(e.target.value))} className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-600" />
+                                    </div>
+                                    
+                                    <div>
+                                        <label className="block text-[15px] font-black text-slate-700 mb-3">Lidocaine Concentration</label>
+                                        <div className="flex gap-4">
+                                            <label className={`flex-1 p-3 border-2 rounded-xl cursor-pointer text-center font-bold transition-colors shadow-sm text-sm ${conc === 1 ? 'bg-sky-50 border-sky-500 text-sky-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                <input type="radio" checked={conc === 1} onChange={() => setConc(1)} className="hidden" /> 1% (10 mg/mL)
+                                            </label>
+                                            <label className={`flex-1 p-3 border-2 rounded-xl cursor-pointer text-center font-bold transition-colors shadow-sm text-sm ${conc === 2 ? 'bg-sky-50 border-sky-500 text-sky-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                <input type="radio" checked={conc === 2} onChange={() => setConc(2)} className="hidden" /> 2% (20 mg/mL)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-[15px] font-black text-slate-700 mb-3">With Epinephrine?</label>
+                                        <div className="flex gap-4">
+                                            <label className={`flex-1 p-3 border-2 rounded-xl cursor-pointer text-center font-bold transition-colors shadow-sm text-sm ${!hasEpi ? 'bg-sky-50 border-sky-500 text-sky-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                <input type="radio" checked={!hasEpi} onChange={() => setHasEpi(false)} className="hidden" /> No (Max 4.5 mg/kg)
+                                            </label>
+                                            <label className={`flex-1 p-3 border-2 rounded-xl cursor-pointer text-center font-bold transition-colors shadow-sm text-sm ${hasEpi ? 'bg-sky-50 border-sky-500 text-sky-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                                                <input type="radio" checked={hasEpi} onChange={() => setHasEpi(true)} className="hidden" /> Yes (Max 7.0 mg/kg)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-900 p-8 rounded-2xl shadow-xl border border-slate-800 text-white flex flex-col justify-center">
+                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-700 pb-3">Computation Breakdown</h3>
+                                
+                                <div className="space-y-5 font-mono text-[15px] mb-8">
+                                    <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg">
+                                        <span className="text-slate-400">Total Mg</span>
+                                        <span className="text-slate-200">{weight} kg × {maxMgPerKg} mg/kg = <strong className="text-sky-400 text-lg ml-2">{totalMg} mg</strong></span>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg">
+                                        <span className="text-slate-400">Concentration</span>
+                                        <span className="text-slate-200">{conc}% = <strong className="text-sky-400 text-lg ml-2">{mgPerMl} mg/mL</strong></span>
+                                    </div>
+                                    <div className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg">
+                                        <span className="text-slate-400">Final Volume</span>
+                                        <span className="text-slate-200">{totalMg} mg ÷ {mgPerMl} mg/mL =</span>
+                                    </div>
+                                </div>
+
+                                <div className="bg-slate-800 rounded-xl p-8 text-center border border-sky-500/30 shadow-inner">
+                                    <div className="text-sm font-bold text-slate-400 mb-2 uppercase tracking-widest">Maximum Safe Volume</div>
+                                    <div className="text-6xl font-black text-sky-400">{maxMl} <span className="text-3xl text-slate-500 font-bold">mL</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="max-w-2xl mx-auto mt-4">
+                            <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                                <div className="bg-slate-900 p-6 text-white text-center flex flex-col items-center">
+                                    <div className="text-3xl mb-2">🧠</div>
+                                    <h3 className="font-black text-xl tracking-wide uppercase">Preceptor Pimping Simulator</h3>
+                                    <p className="text-slate-400 text-sm mt-1 font-medium">Calculate the safe dose mentally without paper.</p>
+                                </div>
+                                <div className="p-8 md:p-10">
+                                    <div className="text-center mb-10 bg-slate-50 p-6 rounded-xl border border-slate-100 shadow-sm">
+                                        <p className="text-[17px] font-medium text-slate-700 leading-relaxed italic">
+                                            "Doc, we have a <strong className="text-slate-900 border-b-2 border-sky-300 mx-1">{drill.weight} kg</strong> patient. 
+                                            We are using <strong className="text-slate-900 border-b-2 border-sky-300 mx-1">{drill.conc}% Lidocaine</strong> 
+                                            <strong className="text-slate-900 border-b-2 border-sky-300 mx-1">{drill.hasEpi ? 'WITH' : 'WITHOUT'} Epinephrine</strong>. 
+                                            What is the absolute maximum volume you can inject?"
+                                        </p>
+                                    </div>
+
+                                    <form onSubmit={handleDrillSubmit} className="flex flex-col items-center">
+                                        <div className="flex items-center gap-4 mb-8">
+                                            <input 
+                                                type="number" 
+                                                step="0.1" 
+                                                value={userAns} 
+                                                onChange={(e) => setUserAns(e.target.value)} 
+                                                disabled={feedback !== null}
+                                                className="w-36 text-center text-3xl font-black p-4 border-2 border-slate-300 rounded-xl focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none disabled:bg-slate-100 transition-all text-slate-800"
+                                                placeholder="0.0"
+                                                required
+                                            />
+                                            <span className="text-2xl font-bold text-slate-400">mL</span>
+                                        </div>
+                                        
+                                        {!feedback ? (
+                                            <button type="submit" className="bg-sky-600 hover:bg-sky-700 text-white font-black text-lg py-4 px-10 rounded-xl shadow-lg transition-colors w-full uppercase tracking-wider">
+                                                Submit Answer
+                                            </button>
+                                        ) : (
+                                            <div className={`w-full p-6 rounded-xl border-2 shadow-sm ${feedback.type === 'success' ? 'bg-emerald-50 border-emerald-400' : 'bg-rose-50 border-rose-400'}`}>
+                                                <div className="font-black text-xl mb-3 flex items-center">
+                                                    <span className="mr-3 text-2xl">{feedback.type === 'success' ? '✅' : '❌'}</span>
+                                                    <span className={feedback.type === 'success' ? 'text-emerald-800' : 'text-rose-800'}>{feedback.msg}</span>
+                                                </div>
+                                                {feedback.rationale && <div className="text-slate-700 font-mono text-[14px] mt-4 pt-4 border-t border-slate-200/50 bg-white/50 p-3 rounded">{feedback.rationale}</div>}
+                                                <button type="button" onClick={nextDrill} className="mt-6 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-lg transition-colors shadow-md text-sm uppercase tracking-wider">
+                                                    Next Scenario &rarr;
+                                                </button>
+                                            </div>
+                                        )}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // Main App
+        const SurgSuturingApp = () => {
+            const [view, setView] = useState('script'); 
+            const [activeIdx, setActiveIdx] = useState(0);
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+            
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s5) {
+                    setIsCompleted(true);
+                }
+            }, []);
+
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s5 = true; // s5 matches Surgery Suturing in index.html
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const activePage = steps[activeIdx];
+            
+            const getActiveRubricItems = () => {
+                return rubric.filter(item => activePage.checklist.includes(item.id));
+            };
+
+            const tabs = [
+                { id: 'script', label: '1. Talk & Touch Script', icon: '🗣️' },
+                { id: 'theory', label: '2. Preceptor Must-Knows', icon: '🧠' },
+                { id: 'materials', label: '3. Sutures & Needles', icon: '🪡' },
+                { id: 'lidocaine', label: '4. Lidocaine Calculator', icon: '💉' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-sky-400">SURG 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400 tracking-tight">SURG 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Basic Suturing</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-emerald-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row */}
+                        <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                    <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                    {tabs.find(t => t.id === view).label}
+                                </h2>
+                                <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics, materials, and clinical calculators.</p>
+                            </div>
+                            
+                            {/* Active Recall Toggle (Only in Script view) */}
+                            {view === 'script' && (
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`max-w-6xl mx-auto space-y-8 animate-fade-in pb-24 pt-8 px-6 md:px-12`}>
+                            
+                            {/* VIEW 1: SCRIPT */}
+                            {view === 'script' && (
+                                <div className="space-y-6">
+                                    
+                                    {/* Pagination */}
+                                    <div className="flex gap-2 overflow-x-auto pb-4 custom-scrollbar">
+                                        {steps.map((step, idx) => (
+                                            <button 
+                                                key={step.id}
+                                                onClick={() => setActiveIdx(idx)}
+                                                className={`whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-sm ${activeIdx === idx ? 'bg-sky-600 text-white ring-2 ring-sky-300' : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'}`}
+                                            >
+                                                {step.icon} {step.title}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                        {/* Left Col: Script */}
+                                        <div className="space-y-6">
+                                            {activePage.patient && (
+                                                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                                    <div className="bg-rose-50 border-b border-rose-100 px-6 py-4 flex items-center gap-3">
+                                                        <div className="bg-white p-2 rounded-lg shadow-sm border border-rose-100 text-xl">🛏️</div> 
+                                                        <h3 className="font-bold text-rose-900 text-sm tracking-wide uppercase">To Suturing Kit (Bedside Manner)</h3>
+                                                    </div>
+                                                    <div className="p-8 bg-[radial-gradient(#fecdd3_1px,transparent_1px)] [background-size:16px_16px]">
+                                                        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl border border-rose-100 shadow-sm text-[15px] text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">
+                                                            {processCloze(activePage.patient, memorizeMode)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {activePage.preceptor && (
+                                                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                                    <div className="bg-slate-800 border-b border-slate-700 px-6 py-4 flex items-center gap-3">
+                                                        <div className="bg-slate-700 p-2 rounded-lg shadow-inner border border-slate-600 text-xl">🗣️</div> 
+                                                        <h3 className="font-bold text-white text-sm tracking-wide uppercase">To Preceptor (Narration)</h3>
+                                                    </div>
+                                                    <div className="p-8">
+                                                        <div className="text-[15px] text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">
+                                                            {processCloze(activePage.preceptor, memorizeMode)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Right Col: Rubric Alignment */}
+                                        <div className="space-y-6">
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-6">
+                                                <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center gap-3">
+                                                    <span className="text-xl">📋</span>
+                                                    <h3 className="font-bold text-slate-800 text-sm tracking-wide uppercase">Exact Rubric Target</h3>
+                                                </div>
+                                                <div className="p-0 bg-white">
+                                                    <ul className="divide-y divide-slate-100">
+                                                        {getActiveRubricItems().length > 0 ? getActiveRubricItems().map((item) => (
+                                                            <li key={item.id} className="p-5 flex items-start text-[15px] text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+                                                                <input type="checkbox" className="mt-1 mr-4 w-5 h-5 accent-emerald-500 rounded cursor-pointer" defaultChecked />
+                                                                <span className="leading-relaxed">{item.text}</span>
+                                                            </li>
+                                                        )) : (
+                                                            <li className="p-6 text-sm text-slate-500 italic text-center bg-slate-50">No specific rubric targets for this step. Execute standardized introduction.</li>
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-between items-center pt-6 mt-6 border-t border-slate-200">
+                                        <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0} className="px-6 py-3 rounded-xl font-bold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-50 transition-colors">
+                                            &larr; Previous Step
+                                        </button>
+                                        <button onClick={() => setActiveIdx(Math.min(steps.length - 1, activeIdx + 1))} disabled={activeIdx === steps.length - 1} className="px-6 py-3 rounded-xl font-bold text-white bg-sky-600 hover:bg-sky-700 disabled:opacity-50 transition-colors shadow-md">
+                                            Next Step &rarr;
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {view === 'theory' && <TheoryReviewer />}
+                            {view === 'materials' && <MaterialsMatrix />}
+                            {view === 'lidocaine' && <LidocaineSimulator />}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SurgSuturingApp />);
+    </script>
+</body>
+</html>

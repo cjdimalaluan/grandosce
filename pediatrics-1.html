@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pediatrics OSCE Master - Official Reviewer Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #059669; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #059669; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #059669; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- CORE DATA STRUCTURES ---
+
+        const refData = {
+            vitalsNote1: "* Heart Rate: In sleep, HR may be significantly {lower}. If perfusion is maintained, no intervention is required. Count for a {full minute}.",
+            vitalsNote2: "† Blood Pressure: Cuff should cover {~2/3} of the arm and {80-100%} of circumference. Obtain in {all 4 extremities} if screening.",
+            vitalsNote3: "+ Respiratory Rate: Expected to {increase} in the presence of fever and stress. Count for a {full minute}.",
+            anthroW: "Weight: Taken in kg to {one-tenths (0.0)}. The infant must be {naked} or wearing a dry diaper (subtract diaper weight). Remove heavy clothing for older children.",
+            anthroL: "Length (< 2 years old): Measured in the {recumbent} position. Requires {two examiners} (one to position the head, one to extend legs). Head must touch the inflexible board.",
+            anthroH: "Height (≥ 2 years old): Measured {standing unassisted} using a stadiometer. Shoes off. Back of head, thoracic spine, buttocks, and heels must approximate the vertical axis.",
+            anthroF: "Frankfurt Plane: The {outer canthi} of the eyes must be inline with the {external auditory meatus}, perpendicular to the long axis of the trunk.",
+            anthroB: "Body Mass Index (BMI): Calculated as Weight (kg) / Height (m)². Plotted for children {≥ 2 years old}.",
+            anthroHC: "Head (HC): Measured with a flexible tape starting at the {supraorbital ridge} around to the {occipital prominence}. Routine for {≤ 3 years old}. (Term avg: 34-35 cm; 1 year: 47 cm).",
+            anthroCC: "Chest (CC): Tape placed at the level of the {xiphoid process}, measured at {mid-inspiration}. (At birth, HC > CC. By 1 year of age, CC catches up).",
+            anthroProp: "U/L Ratio: Normal: {~1.7} at birth, {1.3} at 3 years, {1.0} after 7 years.\nArm Span: Distance between tips of middle fingers with arms outstretched at 90°. Should roughly {equal height}.",
+            counsel1: "Magandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan} pati na rin ang {pangalan at edad ni baby}?\n\nNandito po ako ngayon para {suriin ang kalusugan, timbang, at paglaki ni baby}, at upang {maibigay ang mga kinakailangan niyang bakuna} ngayong araw laban sa mga nakakahawang sakit. Gusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team. {Okay lang po ba} na magsimula tayo?",
+            vacLiveRule: "Live Spacing Rule: Two parenteral live vaccines not administered simultaneously must be spaced by exactly {4 weeks (28 days)}. Delay live vaccines for {11 months} post-Kawasaki IVIG and {4 months} post-RIG."
+        };
+
+        const procData = {
+            prep1: "Wash hands and prepare a clean designated area.",
+            prep2: "Verbalize the 7 Rights of Administration: Right {patient, drug, dose, route, time, technique, documentation}.",
+            po1: "Timing: Do not feed baby {2 hours} prior. Give Oral vaccines {before} injectables.",
+            po2: "Sequence: Give {Rotavirus} first (larger volume), then {OPV} (2 drops).",
+            po3: "Technique: {Cuddle} position, head tilted back. Gently squeeze cheeks. Angle RV tube to {inner cheek}.",
+            id1: "Dose & Site: {0.05 mL} (<12 mos) or {0.10 mL} (≥12 mos) via {Right Deltoid}.",
+            id2: "Technique: Stretch skin firmly. Needle almost flat, {bevel up}. Inject to form a {white wheal}.",
+            idScript: "The mode of administration is {intradermal}. Based on the patient's age, the dose is {[0.05/0.10]} mL. I am pulling the skin taut, inserting the needle almost flat with the {bevel up}, and slowly injecting to form a {wheal}.",
+            im1: "Site Selection: {Vastus lateralis} (anterolateral thigh) for <3yo. {Deltoid} for ≥3yo. Separate multiple vaccines by {1 inch}.",
+            im2: "Technique: Use {Z-technique} to displace skin. Dart-like swift movement at a {90° angle}.",
+            im3: "CRITICAL RULE: Routine aspiration is {no longer recommended} for pediatric vaccines.",
+            imScript: "The route is {intramuscular} on the {vastus lateralis}. I clean the site moving outward. Using the {Z-technique}, I insert the needle swiftly at a {90-degree} angle. {Without aspirating}, I inject the vaccine, remove the needle, and apply pressure.",
+            sc1: "Needle: Must use a {5/8 inch (23-25G)} needle.",
+            sc2: "Site: Fatty tissue over {anterolateral thigh} (<1yo) or {Triceps} (≥1yo).",
+            sc3: "Technique: Pinch the fatty tissue. Insert at a {45° angle}.",
+            scScript: "The route is {subcutaneous}. I am using a {5/8 inch} needle to avoid reaching the muscle. I pinch the fatty tissue over the triceps and insert the needle at a {45-degree} angle. I inject the vaccine, slowly withdraw, and apply pressure.",
+            obs1: "Mandatory Observation: Observe the patient for {15-20 minutes} post-vaccination to monitor for {syncope} or {anaphylaxis}.",
+            obs2: "\"Nabigay na po ang bakuna. Oobserbahan po muna natin si baby ng {15-20 minuto} dito bago kayo umuwi. Maaari po siyang lagnatin o mamula ang hita. Punasan po ng {maligamgam na tubig} at painumin ng {paracetamol} kung kailangan.\"",
+            obs3: "\"I will now document the {date, vaccine name, lot number, manufacturer, and administration site} in the patient's baby book to ensure accurate spacing for future doses.\""
+        };
+
+        const vaccines = [
+            { name: "BCG", route: "{ID, Right Deltoid}", details: "{Dose by Age:} {0.05 mL} for <12 months; {0.10 mL} for ≥12 months. Do not give if birth weight {<2kg}." },
+            { name: "Hep B Birth", route: "{IM, Anterolateral Thigh}", details: "{0, 1, 6 months} routine. For infants <2kg with unknown HBsAg status, give HBV + HBIG {≤12 hours} (dose doesn't count towards 3-dose series)." },
+            { name: "Pentavalent", route: "{IM, Anterolateral Thigh}", details: "{6, 10, 14 weeks}. {DTP Max:} {7 years and 0 days} is the absolute cutoff. {Double-Dose Trap:} Never give monovalent Hep B at the same time as Penta." },
+            { name: "Polio (OPV / IPV)", route: "OPV: {Oral}\nIPV: {IM, Thigh}", details: "NIP schedule OPV at {6, 10, 14w}. IPV strictly at {14w and 9m}. For >7yo unimmunized catch-up, use IPV instead of OPV." },
+            { name: "PCV & PPSV23", route: "{IM, Thigh / Arm}", details: "PCV at {6, 10, 14 weeks}. Booster at {12-15m}. Healthy unvaccinated children >5 years do not require catch-up. High-risk kids >2y get PPSV23." },
+            { name: "Rotavirus (RV)", route: "{Oral}", details: "{Max 1st dose:} {14w6d}. {Final dose max ages:} RV1 ({24 weeks}), RV5 ({32 weeks}), RV5-SII (12 months). Give before OPV." },
+            { name: "Measles / MMR", route: "{SC, Triceps/Thigh (45°)}", details: "NIP provides MMR at {9m and 12m}. School-based MR given at Grade 1 and 7. {Outbreak:} Measles vaccine given at 6m doesn't count towards primary series." },
+            { name: "Influenza", route: "{IM, Thigh/Deltoid}", details: "Starting at {6 months}. Children 6 months to 8 years receiving it for the first time require {2 doses 4 weeks apart}." },
+            { name: "Hep A", route: "{IM, Thigh/Deltoid}", details: "{2-dose series} starting at {12 months}. Doses separated by {6 months}." },
+            { name: "Td / Tdap", route: "{IM, Deltoid}", details: "For unimmunized children {7-18 years old}, catch up using {Tdap} as one of the doses (preferably the first), followed by Td." },
+            { name: "HPV", route: "{IM, Deltoid}", details: "NIP provides HPV to females: {Grade 4} (school-based) or {9 years old} (community-based). Must observe {15-20 mins} post-vaccination." }
+        ];
+
+        // --- MAIN APP COMPONENT ---
+        const PediaApp = () => {
+            const [view, setView] = useState('ref'); 
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s3) {
+                    setIsCompleted(true);
+                }
+            }, []);
+            
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s3 = true; 
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const shuffleBlanks = () => {
+                const newHidden = new Set();
+                const processText = (text, prefix) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1 && Math.random() > 0.2) {
+                            newHidden.add(`${prefix}-${i}`);
+                        }
+                    });
+                };
+
+                Object.values(refData).forEach((v, i) => processText(v, `ref-${i}`));
+                Object.values(procData).forEach((v, i) => processText(v, `proc-${i}`));
+                vaccines.forEach((v, i) => {
+                    processText(v.route, `vac-route-${i}`);
+                    processText(v.details, `vac-det-${i}`);
+                });
+                
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks();
+                else setHiddenWords(new Set());
+            }, [view, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderInline = (text, prefix, highlightColor = "emerald") => {
+                if (!text) return null;
+                const parts = text.split(/\{(.*?)\}/g);
+                return (
+                    <span className="whitespace-pre-wrap">
+                        {parts.map((part, i) => {
+                            if (i % 2 === 1) {
+                                const wordId = `${prefix}-${i}`; 
+                                if (hiddenWords.has(wordId) && memorizeMode) { 
+                                    return <span key={wordId} onClick={() => revealWord(wordId)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block" title="Click to reveal">{part}</span>;
+                                } else {
+                                    return <span key={wordId} className={`font-bold ${memorizeMode ? `bg-${highlightColor}-100 text-${highlightColor}-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block` : `text-${highlightColor}-700`}`}>{part}</span>;
+                                }
+                            }
+                            return <span key={i}>{part}</span>;
+                        })}
+                    </span>
+                );
+            };
+
+            const tabs = [
+                { id: 'ref', label: '1. Ultimate Cheat Sheet', icon: '📊' },
+                { id: 'procedure', label: '2. Procedures & Rules', icon: '🗣️' },
+                { id: 'sim-anthro', label: '3. Anthro/SAM Sim', icon: '📏' },
+                { id: 'sim-vac', label: '4. Vaccine Sim (20)', icon: '💉' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-emerald-400">Pedia 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">PEDIA 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE Mastery</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-emerald-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row */}
+                        <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                    <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                    {tabs.find(t => t.id === view).label}
+                                </h2>
+                                <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics, clinical frameworks, and perform virtual simulations.</p>
+                            </div>
+                            
+                            {/* Active Recall Toggle (Hidden in Simulators) */}
+                            {!view.startsWith('sim') && (
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                    {memorizeMode && (
+                                        <button onClick={shuffleBlanks} className="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold py-1.5 px-4 rounded-lg transition-colors flex items-center gap-2">
+                                            <span>🔀</span> Shuffle Blanks
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={`max-w-6xl mx-auto space-y-10 animate-fade-in pb-24 pt-8 px-6 md:px-12`}>
+                            
+                            {/* VIEW 1: CHEAT SHEET & MATRIX */}
+                            {view === 'ref' && (
+                                <div className="space-y-10">
+                                    {/* Section 1: Anthropometrics & Vitals */}
+                                    <section>
+                                        <h2 className="text-3xl font-black text-indigo-900 border-b-2 border-indigo-200 pb-3 mb-6">1. Clinical Anthropometrics & Vital Signs</h2>
+                                        
+                                        {/* Full Vital Signs Table */}
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                                            <div className="bg-indigo-50 border-b border-indigo-100 px-6 py-4">
+                                                <h3 className="font-bold text-indigo-900 text-lg">Normal Vital Signs According to Age (Table 79.1)</h3>
+                                            </div>
+                                            <div className="overflow-x-auto p-6 pt-2">
+                                                <table className="min-w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden">
+                                                    <thead className="bg-slate-100 text-slate-700">
+                                                        <tr>
+                                                            <th className="p-3 font-bold border-r border-slate-200 w-1/4">Age Category</th>
+                                                            <th className="p-3 font-bold border-r border-slate-200 w-1/4">Heart Rate (beats/min)</th>
+                                                            <th className="p-3 font-bold border-r border-slate-200 w-1/4">Blood Pressure (mm Hg)</th>
+                                                            <th className="p-3 font-bold w-1/4">Respiratory Rate (breaths/min)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200 text-slate-800 font-medium">
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Premature</td><td className="p-3 border-r border-slate-200">120-205*</td><td className="p-3 border-r border-slate-200">60-76 / 31-45</td><td className="p-3">40-70</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Neonate</td><td className="p-3 border-r border-slate-200">100-205*</td><td className="p-3 border-r border-slate-200">67-84 / 35-53</td><td className="p-3">35-55</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Infant</td><td className="p-3 border-r border-slate-200">100-180</td><td className="p-3 border-r border-slate-200">72-104 / 37-56</td><td className="p-3">30-53</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Toddler</td><td className="p-3 border-r border-slate-200">98-140</td><td className="p-3 border-r border-slate-200">86-106 / 42-63</td><td className="p-3">22-37</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Preschooler</td><td className="p-3 border-r border-slate-200">80-120</td><td className="p-3 border-r border-slate-200">89-112 / 46-72</td><td className="p-3">20-28</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">School-age child</td><td className="p-3 border-r border-slate-200">75-118</td><td className="p-3 border-r border-slate-200">97-120 / 57-80</td><td className="p-3">18-25</td></tr>
+                                                        <tr className="hover:bg-slate-50"><td className="p-3 font-bold border-r border-slate-200">Adolescent</td><td className="p-3 border-r border-slate-200">60-100</td><td className="p-3 border-r border-slate-200">110-131 / 64-83</td><td className="p-3">12-20</td></tr>
+                                                    </tbody>
+                                                </table>
+                                                <ul className="text-xs text-slate-600 mt-4 space-y-2 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                                    <li>{renderInline(refData.vitalsNote1, 'ref-v1', 'indigo')}</li>
+                                                    <li>{renderInline(refData.vitalsNote2, 'ref-v2', 'indigo')}</li>
+                                                    <li>{renderInline(refData.vitalsNote3, 'ref-v3', 'indigo')}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        {/* Anthropometric Rules Grid (2 columns) */}
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 mb-6">
+                                            <h3 className="font-bold text-indigo-900 border-b border-slate-200 pb-3 mb-6 text-xl">Anthropometric Techniques (Nelson & PEDIA 250)</h3>
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 text-[15px] text-slate-700 leading-relaxed">
+                                                <div className="space-y-6">
+                                                    <div>
+                                                        <h4 className="font-bold text-indigo-700 mb-3 border-l-4 border-indigo-500 pl-3 uppercase tracking-wider text-sm">Weight, Length/Height & BMI</h4>
+                                                        <ul className="space-y-4">
+                                                            <li>{renderInline(refData.anthroW, 'ref-a1', 'indigo')}</li>
+                                                            <li>{renderInline(refData.anthroL, 'ref-a2', 'indigo')}</li>
+                                                            <li>{renderInline(refData.anthroH, 'ref-a3', 'indigo')}</li>
+                                                            <li>{renderInline(refData.anthroF, 'ref-a4', 'indigo')}</li>
+                                                            <li>{renderInline(refData.anthroB, 'ref-a5', 'indigo')}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-6">
+                                                    <div>
+                                                        <h4 className="font-bold text-indigo-700 mb-3 border-l-4 border-indigo-500 pl-3 uppercase tracking-wider text-sm">Circumferences</h4>
+                                                        <ul className="space-y-4">
+                                                            <li>{renderInline(refData.anthroHC, 'ref-a6', 'indigo')}</li>
+                                                            <li>{renderInline(refData.anthroCC, 'ref-a7', 'indigo')}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="font-bold text-indigo-700 mb-3 border-l-4 border-indigo-500 pl-3 uppercase tracking-wider text-sm">Body Proportions</h4>
+                                                        <ul className="space-y-4">
+                                                            <li>{renderInline(refData.anthroProp, 'ref-a8', 'indigo')}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* WHO Z-Score Table & MUAC Grid */}
+                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                                <div className="bg-indigo-50 border-b border-indigo-100 px-6 py-4">
+                                                    <h3 className="font-bold text-indigo-900 text-lg">WHO Z-Score Growth Matrix</h3>
+                                                </div>
+                                                <div className="overflow-x-auto p-6">
+                                                    <table className="min-w-full text-left text-sm border border-slate-200 rounded-lg overflow-hidden">
+                                                        <thead className="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-wider">
+                                                            <tr>
+                                                                <th className="px-4 py-3 font-bold border-b">Z-score</th>
+                                                                <th className="px-4 py-3 font-bold border-b">Length/Height</th>
+                                                                <th className="px-4 py-3 font-bold border-b">Weight-for-age</th>
+                                                                <th className="px-4 py-3 font-bold border-b">Weight-for-length</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-slate-200 font-medium">
+                                                            <tr><td className="p-3 font-bold bg-slate-50">&gt; +3</td><td className="p-3 text-slate-500">Very Tall</td><td className="p-3 text-slate-500">Assess via BMI</td><td className="p-3 font-bold text-red-600">Obese</td></tr>
+                                                            <tr><td className="p-3 font-bold bg-slate-50">&gt; +2</td><td className="p-3"></td><td className="p-3 font-bold text-orange-600">Overweight</td><td className="p-3 font-bold text-orange-600">Overweight</td></tr>
+                                                            <tr><td className="p-3 font-bold bg-slate-50">&gt; +1</td><td className="p-3"></td><td className="p-3 font-semibold text-amber-600">Risk of Overwt</td><td className="p-3 font-semibold text-amber-600">Risk of Overwt</td></tr>
+                                                            <tr><td className="p-3 font-bold bg-slate-50 text-emerald-600">0 (Median)</td><td className="p-3 text-emerald-600">Normal</td><td className="p-3 text-emerald-600">Normal</td><td className="p-3 text-emerald-600">Normal</td></tr>
+                                                            <tr><td className="p-3 font-bold bg-slate-50">&lt; -2</td><td className="p-3 font-bold text-amber-600">Stunted</td><td className="p-3 font-bold text-amber-600">Underweight</td><td className="p-3 font-bold text-amber-600">Wasted (MAM)</td></tr>
+                                                            <tr><td className="p-3 font-bold bg-slate-50">&lt; -3</td><td className="p-3 font-bold text-red-600">Sev. Stunted</td><td className="p-3 font-bold text-red-600">Sev. Underwt.</td><td className="p-3 font-bold text-red-600">Sev. Wasted (SAM)</td></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                                <div className="bg-indigo-50 border-b border-indigo-100 px-6 py-4">
+                                                    <h3 className="font-bold text-indigo-900 text-lg">MUAC (6-59m)</h3>
+                                                </div>
+                                                <div className="p-6">
+                                                    <ul className="space-y-6 text-sm text-slate-800 font-medium">
+                                                        <li className="flex items-center"><span className="w-5 h-5 bg-green-500 mr-4 rounded-full shadow-sm flex-shrink-0"></span><span className="leading-relaxed"><strong>≥ 12.5 cm:</strong> Normal</span></li>
+                                                        <li className="flex items-center"><span className="w-5 h-5 bg-yellow-400 mr-4 rounded-full shadow-sm flex-shrink-0"></span><span className="leading-relaxed"><strong>11.5 to &lt; 12.5 cm:</strong> MAM (Moderate Acute Malnutrition)</span></li>
+                                                        <li className="flex items-start"><span className="w-5 h-5 bg-red-600 mr-4 rounded-full shadow-sm flex-shrink-0 mt-1"></span><span className="leading-relaxed"><strong className="text-red-700">&lt; 11.5 cm:</strong> SAM (Severe Acute Malnutrition) - Requires immediate admission. Overrides WFH Z-scores.</span></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    {/* Section 3: Vaccine Matrix */}
+                                    <section>
+                                        <h2 className="text-3xl font-black text-blue-900 border-b-2 border-blue-200 pb-3 mb-6">2. Complete 2026 Vaccine Reference Matrix</h2>
+                                        
+                                        <div className="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-lg mb-6 shadow-sm">
+                                            <div className="text-sm text-blue-900 font-medium leading-relaxed">
+                                                {renderInline(refData.vacLiveRule, 'ref-vrule', 'blue')}
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-200">
+                                            <div className="overflow-x-auto">
+                                                <table className="min-w-full text-left text-sm border-collapse">
+                                                    <thead className="bg-slate-800 text-white uppercase text-[11px] tracking-wider">
+                                                        <tr>
+                                                            <th className="px-6 py-4 font-bold border-b w-1/5">Vaccine</th>
+                                                            <th className="px-6 py-4 font-bold border-b w-1/5">Route / Site</th>
+                                                            <th className="px-6 py-4 font-bold border-b">Guidelines, Cutoffs & Pearls</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-slate-200 text-slate-800 font-medium">
+                                                        {vaccines.map((item, idx) => (
+                                                            <tr key={idx} className="hover:bg-blue-50/30 transition-colors">
+                                                                <td className="px-6 py-5 font-black text-blue-900 bg-slate-50/50 border-r border-slate-100">{item.name}</td>
+                                                                <td className="px-6 py-5 whitespace-pre-line text-slate-700">{renderInline(item.route, `vac-route-${idx}`, 'blue')}</td>
+                                                                <td className="px-6 py-5 leading-relaxed text-slate-700">{renderInline(item.details, `vac-det-${idx}`, 'blue')}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            )}
+
+                            {/* VIEW 2: PROCEDURES & SCRIPTS */}
+                            {view === 'procedure' && (
+                                <div className="space-y-10">
+                                    <div className="border-b-2 border-slate-200 pb-4 mb-6">
+                                        <h2 className="text-3xl font-black text-slate-800">Master Procedure Script (2026 Guidelines)</h2>
+                                        <p className="text-slate-500 mt-2 font-medium">Master checklist and verbatim scripts for the preparation, administration, and post-procedure documentation of vaccines.</p>
+                                    </div>
+
+                                    {/* Standard Intro */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group hover:border-slate-300 transition-colors">
+                                        <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">🤝</div> 
+                                            <h3 className="font-bold text-slate-800 text-lg">Standardized Introduction Script</h3>
+                                        </div>
+                                        <div className="p-8">
+                                            <div className="relative">
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-full"></div>
+                                                <div className="pl-6 text-slate-700 font-medium">
+                                                    {renderInline(refData.counsel1, 'intro', 'emerald')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Step 1 */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                                        <h3 className="text-2xl font-black text-teal-800 border-b border-slate-100 pb-3 mb-5 flex items-center gap-3">
+                                            <span className="bg-teal-100 text-teal-800 py-1 px-4 rounded-full text-sm tracking-wider">STEP 1</span> Preparation & The 7 Rights
+                                        </h3>
+                                        <div className="space-y-4 text-slate-700 font-medium text-[16px] ml-2">
+                                            <div className="flex items-center gap-3"><span className="text-emerald-500">✔</span> {renderInline(procData.prep1, 'proc-0', 'teal')}</div>
+                                            <div className="flex items-center gap-3"><span className="text-emerald-500">✔</span> {renderInline(procData.prep2, 'proc-1', 'teal')}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Step 2 */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                                        <h3 className="text-2xl font-black text-teal-800 border-b border-slate-100 pb-3 mb-6 flex items-center gap-3">
+                                            <span className="bg-teal-100 text-teal-800 py-1 px-4 rounded-full text-sm tracking-wider">STEP 2</span> Execution / Administration Routes
+                                        </h3>
+                                        
+                                        <div className="grid grid-cols-1 gap-8">
+                                            {/* PO */}
+                                            <div className="border-l-4 border-purple-500 rounded-r-xl p-6 bg-slate-50 shadow-sm">
+                                                <h4 className="font-black text-purple-900 mb-4 uppercase tracking-widest text-sm">A. Oral (PO) - Rotavirus & OPV</h4>
+                                                <ul className="list-disc pl-5 space-y-3 text-[15px] text-slate-700 font-medium mb-3">
+                                                    <li>{renderInline(procData.po1, 'proc-2', 'purple')}</li>
+                                                    <li>{renderInline(procData.po2, 'proc-3', 'purple')}</li>
+                                                    <li>{renderInline(procData.po3, 'proc-4', 'purple')}</li>
+                                                </ul>
+                                            </div>
+
+                                            {/* ID */}
+                                            <div className="border-l-4 border-emerald-500 rounded-r-xl p-6 bg-slate-50 shadow-sm">
+                                                <h4 className="font-black text-emerald-900 mb-4 uppercase tracking-widest text-sm">B. Intradermal (ID) - BCG</h4>
+                                                <ul className="list-disc pl-5 space-y-3 text-[15px] text-slate-700 font-medium mb-4">
+                                                    <li>{renderInline(procData.id1, 'proc-5', 'emerald')}</li>
+                                                    <li>{renderInline(procData.id2, 'proc-6', 'emerald')}</li>
+                                                </ul>
+                                                <div className="bg-emerald-100/50 p-4 rounded-lg border border-emerald-200/50">
+                                                    <span className="font-bold text-emerald-800 text-sm uppercase tracking-wider mb-2 block">🗣️ To Consultant:</span>
+                                                    <p className="italic text-slate-700 font-medium">"{renderInline(procData.idScript, 'proc-7', 'emerald')}"</p>
+                                                </div>
+                                            </div>
+
+                                            {/* IM */}
+                                            <div className="border-l-4 border-blue-500 rounded-r-xl p-6 bg-slate-50 shadow-sm">
+                                                <h4 className="font-black text-blue-900 mb-4 uppercase tracking-widest text-sm">C. Intramuscular (IM)</h4>
+                                                <ul className="list-disc pl-5 space-y-3 text-[15px] text-slate-700 font-medium mb-4">
+                                                    <li>{renderInline(procData.im1, 'proc-8', 'blue')}</li>
+                                                    <li>{renderInline(procData.im2, 'proc-9', 'blue')}</li>
+                                                    <li className="text-red-700">{renderInline(procData.im3, 'proc-10', 'red')}</li>
+                                                </ul>
+                                                <div className="bg-blue-100/50 p-4 rounded-lg border border-blue-200/50">
+                                                    <span className="font-bold text-blue-800 text-sm uppercase tracking-wider mb-2 block">🗣️ To Consultant:</span>
+                                                    <p className="italic text-slate-700 font-medium">"{renderInline(procData.imScript, 'proc-11', 'blue')}"</p>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* SC */}
+                                            <div className="border-l-4 border-amber-500 rounded-r-xl p-6 bg-slate-50 shadow-sm">
+                                                <h4 className="font-black text-amber-900 mb-4 uppercase tracking-widest text-sm">D. Subcutaneous (SC) - MMR, Varicella, JEV</h4>
+                                                <ul className="list-disc pl-5 space-y-3 text-[15px] text-slate-700 font-medium mb-4">
+                                                    <li>{renderInline(procData.sc1, 'proc-12', 'amber')}</li>
+                                                    <li>{renderInline(procData.sc2, 'proc-13', 'amber')}</li>
+                                                    <li>{renderInline(procData.sc3, 'proc-14', 'amber')}</li>
+                                                </ul>
+                                                <div className="bg-amber-100/50 p-4 rounded-lg border border-amber-200/50">
+                                                    <span className="font-bold text-amber-800 text-sm uppercase tracking-wider mb-2 block">🗣️ To Consultant:</span>
+                                                    <p className="italic text-slate-700 font-medium">"{renderInline(procData.scScript, 'proc-15', 'amber')}"</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Step 3 */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+                                        <h3 className="text-2xl font-black text-teal-800 border-b border-slate-100 pb-3 mb-6 flex items-center gap-3">
+                                            <span className="bg-teal-100 text-teal-800 py-1 px-4 rounded-full text-sm tracking-wider">STEP 3</span> Post-Admin Observation & Documentation
+                                        </h3>
+                                        
+                                        <div className="space-y-6">
+                                            <div className="bg-red-50 p-5 rounded-xl border-l-4 border-red-500 shadow-sm">
+                                                <h4 className="font-black text-red-900 mb-2 uppercase tracking-wider text-sm">⚠ Mandatory Observation</h4>
+                                                <p className="text-slate-800 font-medium text-[15px]">{renderInline(procData.obs1, 'proc-16', 'red')}</p>
+                                            </div>
+                                            
+                                            <div className="bg-blue-50 p-5 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                                                <h4 className="font-black text-blue-900 mb-2 uppercase tracking-wider text-sm">🗣️ Counseling Example (Hep B)</h4>
+                                                <p className="italic text-slate-800 font-medium text-[15px]">{renderInline(procData.obs2, 'proc-17', 'blue')}</p>
+                                            </div>
+
+                                            <div className="bg-indigo-50 p-5 rounded-xl border-l-4 border-indigo-500 shadow-sm">
+                                                <h4 className="font-black text-indigo-900 mb-2 uppercase tracking-wider text-sm">📝 Documentation (To Consultant)</h4>
+                                                <p className="italic text-slate-800 font-medium text-[15px]">{renderInline(procData.obs3, 'proc-18', 'indigo')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: ANTHRO SIMULATOR */}
+                            {view === 'sim-anthro' && (
+                                <AnthroSimulatorComponent />
+                            )}
+
+                            {/* VIEW 4: VACCINE SIMULATOR */}
+                            {view === 'sim-vac' && (
+                                <AdvancedSimulatorComponent />
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        // --- ANTHRO SIMULATOR COMPONENT ---
+        const AnthroSimulatorComponent = () => {
+            const [submitted, setSubmitted] = useState(false);
+            const [score, setScore] = useState(0);
+            const [feedback, setFeedback] = useState([]);
+            const [currentCaseId, setCurrentCaseId] = useState(1);
+            const [selections, setSelections] = useState({ measure: "", hrStat: "", rrStat: "", nutStat: "" });
+
+            const cases = {
+                1: { title: "1. The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Severe Wasting (SAM)" }, pearl: "Toddler (1-3y) normal HR is 98-140 per Table 79.1. A HR of 145 in an 18mo is tachycardic. WFH < -3 is classic SAM." },
+                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschooler normal RR is 20-28 per Table 79.1. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
+                3: { title: "3. MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM - Override)" }, pearl: "Regardless of a MAM WFH Z-score, a MUAC < 11.5cm is an independent, immediate diagnostic criterion for SAM." },
+                4: { title: "4. The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" }, pearl: "WFH > +2 is Overweight. WFH > +3 is Obese. Standing height using a stadiometer is strictly used for children >= 2 years old (Nelson)." },
+                5: { title: "5. Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 18. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" }, pearl: "Toddler normal RR is 22-37 per Table 79.1. RR 18 is bradypneic. HFA < -3 defines Severe Stunting." },
+                6: { title: "6. Overweight & Tachycardia", prompt: "10-month-old. HR 200, RR 45. WFH Z-score +2.5.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Overweight" }, pearl: "Infant max HR is 180 per Table 79.1. 200 is tachycardic. WFH between +2 and +3 is Overweight." },
+                7: { title: "7. School-Age Bradycardia", prompt: "8-year-old. HR 55, RR 20. WFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Bradycardia", rrStat: "Normal", nutStat: "Underweight" }, pearl: "School-age normal HR is 75-118 per Table 79.1. HR 55 is bradycardic. WFA < -2 is Underweight." },
+                8: { title: "8. Adjustment Rule (+/- 0.7cm)", prompt: "A 2.5-year-old refuses to stand. Measured lying down at 90.0 cm. HR 100, RR 25. WFH Z-score -1.0.", rules: { measure: "Subtract 0.7 cm", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" }, pearl: "Because gravity compresses the spine when standing, recumbent length is naturally ~0.7cm longer. You must subtract 0.7cm if an older child (>= 2y) is measured lying down to plot on standing height charts." }
+            };
+
+            const evaluateCase = () => {
+                let pts = 100; let fb = []; const activeCase = cases[currentCaseId].rules;
+                
+                if(selections.measure === activeCase.measure) fb.push({type:'ok', msg: `Measurement: ${activeCase.measure}`});
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong Measurement`, rationale: `Expected: ${activeCase.measure}.`}); }
+                
+                if(selections.hrStat === activeCase.hrStat) fb.push({type:'ok', msg: `HR: ${activeCase.hrStat}`});
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong HR`, rationale: `Expected: ${activeCase.hrStat}.`}); }
+                
+                if(selections.rrStat === activeCase.rrStat) fb.push({type:'ok', msg: `RR: ${activeCase.rrStat}`});
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong RR`, rationale: `Expected: ${activeCase.rrStat}.`}); }
+                
+                if(selections.nutStat === activeCase.nutStat) fb.push({type:'ok', msg: `Diagnosis: ${activeCase.nutStat}`});
+                else { pts -= 25; fb.push({type:'err', msg: `Wrong Diagnosis`, rationale: `Expected: ${activeCase.nutStat}.`}); }
+                
+                fb.push({type: 'info', msg: '🗣️ IDEAL OSCE REPORTING SCRIPT:', rationale: `"Good morning Doc, presenting my patient. Vitals show a ${activeCase.hrStat} heart rate and ${activeCase.rrStat} respiratory rate. Because of their age/cooperation, I utilized the ${activeCase.measure}. Based on the parameters, the final assessment is ${activeCase.nutStat}."`});
+                fb.push({type: 'pearl', msg: 'Clinical Pearl', rationale: cases[currentCaseId].pearl});
+
+                setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
+            };
+
+            const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelections({measure:"", hrStat:"", rrStat:"", nutStat:""}); setFeedback([]); };
+
+            return (
+                <div className="space-y-6">
+                    <div className="border-b-2 border-slate-200 pb-4 mb-6">
+                        <h2 className="text-3xl font-black text-slate-800 flex items-center">
+                            <span className="mr-3 text-3xl">📏</span> Anthro/SAM Simulator
+                        </h2>
+                        <p className="text-slate-500 mt-2 font-medium">Evaluate the patient's vitals and anthropometrics, and determine the correct tool and diagnosis.</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 border-b-2 border-emerald-100 pb-4 mb-6">
+                        {Object.keys(cases).map(id => (
+                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-4 py-2 rounded-full font-bold transition-colors shadow-sm text-sm ${currentCaseId === parseInt(id) ? 'bg-emerald-700 text-white ring-2 ring-emerald-300' : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'}`}>
+                                Case {id}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div className="bg-slate-800 border-l-4 border-emerald-500 p-5 rounded-r-lg mb-8 shadow-sm">
+                            <h3 className="font-black text-emerald-400 uppercase tracking-widest text-sm mb-2">{cases[currentCaseId].title}</h3>
+                            <p className="text-lg text-white italic">"{cases[currentCaseId].prompt}"</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div className="space-y-5 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                <div>
+                                    <label className="block font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">1. Measurement Tool / Rule:</label>
+                                    <select disabled={submitted} value={selections.measure} onChange={e=>setSelections({...selections, measure:e.target.value})} className="w-full p-3 border border-slate-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 transition-all font-medium"><option value="">Select...</option><option value="Recumbent">Recumbent Length</option><option value="Standing">Standing Stadiometer</option><option value="Subtract 0.7 cm">Subtract 0.7 cm</option><option value="Add 0.7 cm">Add 0.7 cm</option></select>
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">2. Nutritional Diagnosis:</label>
+                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-3 border border-slate-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 transition-all font-medium"><option value="">Select...</option><option value="Normal">Normal</option><option value="Severe Wasting (SAM)">Severe Wasting (SAM)</option><option value="Severe Acute Malnutrition (SAM - Override)">Severe Acute Malnutrition (SAM - Override)</option><option value="Wasting (MAM)">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Underweight">Underweight</option><option value="Overweight">Overweight</option><option value="Obese">Obese</option></select>
+                                </div>
+                            </div>
+                            <div className="space-y-5 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                <div>
+                                    <label className="block font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">3. Heart Rate Status:</label>
+                                    <select disabled={submitted} value={selections.hrStat} onChange={e=>setSelections({...selections, hrStat:e.target.value})} className="w-full p-3 border border-slate-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 transition-all font-medium"><option value="">Select...</option><option value="Bradycardia">Bradycardia</option><option value="Normal">Normal</option><option value="Tachycardia">Tachycardia</option></select>
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider">4. Respiratory Rate Status:</label>
+                                    <select disabled={submitted} value={selections.rrStat} onChange={e=>setSelections({...selections, rrStat:e.target.value})} className="w-full p-3 border border-slate-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-emerald-200 focus:border-emerald-500 transition-all font-medium"><option value="">Select...</option><option value="Bradypnea">Bradypnea</option><option value="Normal">Normal</option><option value="Tachypnea">Tachypnea</option></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {!submitted ? <button onClick={evaluateCase} disabled={!selections.measure || !selections.hrStat || !selections.rrStat || !selections.nutStat} className="w-full bg-emerald-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-emerald-700 disabled:opacity-50 transition-all uppercase tracking-widest text-lg">Submit Assessment</button> : 
+                            <div className="p-8 rounded-xl border-t-8 border-emerald-600 bg-slate-50 shadow-inner">
+                                <h3 className="text-3xl font-black text-slate-800 mb-6">Feedback: {score}%</h3>
+                                
+                                <div className="mb-6 bg-white p-5 rounded-xl border border-emerald-200 shadow-sm">
+                                    <h4 className="font-bold text-emerald-900 border-b border-emerald-100 pb-2 mb-4 flex items-center gap-2"><span className="text-xl">🔑</span> Ideal Answer Key</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-800">
+                                        <div className="bg-emerald-50 p-3 rounded-lg"><strong>Measurement:</strong> <span className="text-emerald-700 font-bold ml-1">{cases[currentCaseId].rules.measure}</span></div>
+                                        <div className="bg-emerald-50 p-3 rounded-lg"><strong>Diagnosis:</strong> <span className="text-emerald-700 font-bold ml-1">{cases[currentCaseId].rules.nutStat}</span></div>
+                                        <div className="bg-emerald-50 p-3 rounded-lg"><strong>Heart Rate:</strong> <span className="text-emerald-700 font-bold ml-1">{cases[currentCaseId].rules.hrStat}</span></div>
+                                        <div className="bg-emerald-50 p-3 rounded-lg"><strong>Resp Rate:</strong> <span className="text-emerald-700 font-bold ml-1">{cases[currentCaseId].rules.rrStat}</span></div>
+                                    </div>
+                                </div>
+
+                                <ul className="space-y-4">
+                                    {feedback.map((f, i) => (
+                                        <li key={i} className={`flex flex-col p-4 rounded-lg border shadow-sm ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-white border-emerald-200 text-emerald-900'}`}>
+                                            <div className="flex items-start">
+                                                <span className="mr-3 font-bold text-xl">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : f.type === 'pearl' ? '💡' : '✔'}</span>
+                                                <span className="font-bold text-base leading-snug">{f.msg}</span>
+                                            </div>
+                                            {(f.rationale || f.rat) && <div className={`mt-2 ml-8 text-sm ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium text-base' : 'text-slate-600'}`}>{f.rationale || f.rat}</div>}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={() => loadCase(currentCaseId)} className="mt-8 w-full md:w-auto bg-slate-800 text-white font-bold px-10 py-4 rounded-lg hover:bg-slate-700 shadow-md transition-colors uppercase tracking-wider text-sm">Retry Case</button>
+                            </div>}
+                    </div>
+                </div>
+            );
+        };
+
+        // --- VACCINE SIMULATOR COMPONENT ---
+        const AdvancedSimulatorComponent = () => {
+            const [submitted, setSubmitted] = useState(false);
+            const [score, setScore] = useState(0);
+            const [feedback, setFeedback] = useState([]);
+            const [currentCaseId, setCurrentCaseId] = useState(1);
+            const [selectedVaccines, setSelectedVaccines] = useState({});
+
+            const vaccineList = ["BCG", "Hep B", "Penta", "OPV", "IPV", "PCV", "PPSV23", "RV", "MCV0", "MMR", "Tdap", "Td", "Flu", "Varicella", "JEV", "Hep A", "HPV", "Typhoid", "Cholera"];
+
+            const cases = {
+                1: { title: "1. The 6-Week-Old (Primary)", prompt: "6-week-old FT baby. Home birth, given BCG and Hep B by midwife. First time at pediatrician.", req: ["Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Flu", "MMR", "Hep B", "IPV"], ratReq: "Needs 1st doses of Penta, OPV, PCV, and Rotavirus.", ratTrap: "Too young for Flu/MMR. Hep B is already included in Penta. IPV is not given until 14 weeks.", pearl: "Administer Rotavirus orally first while baby is calm, before injecting IM vaccines in the vastus lateralis. Do NOT give monovalent Hep B alongside Penta." },
+                2: { title: "2. The 12-Month Routine", prompt: "Exactly 12-month-old child. UTD up to 9 months (Received BCG, HepBx3, Pentax3, OPVx3, IPVx2, PCVx3, RVx2, and MMR1 + JEV at 9mo). No vaccines since 9mo.", req: ["MMR", "Varicella", "Hep A", "PCV"], defer: [], traps: ["Penta", "OPV", "RV"], ratReq: "Needs MMR2, Varicella, Hep A, and PCV booster.", ratTrap: "Already UTD on primary series. RV age limit passed.", pearl: "The 12-month visit is heavily focused on live vaccines (MMR2, Varicella) and the PCV booster." },
+                3: { title: "3. 16wks (Surgery)", prompt: "16w old. Intussusception surgery at 6w. 0 prior vaccines.", req: ["BCG", "Penta", "OPV", "PCV"], defer: [], traps: ["RV", "Hep B", "IPV"], ratReq: "Initiate primary. BCG, Penta, OPV, PCV.", ratTrap: "RV contraindicated due to age (>14w6d) AND history of intussusception. IPV is deferred to the 14-week equivalent visit.", pearl: "Even if age-eligible, previous intussusception or uncorrected congenital GI tract malformations are absolute contraindications for Rotavirus." },
+                4: { title: "4. 6mo (Outbreak)", prompt: "6mo infant. UTD to 14w. DOH declared local measles outbreak.", req: ["MCV0"], defer: [], traps: ["MMR"], ratReq: "MCV0 is indicated at 6m during outbreaks.", ratTrap: "Routine MMR is strictly at 12m for non-NIP, 9m for NIP.", pearl: "MCV0 does not count toward the primary series because maternal IgG antibodies can blunt the viral replication of the vaccine." },
+                5: { title: "5. Preterm <2kg", prompt: "32wks, 1.8kg, Day 1. Unknown maternal HBsAg.", req: ["Hep B"], defer: [], traps: ["BCG", "Penta", "OPV"], ratReq: "Give Hep B (plus HBIG within 12h).", ratTrap: "BCG is withheld until infant reaches 2kg. Too young for Penta/OPV.", pearl: "For infants <2kg with unknown HBsAg status, give HBV and HBIG within 12 hours, but this birth dose does not count toward the primary 3-dose series. Delay BCG until 2kg." },
+                6: { title: "6. 12mo Post-IVIG", prompt: "12mo. High-dose IVIG for Kawasaki 2mo ago. UTD to 9m.", req: ["PCV", "Hep A"], defer: ["MMR", "Varicella", "JEV"], traps: [], ratReq: "Can give inactivated vaccines like PCV booster and Hep A.", ratTrap: "Delay live vaccines 11 months after high-dose IVIG.", pearl: "High-dose IVIG contains passive antibodies that neutralize live attenuated vaccines. Delay 11 months for Kawasaki." },
+                7: { title: "7. 7-year-old Catch-up", prompt: "Turned 7 years exactly today. 0 prior vaccines.", req: ["Tdap", "Hep B", "IPV", "MMR"], defer: [], traps: ["Penta", "Td", "OPV"], ratReq: "Initiate Tdap, HepB, IPV, MMR.", ratTrap: "Max age for DTP/Penta is <7. Use IPV for older kids instead of OPV.", pearl: "For catch-up in 7-18 year olds, use Tdap as the first dose of the tetanus series instead of DTP/Penta, and IPV instead of OPV." },
+                8: { title: "8. Live Spacing", prompt: "13mo. Received Varicella exactly 2 weeks ago. Wants remaining vaccines.", req: [], defer: ["MMR", "JEV"], traps: ["MMR", "JEV"], ratReq: "None today.", ratTrap: "Must space parenteral live vaccines by exactly 28 days.", pearl: "If two parenteral live vaccines (MMR, Varicella, JEV) are not administered on the exact same day, they must be separated by at least 28 days to avoid viral interference." },
+                9: { title: "9. 3mo no BCG", prompt: "12-week-old (3 months). NEVER received BCG. Healthy.", req: ["BCG", "Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "BCG can be given without PPD <1yo. Initiate primary series including RV.", ratTrap: "Hep B covered by Penta. IPV is not given until 14 weeks.", pearl: "BCG can be given without prior PPD testing for healthy asymptomatic infants < 1 year old. The dose is 0.05 mL." },
+                10: { title: "10. Post-RIG", prompt: "10mo. Rabies IG 1 month ago. Missed 9m visit.", req: ["IPV"], defer: ["MMR", "JEV"], traps: ["MCV0", "MMR", "JEV"], ratReq: "Can give IPV (inactivated) which was due at 9 months.", ratTrap: "Delay live vaccines 4 months after RIG.", pearl: "Unlike IVIG (11 months), Rabies Immunoglobulin (RIG) only requires a 4-month delay for live vaccines." },
+                11: { title: "11. High Risk Pneumo", prompt: "3-year-old with Sickle Cell. Completed PCV13 series at 15mo.", req: ["PPSV23"], defer: [], traps: ["PCV"], ratReq: "Needs PPSV23 for high risk status.", ratTrap: "Already completed PCV series.", pearl: "High-risk children >2 years old who completed their PCV series must receive PPSV23 at least 8 weeks after their last PCV dose." },
+                12: { title: "12. 11y Female Catch-up", prompt: "11y female Grade 5. Missed Grade 4 school-based HPV. UTD on others.", req: ["HPV"], defer: [], traps: ["Td"], ratReq: "Catch-up HPV.", ratTrap: "Td is given at Grade 1 and Grade 7.", pearl: "Catch-up HPV is crucial for females who miss the Grade 4 cohort. NIP provides 2 doses." },
+                13: { title: "13. RV5 Final Dose Max", prompt: "30w old (7.5m). Had 2 prior doses of RV5. Missed 3rd.", req: ["RV"], defer: [], traps: [], ratReq: "Give 3rd dose of Rotavirus.", ratTrap: "None.", pearl: "RV5 max final age is 32 weeks. (RV1 max is 24 weeks). 30w is acceptable for RV5." },
+                14: { title: "14. DTP Limit Check", prompt: "4y 11mo old child. 0 prior vaccines.", req: ["Penta", "OPV", "MMR"], defer: ["IPV"], traps: ["Tdap", "Td"], ratReq: "Penta is valid <5y.", ratTrap: "Td/Tdap is for >7y.", pearl: "Pentavalent (wP) can be given up to 6 years and 364 days old (Hib specifically <5y). At exactly 7 years, switch to Tdap/Td." },
+                15: { title: "15. Influenza Series", prompt: "8mo old. 1st Flu 4w ago.", req: ["Flu"], defer: [], traps: ["MCV0", "MMR"], ratReq: "Needs 2nd dose of Flu.", ratTrap: "MCV0 is only for outbreaks or 9m routine.", pearl: "Children 6 months to 8 years receiving the influenza vaccine for the first time require 2 doses spaced 4 weeks apart." },
+                16: { title: "16. 18mo Routine (Hep A)", prompt: "18-month-old. UTD on all vaccines including 12mo Hep A.", req: ["Hep A"], defer: [], traps: [], ratReq: "Hepatitis A requires 2nd dose 6 months after the 1st.", ratTrap: "None.", pearl: "Hepatitis A vaccine requires a 2-dose series, separated by at least 6 months." },
+                17: { title: "17. 3y Evacuee (Flood)", prompt: "3y in flooded evacuation center. UTD on NIP.", req: ["Typhoid", "Cholera"], defer: [], traps: [], ratReq: "Waterborne protection indicated.", ratTrap: "None.", pearl: "Typhoid minimum age is 2y (IM). Cholera minimum age is 1y (PO). Crucial during disaster/flood settings." },
+                18: { title: "18. Post-RV Gastro", prompt: "8w old. Rotavirus Gastro at 6w, recovered. Missed 6w visit.", req: ["Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "Give all 6w primary vaccines.", ratTrap: "Hep B covered by Penta. IPV given at 14w.", pearl: "Prior rotavirus infection does not confer complete immunity to all serotypes. You must complete the vaccine series." },
+                19: { title: "19. Preterm Catch-up", prompt: "Born at 30w (1.2kg). Given Hep B at birth. Now 8 weeks old, weighing 2.5kg.", req: ["BCG", "Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "Initiate primary series and catch up BCG.", ratTrap: "Hep B covered by Penta. IPV given at 14w.", pearl: "Vaccinate preterms based on their chronological age without correcting for prematurity. BCG is safe once >=2kg." },
+                20: { title: "20. Spacing Error", prompt: "15mo. Received MMR yesterday at health center. Wants Varicella today.", req: [], defer: ["Varicella"], traps: ["Varicella"], ratReq: "None today.", ratTrap: "Live vaccine spacing violation.", pearl: "If two parenteral live vaccines (MMR, Varicella, JEV) are not administered on the exact same day, they must be separated by at least 28 days to avoid viral interference." }
+            };
+
+            const specificSideEffects = {
+                "BCG": "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Mag-iiwan ito ng peklat. Gamitin lamang ang cotton at sterile water. Huwag lagyan ng alcohol.",
+                "Penta": "Asahan po natin na baka lagnatin si baby at sumakit o mamaga ang hita.",
+                "PCV": "Maaari rin pong magkalagnat at mamula ang tinurukan.",
+                "PPSV23": "Maaari rin pong magkalagnat at mamula ang tinurukan.",
+                "MCV0": "Maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 6-12 araw.",
+                "MMR": "Maaaring magkalagnat, mamaga ang pisngi (glands), o magkapantal pagkalipas ng 6-12 araw.",
+                "RV": "Baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak dahil sa sakit ng tiyan, dalhin agad sa ER).",
+                "OPV": "Wala po tayong masyadong inaasahang side effect, pero baka maging iritable nang bahagya.",
+                "IPV": "Maaaring sumakit at mamula ang tinurukan.",
+                "Tdap": "Maaaring mangawit ang braso.",
+                "Td": "Maaaring mangawit ang braso.",
+                "Flu": "Maaaring magkalagnat ng bahagya o sumakit ang tinurukan.",
+                "HPV": "Bukod sa ngawit sa braso, maaari ring mahilo o himatayin (syncope) ang teenager kaya magpapahinga muna siya ng 15-20 minuto pagkatapos turukan."
+            };
+
+            const toggle = (v) => {
+                if (selectedVaccines[v]) {
+                    const newSel = {...selectedVaccines}; delete newSel[v]; setSelectedVaccines(newSel);
+                } else setSelectedVaccines({...selectedVaccines, [v]: { route: '', site: '' }});
+            };
+
+            const handleDetailChange = (v, field, value) => {
+                setSelectedVaccines({...selectedVaccines, [v]: { ...selectedVaccines[v], [field]: value }});
+            };
+
+            const generateIdealCounselingScript = (activeCase) => {
+                let adminIM = []; let adminPO = []; let adminSQ = []; let adminID = []; let deferScript = [...activeCase.defer]; let seScript = [];
+                
+                activeCase.req.forEach(v => {
+                    if (["OPV", "RV", "Cholera"].includes(v)) adminPO.push(v);
+                    else if (["MCV0", "MMR", "Varicella", "JEV"].includes(v)) adminSQ.push(v);
+                    else if (v === "BCG") adminID.push(v);
+                    else adminIM.push(v);
+                    
+                    if (specificSideEffects[v] && !seScript.includes(specificSideEffects[v])) {
+                        seScript.push(specificSideEffects[v]);
+                    }
+                });
+
+                if (activeCase.req.length === 0 && activeCase.defer.length === 0) return `"Wala po tayong kailangang ibigay na bakuna sa ngayon."`;
+
+                let finalScript = `"Magandang araw po Mommy. Ako po si Dok, titingin kay baby ngayon. `;
+                if (adminPO.length > 0) finalScript += `Ipapainom po muna natin ang ${adminPO.join(", ")} habang kalmado pa si baby. Siguraduhin natin na hindi siya dumede sa nakaraang dalawang oras. `;
+                if (adminIM.length > 0 || adminSQ.length > 0 || adminID.length > 0) finalScript += `Pagkatapos, ituturok po natin ang ${[...adminIM, ...adminSQ, ...adminID].join(" at ")}. `;
+                if (seScript.length > 0) finalScript += `\n\nMga Inaasahan (Side Effects):\n` + seScript.join(" ") + ` Pwede po punasan ng maligamgam na tubig at painumin ng paracetamol kung lagnatin (maliban kung may tiyak na bawal). `;
+                if (deferScript.length > 0) finalScript += `\n\nDahil sa rules ng spacing o para hindi masyadong masaktan si baby ngayon, ipagpapaliban po muna natin ang ${deferScript.join(", ")}. Babalik po kayo sa tamang petsa."`;
+                
+                return finalScript;
+            };
+
+            const evaluateCase = () => {
+                let pts = 100; let fb = []; const activeCase = cases[currentCaseId];
+
+                Object.keys(selectedVaccines).forEach(v => {
+                    if (!activeCase.req.includes(v) && !activeCase.traps.includes(v) && !activeCase.defer.includes(v) && selectedVaccines[v].route !== "Defer") {
+                        pts -= 10;
+                        fb.push({
+                            type: 'warn', 
+                            msg: `⚠ Unwarranted Selection: ${v}`, 
+                            rationale: "This vaccine is not the primary objective for this specific clinical scenario or age group. Focus only on the indicated priority vaccines."
+                        });
+                    }
+                });
+
+                if (selectedVaccines["Penta"] && selectedVaccines["Hep B"] && selectedVaccines["Hep B"].route !== "Defer") {
+                    pts -= 25;
+                    fb.push({type: 'err', msg: "💉 DOUBLE DOSING ERROR: Pentavalent already contains Hepatitis B.", rationale: "Never administer a separate monovalent Hep B shot on the same day you give Pentavalent."});
+                }
+
+                activeCase.req.forEach(req => {
+                    if (!selectedVaccines[req]) { pts -= 15; fb.push({type: 'err', msg: `Missed: ${req}.`, rationale: activeCase.ratReq}); }
+                    else if (req !== "Penta" && req !== "Hep B") { fb.push({type: 'ok', msg: `Correct: ${req}`}); }
+                    else if (req === "Penta" && !selectedVaccines["Hep B"]) { fb.push({type: 'ok', msg: `Correct: Penta (Hep B safely integrated).`}); }
+                });
+
+                activeCase.traps.forEach(trap => {
+                    if (selectedVaccines[trap] && selectedVaccines[trap].route !== "Defer") {
+                        pts -= 25; fb.push({type: 'err', msg: `Contraindicated/Trap: ${trap}.`, rationale: activeCase.ratTrap});
+                    }
+                });
+
+                activeCase.defer.forEach(d => {
+                    if (selectedVaccines[d] && selectedVaccines[d].route === "Defer") {
+                        pts += 5; fb.push({type: 'ok', msg: `Deferred: ${d}.`});
+                    } else if (selectedVaccines[d]) {
+                        pts -= 10; fb.push({type: 'warn', msg: `Administered ${d} today.`, rationale: "Violates spacing or forces extra stick. Route as 'Defer'."});
+                    } else {
+                        pts -= 5; fb.push({type: 'warn', msg: `Missed identifying ${d}.`, rationale: "Select and route as 'Defer' to verbalize plan."});
+                    }
+                });
+
+                Object.keys(selectedVaccines).forEach(v => {
+                    if (activeCase.traps.includes(v) || selectedVaccines[v].route === "Defer" || (!activeCase.req.includes(v) && !activeCase.defer.includes(v))) return; 
+                    const d = selectedVaccines[v];
+                    if (d.route === "" || d.site === "") { pts -= 10; fb.push({type: 'err', msg: `Missing Route/Site for ${v}.`}); return; }
+                    
+                    const isSC = (d.route === "SC"); const isIM = (d.route === "IM");
+                    if(v === "BCG" && (d.route !== "ID" || d.site !== "Right Deltoid")) pts -= 10;
+                    if(["Hep B", "Penta", "PCV", "PPSV23", "HPV", "Typhoid", "Flu", "Hep A"].includes(v) && !isIM) pts -= 10;
+                    if(["Td", "Tdap"].includes(v) && (!isIM || d.site !== "Deltoid (Arm)")) pts -= 10;
+                    if(["OPV", "RV", "Cholera"].includes(v) && d.route !== "Oral") pts -= 10;
+                    if(["MCV0", "MMR", "Varicella", "JEV"].includes(v) && !isSC) pts -= 10;
+                });
+
+                fb.push({type: 'info', msg: '🗣️ IDEAL OSCE COUNSELING SCRIPT (Verbalize to Mother):', rationale: generateIdealCounselingScript(activeCase)});
+                fb.push({type: 'pearl', msg: 'Clinical Pearl', rationale: activeCase.pearl});
+
+                setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
+            };
+
+            const loadCase = (id) => { setSubmitted(false); setCurrentCaseId(id); setSelectedVaccines({}); setFeedback([]); };
+
+            return (
+                <div className="space-y-6">
+                    <div className="flex flex-wrap gap-2 border-b-2 border-emerald-100 pb-4 mb-6">
+                        {Object.keys(cases).map(id => (
+                            <button key={id} onClick={() => loadCase(parseInt(id))} className={`px-4 py-2 rounded-full font-bold transition-colors shadow-sm text-sm ${currentCaseId === parseInt(id) ? 'bg-blue-700 text-white ring-2 ring-blue-300' : 'bg-white text-slate-600 hover:bg-blue-50 border border-slate-200'}`}>
+                                Case {id}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div className="bg-slate-800 border-l-4 border-blue-500 p-5 rounded-r-lg mb-8 shadow-sm">
+                            <h3 className="font-black text-blue-400 uppercase tracking-widest text-sm mb-2">{cases[currentCaseId].title}</h3>
+                            <p className="text-lg text-white italic">"{cases[currentCaseId].prompt}"</p>
+                        </div>
+
+                        <div className="mb-8">
+                            <h4 className="font-bold text-slate-700 mb-4 text-sm uppercase tracking-wider border-b border-slate-200 pb-2">1. Select ALL Vaccines to Address Today:</h4>
+                            <div className="flex flex-wrap gap-3">
+                                {vaccineList.map(v => (
+                                    <button key={v} onClick={() => !submitted && toggle(v)} disabled={submitted} className={`px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all ${selectedVaccines[v] ? 'bg-blue-600 text-white ring-2 ring-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'}`}>{v}</button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {Object.keys(selectedVaccines).length > 0 && (
+                            <div className="mb-8 space-y-3 bg-slate-50 p-5 rounded-xl border border-slate-100">
+                                <h4 className="font-bold text-slate-700 mb-2 text-sm uppercase tracking-wider border-b border-slate-200 pb-2">2. Specify Route and Site:</h4>
+                                {Object.keys(selectedVaccines).map(v => (
+                                    <div key={v} className="flex flex-col md:flex-row md:items-center gap-3 bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                                        <span className="font-black text-blue-800 w-32 text-sm pt-1">{v}</span>
+                                        <select disabled={submitted} value={selectedVaccines[v].route} onChange={e => handleDetailChange(v, 'route', e.target.value)} className="p-2 border border-slate-300 rounded-lg text-sm flex-1 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all font-medium"><option value="">Route...</option><option value="Oral">Oral</option><option value="IM">IM</option><option value="SC">SC</option><option value="ID">ID</option><option value="Defer">Defer</option></select>
+                                        <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-2 border border-slate-300 rounded-lg text-sm flex-1 disabled:opacity-50 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition-all font-medium"><option value="">Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Triceps Fatty Tissue">Triceps Fatty Tissue</option></select>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {!submitted ? <button onClick={evaluateCase} disabled={Object.keys(selectedVaccines).length === 0} className="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-blue-700 disabled:opacity-50 transition-all uppercase tracking-widest text-lg">Evaluate Station</button> : 
+                            <div className="p-8 rounded-xl border-t-8 border-blue-600 bg-slate-50 shadow-inner">
+                                <h3 className="text-3xl font-black text-slate-800 mb-6">Feedback: {score}%</h3>
+                                
+                                <div className="mb-6 bg-white p-5 rounded-xl border border-blue-200 shadow-sm">
+                                    <h4 className="font-bold text-blue-900 border-b border-blue-100 pb-2 mb-4 flex items-center gap-2"><span className="text-xl">🔑</span> Ideal Answer Key</h4>
+                                    <div className="text-sm text-slate-800 space-y-3">
+                                        <div className="bg-emerald-50 p-3 rounded-lg"><strong>💉 Administer Today:</strong> <span className="text-emerald-700 font-bold ml-1">{cases[currentCaseId].req.length > 0 ? cases[currentCaseId].req.join(", ") : "None"}</span></div>
+                                        <div className="bg-amber-50 p-3 rounded-lg"><strong>⏳ Defer:</strong> <span className="text-amber-600 font-bold ml-1">{cases[currentCaseId].defer.length > 0 ? cases[currentCaseId].defer.join(", ") : "None"}</span></div>
+                                        <div className="bg-red-50 p-3 rounded-lg"><strong>🚫 Contraindicated (Traps):</strong> <span className="text-red-600 font-bold ml-1">{cases[currentCaseId].traps.length > 0 ? cases[currentCaseId].traps.join(", ") : "None"}</span></div>
+                                    </div>
+                                </div>
+
+                                <ul className="space-y-4">
+                                    {feedback.map((f, i) => (
+                                        <li key={i} className={`flex flex-col p-4 rounded-lg border shadow-sm ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-amber-50 border-amber-200 text-amber-900' : f.type === 'warn' ? 'bg-orange-50 border-orange-200 text-orange-900' : 'bg-white border-emerald-200 text-emerald-900'}`}>
+                                            <div className="flex items-start">
+                                                <span className="mr-3 font-bold text-xl">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : f.type === 'pearl' ? '💡' : f.type === 'warn' ? '⚠' : '✔'}</span>
+                                                <span className="font-bold text-base leading-snug">{f.msg}</span>
+                                            </div>
+                                            {(f.rationale || f.rat) && <div className={`mt-2 ml-8 text-sm whitespace-pre-line ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium text-base' : 'text-slate-600'}`}>{f.rationale || f.rat}</div>}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={() => loadCase(currentCaseId)} className="mt-8 w-full md:w-auto bg-slate-800 text-white font-bold px-10 py-4 rounded-lg hover:bg-slate-700 shadow-md transition-colors uppercase tracking-wider text-sm">Retry Case</button>
+                            </div>}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<PediaApp />);
+    </script>
+</body>
+</html>

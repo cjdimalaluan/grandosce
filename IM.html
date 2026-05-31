@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IM OSCE Master - Official Reviewer Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .chat-bubble-patient { background-color: #f1f5f9; color: #334155; border-radius: 1.25rem 1.25rem 1.25rem 0.25rem; }
+        .chat-bubble-doctor { background-color: #2563eb; color: #ffffff; border-radius: 1.25rem 1.25rem 0.25rem 1.25rem; }
+        .chat-bubble-system { background-color: #fffbeb; color: #92400e; border-left: 4px solid #f59e0b; border-radius: 0.5rem; }
+        
+        .blank-hidden { background-color: #e2e8f0; color: transparent; user-select: none; border-bottom: 2px dashed #3b82f6; transition: all 0.2s ease;}
+        .blank-hidden:hover { background-color: #cbd5e1; color: transparent; transform: scale(1.02); }
+        
+        /* Custom Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #2563eb; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #2563eb; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-200 selection:text-blue-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const med1Data = {
+            intro: "0. INTRODUCTION & CONSENT\n\n1. Identity & Role:\nMagandang araw/hapon po. Ako po si {CJ}, isang estudyanteng doktor dito sa {PGH}. Maaari ko po bang malaman ang inyong {buong pangalan at edad}?\n\n2. Purpose & Confidentiality:\nNandito po ako ngayon para {kapanayamin kayo at magsagawa ng pisikal na eksaminasyon} upang malaman kung ano ang pinagmumulan ng inyong nararamdaman, at upang mabigyan natin ito ng nararapat na lunas. Gusto ko pong ipaalala na ang lahat ng pag-uusapan at gagawin natin ay {mananatiling pribado} at para lamang sa aming medical team na tutulong sa inyo, maliban na lang kung may kinalaman ito sa inyong {kaligtasan} o ng ibang tao.\n\n3. Consent:\n{Okay lang po ba} na magsimula tayo?",
+            cough: {
+                keyPoints: "• Ask for {onset} and {quality} + {associated symptoms};\n   ◦ Note for {long low-grade fever}\n• Ask for {past medical history}\n• Ask for {family history}",
+                diffs: "• Pulmonary Tuberculosis\n• Community-Acquired Pneumonia\n• URTI\n• Bronchial Asthma\n• COPD\n• GERD"
+            },
+            chestPain: {
+                keyPoints: "• Ask for {onset}. Note it could be an {emergency}\n• Ask for {radiation} and {associated signs / symptoms}\n• Ask for {past medical history}, examine {comorbids}\n• Ask for {family history}\n• Ask for {dietary history}",
+                diffs: "• Angina\n• Myocardial Infarction\n• Pericarditis\n• Pleuritis / Pneumonia\n• GERD / PUD\n• Costochondritis"
+            },
+            problemListQualities: [
+                { quality: "Complete", desc: "Must include: {Major and minor problems}, {Past procedures}, {Non-biomedical problems} (tobacco use, financial constraints etc.)" },
+                { quality: "Clustered", desc: "Related problems should be {BESIDE EACH OTHER}. {Indented} if problem encompasses a direct causal relationship." },
+                { quality: "Prioritized", desc: "{Most important} to least important. If admitted, {reason for admission} is most important." },
+                { quality: "Dated", desc: "{Chronic} illnesses – Just the {year} of diagnosis is fine. {Acute} illness – {Date of onset}." }
+            ]
+        };
+
+        const sobDescriptors = [
+            { desc: "Chest tightness / constriction", examples: "{Asthma}, {CHF}", patho: "Bronchoconstriction, interstitial edema" },
+            { desc: "Increase work or effort of breathing", examples: "{COPD}, {asthma}, neuromuscular disease, chest wall restriction", patho: "Airway obstruction, neuromuscular disease" },
+            { desc: "Air hunger, need to breathe, urge to breathe", examples: "{CHF}, {PE}, COPD, asthma, pulmonary fibrosis", patho: "Increased drive to breathe" },
+            { desc: "Inability to get a deep breath, unsatisfying breath", examples: "Moderate to severe {asthma} and {COPD}, pulmonary fibrosis, chest wall disease", patho: "Hyperinflation, restricted tidal volume" },
+            { desc: "Heavy breathing, rapid breathing, breathing more", examples: "Sedentary status in health individual or Px with cardiopulmonary disease", patho: "Deconditioning" }
+        ];
+
+        const med2Data = {
+            cxrScript: "This is a {[PA/AP]} projection film taken in...\n   ◦ Note {Mongolian hat sign} (C7 - T1), {Winging of Scapula}\n" +
+                       "{[upright/supine]} position with {[+/-] obliquity},\n   ◦ Supine - Almost always AP\n   ◦ Obliquity - check clavicles\n" +
+                       "{[adequate/inadequate]} inspiratory effort,\n   ◦ Adequate - {9-11} posterior ribs or {6-8} anterior ribs\n" +
+                       "{[with/without]} motion artifacts and \n{[adequate/inadequate]} exposure.\n   ◦ Only {upper 4 thoracic} vertebrae should be appreciable\n\n" +
+                       "The {bilateral lung fields} [are clear] / have...\n   ◦ Pleura - Check for pneumothorax\n   ◦ Parenchyma - Check for {opacities / densities / infiltrates}\n" +
+                       "The {heart} is [enlarged/not enlarged].\n   ◦ Cardiomegaly - CT Ratio > {0.5} in PA, > {0.55-0.6} in AP\n" +
+                       "The {aorta} is [unremarkable/enlarged].\n   ◦ Note aortic knob and pulmonary vasculature\n" +
+                       "The {trachea} is [midline/deviated towards the right/left].\n" +
+                       "The {costophrenic angles} and {hemidiaphragms} are [intact/blunted/obscured/flattened]\n   ◦ {Right} hemidiaphragm usually higher. Note for scalloping.\n" +
+                       "The {osseous structures} and {soft tissues} are [unremarkable/finding].\n   ◦ Note for swelling, fractures, or foreign bodies.",
+            rxScript: "Header:\n  ◦ Patient {name, age, sex, address}\n  ◦ {Date} of Consult\n\n" +
+                      "{Diagnosis} (Crucial step often missed!)\n\n" +
+                      "{R/}\n" +
+                      "  {[Generic drug name]} {[dosage]} ...................... {#[number of tablets/inhalers/etc for regimen]}\n" +
+                      "  Sig: {[instructions for administration in plain language, no abbreviations with length of regimen]}\n\n" +
+                      "Watch out for: {[adverse effects in terms of SYMPTOMS (e.g. \"numbness\", not \"neuropathy\")]}\n" +
+                      "{Follow-up date}\n" +
+                      "Footer: {signature} over printed name, {license number}"
+        };
+
+        const drugDosages = [
+            { class: "Tuberculosis", meds: "• {Isoniazid 75 mg + Rifampicin 150 mg + Pyrazinamide 400 mg + Ethambutol 275 mg} tab, [X] tabs {OD} for {2 months}\n  ◦ Take on empty stomach 1 hr before or 2 hrs after meals\n• [X] tablets per weight:\n  ◦ ≥ 71 kg: {5 tabs}\n  ◦ 55 - 70 kg: {4 tabs}\n  ◦ 38 - 54 kg: {3 tabs}\n  ◦ 30 - 37 kg: {2 tabs}" },
+            { class: "Low-Risk CAP (without comorbidities)", meds: "• {Amoxicillin 500 mg/tab, 2 tabs TID} for 7 days with meals\n• Clarithromycin 500 mg/tab, 1 tab BID for 7 days, OR\n• Azithromycin 500 mg/tab, 1 tab OD for 7 days" },
+            { class: "Low-Risk CAP (with stable comorbidities)", meds: "1 of the following:\n• {Amoxicillin-clavulanate 500 mg / 125 mg tab, 1 tab TID} for 7 days with meals\n• Cefuroxime 500 mg/tab, 1 tab BID for 7 days\nWITH OR WITHOUT 1 of the following:\n• Azithromycin 500 mg/tab, 1 tab OD for 7 days\n• Clarithromycin 500 mg/tab, 1 tab BID for 7 days" },
+            { class: "Bronchial Asthma (MART Track 1)", meds: "• MART: {Budesonide / Formoterol 160mcg / 4.5mcg / actuation x 120 actuations / MDI}\n  ◦ Inhale {2 puffs as needed} during acute attack, {maximum of 12} inhalations in a day\n  ◦ Gargle or rinse mouth with every use" },
+            { class: "COPD", meds: "• {Tiotropium / Olodaterol 2.5 / 2.5 mcg x 60 actuations / MDI}\n  ◦ Take {2 puffs in the morning} and {2 in the afternoon} daily" },
+            { class: "GERD", meds: "• {Omeprazole 20 mg 1 tab OD}, take 30 mins before breakfast" },
+            { class: "DM", meds: "• {Metformin 500 mg tab BID} with meals (breakfast & dinner)" },
+            { class: "Dyslipidemia", meds: "• {Simvastatin 20 mg tab OD} at night before sleeping" },
+            { class: "Hypertension", meds: "• {Losartan 50 mg tab OD} after breakfast, AND/OR\n• {Amlodipine 5 mg tab OD} after breakfast" },
+            { class: "MI Prevention (post-MI)", meds: "• {Aspirin 80 mg tab OD}, immediately after breakfast with water, PLUS\n• {Clopidogrel bisulfate 75 mg tab OD}, immediately after breakfast" }
+        ];
+
+        const IMApp = () => {
+            const [view, setView] = useState('med1');
+            const [memorizeMode, setMemorizeMode] = useState(false);
+            const [hiddenWords, setHiddenWords] = useState(new Set());
+            const [isCompleted, setIsCompleted] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile
+
+            useEffect(() => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                if (progress.s2) {
+                    setIsCompleted(true);
+                }
+            }, []);
+            
+            const markCompleted = () => {
+                const progress = JSON.parse(localStorage.getItem('osce_progress') || '{}');
+                progress.s2 = true;
+                localStorage.setItem('osce_progress', JSON.stringify(progress));
+                setIsCompleted(true);
+                window.location.href = 'index.html';
+            };
+
+            const shuffleBlanks = () => {
+                const newHidden = new Set();
+                const processText = (text, prefix) => {
+                    if (!text) return;
+                    const parts = text.split(/\{(.*?)\}/g);
+                    parts.forEach((part, i) => {
+                        if (i % 2 === 1 && Math.random() > 0.2) {
+                            newHidden.add(`${prefix}-${i}`);
+                        }
+                    });
+                };
+
+                if (view === 'med1') {
+                    processText(med1Data.intro, 'med1-intro');
+                    processText(med1Data.cough.keyPoints, 'med1-ckp');
+                    processText(med1Data.chestPain.keyPoints, 'med1-cpkp');
+                    med1Data.problemListQualities.forEach((q, i) => processText(q.desc, `plq-${i}`));
+                    sobDescriptors.forEach((d, i) => processText(d.examples, `sob-${i}`));
+                } else if (view === 'med2') {
+                    processText(med2Data.cxrScript, 'cxr-script');
+                    processText(med2Data.rxScript, 'rx-script');
+                } else if (view === 'drugs') {
+                    drugDosages.forEach((d, i) => processText(d.meds, `drug-${i}`));
+                }
+                
+                setHiddenWords(newHidden);
+            };
+
+            useEffect(() => {
+                if (memorizeMode) shuffleBlanks();
+                else setHiddenWords(new Set());
+            }, [view, memorizeMode]);
+
+            const revealWord = (id) => {
+                setHiddenWords(prev => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            };
+
+            const renderText = (text, prefix, highlightColor = "blue") => {
+                if (!text) return null;
+                const lines = text.split('\n');
+                
+                return (
+                    <div className="space-y-1.5">
+                        {lines.map((line, lineIndex) => {
+                            if (line.trim() === '') return <div key={`empty-${lineIndex}`} className="h-2"></div>;
+                            
+                            const isSubheader = /^[0-9A-Z\s&/()\-]+:(\)?)$/.test(line.trim());
+                            let contentLine = line;
+                            let lineClass = "leading-relaxed text-[15px]";
+                            
+                            if (isSubheader) {
+                                lineClass = "font-bold text-slate-800 text-xs tracking-wider mt-4 uppercase border-b border-slate-200 pb-1 opacity-80";
+                            }
+                            
+                            if (!memorizeMode) {
+                                const parts = contentLine.split(/\{(.*?)\}/g);
+                                return (
+                                    <div key={lineIndex} className={lineClass}>
+                                        {parts.map((part, i) => i % 2 === 1 ? <strong key={i} className={`text-${highlightColor}-700 bg-${highlightColor}-50 px-1 rounded`}>{part}</strong> : <span key={i}>{part}</span>)}
+                                    </div>
+                                );
+                            }
+                            
+                            const parts = contentLine.split(/\{(.*?)\}/g);
+                            return (
+                                <div key={lineIndex} className={lineClass}>
+                                    {parts.map((part, i) => {
+                                        if (i % 2 === 1) {
+                                            const wordId = `${prefix}-${lineIndex}-${i}`; 
+                                            if (hiddenWords.has(wordId) || hiddenWords.has(`${prefix}-${i}`)) { 
+                                                return <span key={wordId} onClick={() => revealWord(wordId || `${prefix}-${i}`)} className="blank-hidden px-2 py-0.5 rounded cursor-pointer mx-0.5 shadow-sm inline-block" title="Click to reveal">{part}</span>;
+                                            } else {
+                                                return <span key={wordId} className={`font-bold bg-${highlightColor}-100 text-${highlightColor}-800 px-1.5 py-0.5 rounded mx-0.5 shadow-sm inline-block`}>{part}</span>;
+                                            }
+                                        }
+                                        return <span key={i}>{part}</span>;
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                );
+            };
+
+            const tabs = [
+                { id: 'med1', label: 'Medicine I (Hx & Dx)', icon: '🗣️' },
+                { id: 'med2', label: 'Medicine II (CXR & Rx)', icon: '🩻' },
+                { id: 'drugs', label: 'Drug Dosages', icon: '💊' },
+                { id: 'sim', label: 'PWI Simulator', icon: '🤖' }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row bg-[#f8fafc]">
+                    
+                    {/* Mobile Header */}
+                    <div className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center z-30 sticky top-0 shadow-md">
+                        <h1 className="text-xl font-black text-blue-400">IM 250 OSCE</h1>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 bg-slate-800 rounded">
+                            ☰
+                        </button>
+                    </div>
+
+                    {/* SIDEBAR NAVIGATION */}
+                    <nav className={`${sidebarOpen ? 'block' : 'hidden'} md:flex w-full md:w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-2xl flex-shrink-0 z-20 flex-col fixed md:sticky top-0 h-screen overflow-y-auto transition-all`}>
+                        <div className="p-8 pb-4 border-b border-white/10 mb-6 hidden md:block">
+                            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 tracking-tight">IM 250</h1>
+                            <p className="text-xs text-slate-400 mt-2 uppercase tracking-widest font-bold">LU5 Grand OSCE Mastery</p>
+                        </div>
+                        
+                        <ul className="space-y-2 px-4 mb-8 flex-1">
+                            {tabs.map((tab, idx) => (
+                                <li key={tab.id}>
+                                    <button 
+                                        onClick={() => {setView(tab.id); setSidebarOpen(false);}} 
+                                        className={`w-full flex items-center p-3.5 rounded-xl font-semibold transition-all duration-300 ${view === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50 transform translate-x-2' : 'text-slate-400 hover:bg-white/5 hover:text-white hover:translate-x-1'}`}
+                                    >
+                                        <span className="mr-4 text-xl bg-white/10 p-1.5 rounded-lg">{tab.icon}</span>
+                                        <span className="tracking-wide text-sm">{tab.label}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                        
+                        <div className="mt-auto pt-6 border-t border-white/10 px-6 pb-8">
+                            <button 
+                                onClick={markCompleted}
+                                className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all shadow-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2 ${isCompleted ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/30' : 'bg-slate-700/50 text-slate-300 hover:bg-emerald-600 hover:text-white border border-slate-600'}`}
+                            >
+                                {isCompleted ? '✓ Station Reviewed' : 'Mark as Reviewed'}
+                            </button>
+                            <a href="index.html" className="block text-center mt-6 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-white transition-colors">
+                                &larr; Back to Dashboard
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 overflow-y-auto relative h-screen custom-scrollbar scroll-smooth">
+                        
+                        {/* Sticky Header Row for Title and Toggles */}
+                        {view !== 'sim' && (
+                            <div className="sticky top-0 z-10 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200 px-6 md:px-12 py-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div>
+                                    <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
+                                        <span className="text-3xl drop-shadow-sm">{tabs.find(t => t.id === view).icon}</span>
+                                        {tabs.find(t => t.id === view).label}
+                                    </h2>
+                                    <p className="text-slate-500 mt-1.5 font-medium text-sm">Review standardized rubrics and frameworks required for this station.</p>
+                                </div>
+                                
+                                <div className="flex flex-col items-end gap-3">
+                                    <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+                                        <span className="text-sm font-semibold text-slate-600 px-2">Active Recall</span>
+                                        <div className="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                            <input type="checkbox" name="toggle" id="toggle" checked={memorizeMode} onChange={() => setMemorizeMode(!memorizeMode)} className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 z-10 top-0 left-0" />
+                                            <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                                        </div>
+                                    </div>
+                                    
+                                    {memorizeMode && (
+                                        <button onClick={shuffleBlanks} className="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-1.5 px-4 rounded-lg transition-colors flex items-center gap-2">
+                                            <span>🔀</span> Shuffle Blanks
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className={`max-w-6xl mx-auto space-y-8 animate-fade-in pb-24 ${view === 'sim' ? 'pt-8 px-4 md:px-12' : 'pt-8 px-6 md:px-12'}`}>
+                            
+                            {/* VIEW 1: STATION 1 (Medicine 1) */}
+                            {view === 'med1' && (
+                                <div className="space-y-8">
+                                    
+                                    {/* Standard Intro */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden group hover:border-slate-300 transition-colors">
+                                        <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">🤝</div> 
+                                            <h3 className="font-bold text-slate-800 text-lg">Standardized Introduction Script</h3>
+                                        </div>
+                                        <div className="p-8">
+                                            <div className="relative">
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-blue-500 rounded-full"></div>
+                                                <div className="pl-6 text-slate-700 font-medium">
+                                                    {renderText(med1Data.intro, 'med1-intro', 'blue')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Cough vs Chest Pain Grid */}
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                            <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-4 font-bold tracking-wide">
+                                                Presenting with COUGH / DYSPNEA
+                                            </div>
+                                            <div className="p-6 space-y-6">
+                                                <div>
+                                                    <h4 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                                                        Key Points to Elicit
+                                                    </h4>
+                                                    <div className="text-slate-700">{renderText(med1Data.cough.keyPoints, 'med1-ckp')}</div>
+                                                </div>
+                                                <div className="pt-4 border-t border-slate-100">
+                                                    <h4 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                                        Top Differentials
+                                                    </h4>
+                                                    <div className="text-slate-600 text-[15px] leading-relaxed whitespace-pre-line font-medium bg-slate-50 p-4 rounded-xl">{med1Data.cough.diffs}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                                            <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-6 py-4 font-bold tracking-wide">
+                                                Presenting with CHEST PAIN
+                                            </div>
+                                            <div className="p-6 space-y-6">
+                                                <div>
+                                                    <h4 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                                                        Key Points to Elicit
+                                                    </h4>
+                                                    <div className="text-slate-700">{renderText(med1Data.chestPain.keyPoints, 'med1-cpkp')}</div>
+                                                </div>
+                                                <div className="pt-4 border-t border-slate-100">
+                                                    <h4 className="font-bold text-slate-400 text-xs uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                                        Top Differentials
+                                                    </h4>
+                                                    <div className="text-slate-600 text-[15px] leading-relaxed whitespace-pre-line font-medium bg-slate-50 p-4 rounded-xl">{med1Data.chestPain.diffs}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Problem List Card */}
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+                                        <div className="p-8">
+                                            <h3 className="text-xl font-black text-slate-800 mb-6 flex items-center gap-2">
+                                                <span className="bg-emerald-100 text-emerald-600 p-2 rounded-lg">📋</span> 
+                                                Qualities of a Good Problem List
+                                            </h3>
+                                            <div className="grid md:grid-cols-2 gap-4">
+                                                {med1Data.problemListQualities.map((item, idx) => (
+                                                    <div key={idx} className="bg-slate-50 p-5 rounded-xl border border-slate-100 hover:border-emerald-200 transition-colors">
+                                                        <h4 className="font-black text-slate-800 text-md mb-2">{item.quality}</h4>
+                                                        <div className="text-slate-600">{renderText(item.desc, `plq-${idx}`, 'emerald')}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="mt-8 bg-slate-900 rounded-xl p-6 shadow-inner text-slate-300">
+                                                <h4 className="font-bold text-slate-400 mb-4 text-xs uppercase tracking-widest border-b border-slate-700 pb-2">Sample Clustered/Dated Problem List</h4>
+                                                <div className="font-mono text-[14px] leading-relaxed overflow-x-auto">
+                                                    <span className="text-emerald-400">04/01/2023</span> &nbsp; <strong className="text-white">Bacteriologically confirmed Pulmonary Tuberculosis</strong><br/>
+                                                    <span className="text-slate-500">04/01/2023</span> &nbsp; &nbsp; <span className="text-slate-300">Pleural Effusion (right lung)</span><br/>
+                                                    <span className="text-slate-500">04/01/2023</span> &nbsp; &nbsp; <span className="text-slate-300">Anemia of Chronic Disease</span><br/>
+                                                    <span className="text-slate-500">04/01/2023</span> &nbsp; &nbsp; <span className="text-slate-300">Underweight (BMI of 16.5)</span><br/>
+                                                    <span className="text-emerald-400">04/01/2023</span> &nbsp; <strong className="text-white">t/c Primary Lung Malignancy</strong><br/>
+                                                    <span className="text-amber-400">2003</span> &nbsp; &nbsp; &nbsp; &nbsp; 40 pack-year smoking history
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* SOB Descriptors Table */}
+                                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-200">
+                                        <div className="bg-slate-50 px-6 py-4 font-bold flex items-center gap-3 border-b border-slate-200">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">🫁</div>
+                                            <h3 className="text-slate-800 text-lg">Qualitative Descriptors for SOB</h3>
+                                        </div>
+                                        <div className="overflow-x-auto">
+                                            <table className="min-w-full text-left text-sm border-collapse">
+                                                <thead className="bg-slate-100 text-slate-600 uppercase text-xs tracking-wider">
+                                                    <tr>
+                                                        <th className="px-6 py-4 font-bold border-b">Descriptor</th>
+                                                        <th className="px-6 py-4 font-bold border-b">Clinical Examples</th>
+                                                        <th className="px-6 py-4 font-bold border-b">Pathophysiology</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-slate-100 text-slate-800">
+                                                    {sobDescriptors.map((item, idx) => (
+                                                        <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                                                            <td className="px-6 py-4 font-semibold text-slate-700">{item.desc}</td>
+                                                            <td className="px-6 py-4">{renderText(item.examples, `sob-${idx}`)}</td>
+                                                            <td className="px-6 py-4 text-slate-500 text-[13px]">{item.patho}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 2: STATION 2 (Medicine 2) */}
+                            {view === 'med2' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">📋</div>
+                                            <h3 className="font-bold text-slate-800 text-lg">PGH CXR Interpretation Script</h3>
+                                        </div>
+                                        <div className="p-8 flex-1">
+                                            <div className="text-slate-700">
+                                                {renderText(med2Data.cxrScript, 'cxr-script')}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                                        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100 text-xl">✍️</div>
+                                            <h3 className="font-bold text-slate-800 text-lg">Writing a Prescription</h3>
+                                        </div>
+                                        <div className="p-8 flex-1 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+                                            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-slate-100 shadow-sm text-slate-800 font-mono text-sm leading-relaxed">
+                                                {renderText(med2Data.rxScript, 'rx-script', 'indigo')}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 3: DRUG DOSAGES */}
+                            {view === 'drugs' && (
+                                <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-200">
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full text-left border-collapse">
+                                            <thead className="bg-slate-900 text-white sticky top-0 z-10 shadow-sm">
+                                                <tr>
+                                                    <th className="px-6 py-5 font-bold w-1/3 text-sm uppercase tracking-wider">Condition</th>
+                                                    <th className="px-6 py-5 font-bold w-2/3 text-sm uppercase tracking-wider border-l border-slate-700">Exact Regimen (From Reviewer)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-200 text-slate-800">
+                                                {drugDosages.map((item, idx) => (
+                                                    <tr key={idx} className="hover:bg-blue-50/30 transition-colors group">
+                                                        <td className="px-6 py-6 bg-slate-50/50 group-hover:bg-blue-50/30 font-black text-slate-800 text-[15px] align-top border-r border-slate-100">
+                                                            {item.class}
+                                                        </td>
+                                                        <td className="px-6 py-6 align-top">
+                                                            {renderText(item.meds, `drug-${idx}`)}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* VIEW 4: ADVANCED SIMULATOR */}
+                            {view === 'sim' && (
+                                <div className="space-y-6 max-w-4xl mx-auto">
+                                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
+                                        <div className="text-3xl">🤖</div>
+                                        <div>
+                                            <h2 className="text-xl font-black text-amber-900">Strict PWI Simulator Active</h2>
+                                            <p className="text-amber-800 mt-1 text-sm leading-relaxed">
+                                                The preceptor will NOT volunteer the full PE. You must independently specify exact maneuvers. Type <strong>"end case"</strong> when finished for clinical reasoning feedback.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <PWISimulatorComponent />
+                                </div>
+                            )}
+
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const PWISimulatorComponent = () => {
+            const [chat, setChat] = useState([
+                { sender: 'system', text: 'CASE: 55-year-old male from Manila. Chief complaint: "Inuubo po ako."' },
+                { sender: 'patient', text: 'Magandang araw po, Doc. Inuubo po kasi ako at masama ang pakiramdam.' }
+            ]);
+            const [input, setInput] = useState('');
+            const [isEnded, setIsEnded] = useState(false);
+            const chatEndRef = useRef(null);
+
+            const [flags, setFlags] = useState({
+                askedOnset: false, askedFever: false, askedSmoking: false, askedVitals: false,
+                askedLungs: false, askedHeart: false, gaveDiagnosis: false
+            });
+
+            const scrollToBottom = () => {
+                chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            useEffect(() => {
+                scrollToBottom();
+            }, [chat]);
+
+            const handleSend = (e) => {
+                e.preventDefault();
+                if(!input.trim() || isEnded) return;
+
+                const userMsg = input.trim();
+                const lowerMsg = userMsg.toLowerCase();
+                setChat(prev => [...prev, { sender: 'doctor', text: userMsg }]);
+                setInput('');
+
+                const msgHas = (words) => words.some(w => lowerMsg.includes(w));
+
+                if (msgHas(['end case', 'tapos na', 'end encounter', 'end osce'])) {
+                    setIsEnded(true);
+                    generateFeedback();
+                    return;
+                }
+
+                setTimeout(() => {
+                    let response = "";
+                    let isSystem = false;
+                    let newFlags = { ...flags };
+
+                    const peKeywords = ['pe', 'physical exam', 'physical examination', 'examine'];
+                    const lungKeywords = ['lung', 'chest', 'auscultate', 'baga', 'breath', 'pakinggan'];
+                    const vitalKeywords = ['vital', 'bp', 'blood pressure', 'heart rate', 'hr', 'rr', 'temp', 'temperature', 'o2'];
+                    const heartKeywords = ['heart', 'cardiac', 'cardiovascular', 'murmur', 'puso'];
+                    const edemaKeywords = ['edema', 'extremit', 'manas', 'swelling'];
+                    const generalKeywords = ['general survey', 'appearance'];
+
+                    const dxKeywords = ['pneumonia', 'cap', 'antibiotic', 'gamot', 'amoxicillin'];
+                    const mgmtKeywords = ['admit', 'x-ray', 'xray', 'lab', 'hospital', 'test'];
+
+                    const onsetKeywords = ['kailan', 'ilang araw', 'kelan', 'onset', 'how long', 'start'];
+                    const feverKeywords = ['lagnat', 'fever', 'init', 'temperature', 'nilalagnat', 'chills'];
+                    const sputumKeywords = ['plema', 'sputum', 'phlegm'];
+                    const smokeKeywords = ['sigarilyo', 'smoke', 'paninigarilyo', 'smoking', 'yosi'];
+                    const painKeywords = ['sakit', 'pain', 'masakit', 'chest pain'];
+
+                    if (msgHas(peKeywords) && !msgHas([...lungKeywords, ...vitalKeywords, ...heartKeywords, ...generalKeywords])) {
+                        response = "What specific physical examination findings would you like to elicit or maneuvers would you like to perform?";
+                        isSystem = true;
+                    }
+                    else if (msgHas(generalKeywords)) {
+                        response = "Awake, conscious, not in respiratory distress but appears warm and flushed.";
+                        isSystem = true;
+                    }
+                    else if (msgHas(vitalKeywords)) {
+                        response = "BP 130/80, HR 112, RR 24, Temp 38.9 C, O2 sat 94% room air.";
+                        isSystem = true;
+                        newFlags.askedVitals = true;
+                    }
+                    else if (msgHas(lungKeywords)) {
+                        response = "May bibasal crackles sa parehong lower lung fields. Walang wheezing.";
+                        isSystem = true;
+                        newFlags.askedLungs = true;
+                    }
+                    else if (msgHas(heartKeywords)) {
+                        response = "May tachycardia. Regular rhythm. Walang murmurs.";
+                        isSystem = true;
+                        newFlags.askedHeart = true;
+                    }
+                    else if (msgHas(edemaKeywords)) {
+                        response = "Walang edema. Full pulses bilaterally.";
+                        isSystem = true;
+                    }
+                    else if (msgHas(dxKeywords)) {
+                        response = "Opo, doc. Iinumin ko po yung gamot. Maraming salamat po.";
+                        newFlags.gaveDiagnosis = true;
+                    }
+                    else if (msgHas(mgmtKeywords)) {
+                        response = "Sige po, doc. Naiintindihan ko po gagawin natin ang mga test.";
+                    }
+                    else if (msgHas(onsetKeywords)) {
+                        response = "Mga limang araw na po itong ubo ko, doc. May kasamang madilaw na plema.";
+                        newFlags.askedOnset = true;
+                    }
+                    else if (msgHas(feverKeywords)) {
+                        response = "Opo doc, pabalik-balik yung lagnat ko lalo sa gabi. Nanginginig pa nga po ako.";
+                        newFlags.askedFever = true;
+                    }
+                    else if (msgHas(sputumKeywords)) {
+                        response = "Madilaw po na medyo berde minsan yung plema ko, doc.";
+                    }
+                    else if (msgHas(smokeKeywords)) {
+                        response = "Opo, naninigarilyo po ako. Mga isang kaha araw-araw sa loob ng halos sampung taon na.";
+                        newFlags.askedSmoking = true;
+                    }
+                    else if (msgHas(painKeywords)) {
+                        response = "Medyo masakit po ang kanang dibdib ko kapag umuubo ako nang malakas.";
+                    }
+                    else {
+                        response = "Hindi ko po masyadong maintindihan. Inuubo lang po talaga ako at may lagnat.";
+                    }
+
+                    setFlags(newFlags);
+                    setChat(prev => [...prev, { sender: isSystem ? 'system' : 'patient', text: response }]);
+                    
+                    if(isSystem && !response.includes("What specific")) {
+                        setTimeout(() => {
+                            setChat(prev => [...prev, { sender: 'patient', text: "Okay doc." }]);
+                        }, 800);
+                    }
+
+                }, 600);
+            };
+
+            const generateFeedback = () => {
+                setTimeout(() => {
+                    let feedbackStr = "=== OSCE STRUCTURED FEEDBACK ===\n\n";
+                    
+                    feedbackStr += "1. GENERATION OF DIAGNOSES\n";
+                    if (flags.gaveDiagnosis) {
+                        feedbackStr += "✅ Strengths: You correctly suspected the diagnosis and initiated management.\n";
+                    } else {
+                        feedbackStr += "❌ Missed Opportunity: You did not explicitly state a diagnosis or prescribe management to the patient before ending the case.\n";
+                    }
+                    
+                    feedbackStr += "\n2. ELICITED PERTINENT HISTORY (+/-)\n";
+                    if(flags.askedOnset && flags.askedFever && flags.askedSmoking) {
+                        feedbackStr += "✅ Excellent: You successfully elicited the onset, presence of fever/chills (Pertinent Positives), and social risk factors (smoking).\n";
+                    } else {
+                        feedbackStr += "⚠️ Improvement Needed: You missed important OPQRST points or social history to differentiate CAP from COPD.\n";
+                    }
+
+                    feedbackStr += "\n3. CLINICAL REASONING FLOW (PHYSICAL EXAM)\n";
+                    if(flags.askedVitals && flags.askedLungs) {
+                        feedbackStr += "✅ Good reasoning: You correctly targeted the Respiratory exam and requested Vital Signs.\n";
+                    } else if (!flags.askedVitals) {
+                        feedbackStr += "❌ Dangerous Omission: You failed to request Vital Signs! Recognizing tachycardia and tachypnea is critical.\n";
+                    } else if (!flags.askedLungs) {
+                        feedbackStr += "❌ Missed Opportunity: You did not ask to auscultate the lungs for a patient presenting with cough.\n";
+                    }
+
+                    setChat(prev => [...prev, { sender: 'system', text: feedbackStr }]);
+                }, 1000);
+            };
+
+            return (
+                <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[700px] animate-fade-in relative">
+                    {/* Header */}
+                    <div className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center z-10 shadow-sm">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-xl shadow-inner border border-slate-200">👨‍⚕️</div>
+                            <div>
+                                <h3 className="font-bold text-slate-800">Standardized Patient</h3>
+                                <p className="text-xs text-emerald-600 font-medium flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Online</p>
+                            </div>
+                        </div>
+                        <button onClick={() => {setChat([{ sender: 'system', text: 'CASE: 55-year-old male from Manila. Chief complaint: "Inuubo po ako."' }, { sender: 'patient', text: 'Magandang araw po, Doc. Inuubo po kasi ako at masama ang pakiramdam.' }]); setIsEnded(false); setFlags({askedOnset:false, askedFever:false, askedSmoking:false, askedVitals:false, askedLungs:false, askedHeart:false, gaveDiagnosis:false});}} className="text-slate-400 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded-lg text-sm font-bold transition-colors border border-slate-200">
+                            ↻ Reset
+                        </button>
+                    </div>
+
+                    {/* Chat Area */}
+                    <div className="flex-1 overflow-y-auto p-6 space-y-5 bg-[#f8fafc] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+                        {chat.map((msg, idx) => (
+                            <div key={idx} className={`flex ${msg.sender === 'doctor' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[85%] md:max-w-[70%] p-4 shadow-sm text-[15px] leading-relaxed ${msg.sender === 'doctor' ? 'chat-bubble-doctor' : msg.sender === 'system' ? 'chat-bubble-system font-mono text-sm' : 'chat-bubble-patient font-medium'}`}>
+                                    {msg.sender === 'system' && !msg.text.includes("FEEDBACK") && <strong className="block mb-1 text-amber-800 text-xs uppercase tracking-wider">Preceptor Output</strong>}
+                                    {msg.text}
+                                </div>
+                            </div>
+                        ))}
+                        <div ref={chatEndRef} className="h-2" />
+                    </div>
+
+                    {/* Input Area */}
+                    <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-200 flex gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                        <input 
+                            type="text" 
+                            value={input} 
+                            onChange={(e) => setInput(e.target.value)} 
+                            disabled={isEnded}
+                            placeholder={isEnded ? "Case ended. Review your feedback above." : "Type your question or PE maneuver..."}
+                            className="flex-1 p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-slate-100 transition-all font-medium text-slate-700 placeholder-slate-400"
+                        />
+                        <button type="submit" disabled={isEnded || !input.trim()} className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 rounded-xl transition-colors disabled:opacity-50 shadow-md flex items-center justify-center">
+                            <svg className="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19V6m0 0l-8 8m8-8l8 8"></path></svg>
+                        </button>
+                    </form>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<IMApp />);
+    </script>
+</body>
+</html>
