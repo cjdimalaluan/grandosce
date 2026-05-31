@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SURG 250 OSCE - CBE</title>
+    <title>SURG 250 OSCE Clinical Breast Exam</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -68,7 +68,7 @@
                 category: "II. PALPATION",
                 items: [
                     { id: "pa1", text: "Position – patient lying down, arms over head", type: "both" },
-                    { id: "pa2", text: "Perform systematic examination of both breasts (spiral or transverse using pads of 2-3 fingers of two hands)", type: "both" },
+                    { id: "pa2", text: "Perform systematic examination (lawnmower pattern, 2-3 finger pads, light/medium/deep pressure)", type: "both" },
                     { id: "pa3", text: "Left breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
                     { id: "pa4", text: "Right breast (use caliper to measure sizes) - Report Location, Size, Description", type: "both" },
                     { id: "pa5", text: "Nipple - check for nipple discharge, bilateral", type: "both" }
@@ -77,7 +77,7 @@
             {
                 category: "III. LYMPHATIC DRAINAGE",
                 items: [
-                    { id: "ln1", text: "Axilla - examination of axilla explained", type: "both" },
+                    { id: "ln1", text: "Axilla - examination of axilla explained (all 4 node groups)", type: "both" },
                     { id: "ln2", text: "Supraclavicular Area - examination of supraclavicular area explained", type: "both" }
                 ]
             },
@@ -96,28 +96,28 @@
                 id: "intro",
                 title: "1. Setup & Rapport",
                 icon: "🤝",
-                scriptText: "INTRODUCTIONS & RAPPORT:\n- Magandang araw po, Misis. Ako po si Doc {CJ}, isang medikal student/clerk mula sa UP College of Medicine. Kayo po si Ginang {Pangalan}?\n\nEXAM PURPOSE & PRIVACY:\n- Nandito po ako ngayon para magsagawa ng {clinical breast examination} o pagsusuri sa inyong dibdib at kili-kili upang matukoy ang anumang bukol o pagbabago. Sisiguraduhin po nating sarado ang pinto at {pribado} itong kwarto.\n\nCHAPERONE & CONSENT REQUEST:\n- Dahil maselan po ang pagsusuring ito, kukuha po ako ng {babaeng nurse o chaperone} na makakasama natin dito sa loob para sa inyong kapanatagan at proteksyon. Ok lang po ba na magsimula tayo?\n\nPREPARATION VERBALIZATION (TO PRECEPTOR):\n- I have performed hand hygiene and donned non-sterile gloves. I am checking the patient's identity and confirming consent. I have prepared a {caliper} provided for accurate measurement of the sizes of the nodules.",
+                scriptText: "INTRODUCTIONS & RAPPORT:\n- Magandang araw po, Misis. Ako po si Doc {CJ}, isang clinical clerk mula sa UP College of Medicine. Kayo po si Ginang {Pangalan}?\n\nEXAM PURPOSE & PRIVACY:\n- Nandito po ako ngayon para magsagawa ng {clinical breast examination} o pagsusuri sa inyong dibdib at kili-kili upang matukoy ang anumang bukol o pagbabago. Sisiguraduhin po nating sarado ang pinto at {pribado} itong kwarto.\n\nCHAPERONE & CONSENT REQUEST:\n- Dahil maselan po ang pagsusuring ito, kukuha po ako ng {chaperone} (tulad ng isang nurse) na makakasama natin dito sa loob para sa inyong kapanatagan at proteksyon, anuman po ang aking kasarian. Ok lang po ba na magsimula tayo?\n\nPREPARATION VERBALIZATION (TO PRECEPTOR):\n- I have performed hand hygiene and donned non-sterile gloves. I am checking the patient's identity and confirming consent. I have prepared the {caliper} provided for accurate measurement of any nodules.",
                 rubricIds: []
             },
             {
                 id: "inspection",
                 title: "2. Visual Inspection",
                 icon: "👁️",
-                scriptText: "INSTRUCTIONAL COMMANDS FOR PATIENT:\n- Ma'am, paki-upo po nang tuwid sa gilid ng examination table habang relaxed ang dalawang braso sa inyong kandungan.\n- Ngayon naman po, paki-lagay ang dalawang kamay sa inyong hips at {magpamewang nang mariin} para tumigas ang kalamnan sa inyong dibdib.\n- Sunod po, paki-{taas ang dalawang kamay} sa likod ng inyong ulo at manatili nang ilang segundo.\n- At huli po, paki-baba ng kamay at {yumuko nang kaunti paharap} patungo sa akin.\n\nCLINICAL OBSERVATIONS & REPORTING (TO PRECEPTOR):\n- I have ensured to explain the different maneuvers to the patient for position.\n- Upon visual inspection, I report the {size and symmetry} of the breasts.\n- I report that there is no visible {mass} from inspection.\n- I observe no skin changes such as {peau d’ orange} or erythema.\n- I observe no {nipple retraction} or flaking.\n- There are no visible {rashes or ulcerations}.",
+                scriptText: "INSTRUCTIONAL COMMANDS FOR PATIENT:\n- Ma'am, paki-upo po nang tuwid sa gilid ng examination table habang relaxed ang dalawang braso sa inyong kandungan.\n- Ngayon naman po, paki-lagay ang dalawang kamay sa inyong hips at {magpamewang nang mariin} para tumigas ang kalamnan sa inyong dibdib.\n- Sunod po, paki-{taas ang dalawang kamay} sa likod ng inyong ulo at manatili nang ilang segundo.\n- At huli po, paki-baba ng kamay at {yumuko nang kaunti paharap} patungo sa akin.\n\nCLINICAL OBSERVATIONS & REPORTING (TO PRECEPTOR):\n- I have ensured to explain the different maneuvers to the patient for optimal positioning.\n- Upon visual inspection, I report the {size and symmetry} of the breasts.\n- I report that there is no visible {mass} from inspection.\n- I observe no skin changes such as {peau d’ orange} or erythema.\n- I observe no {nipple retraction} or flaking.\n- There are no visible {rashes or ulcerations}.",
                 rubricIds: ["i1", "i2", "i3", "i4", "i5", "i6"]
             },
             {
                 id: "palpation",
                 title: "3. Breast Palpation",
                 icon: "✋",
-                scriptText: "PATIENT POSITIONING:\n- Ma'am, maaari po ba kayong humiga nang supine? Ipapatong ko po itong maliit na unan sa ilalim ng inyong likod sa kanang bahagi, at paki-taas po ang inyong {kanang kamay} sa likod ng ulo.\n\nMETHODICAL PALPATION & REPORTING (TO PRECEPTOR):\n- The position of the patient is confirmed as {lying down, arms over head}.\n- I perform a systematic examination of both breasts using a {spiral or transverse} pattern, utilizing the pads of {2-3 fingers} of two hands.\n- For the {left breast} and {right breast}, I will systematically assess the tissue up to the axillary tail of Spence.\n- If a mass is identified, I will use the {caliper} to measure sizes, and report the precise findings: {approximate size in cm}, {location according to the face of a clock}, {distance in cm from the nipple}, whether it is {well-circumscribed or not}, {tenderness}, {shape and consistency}, and if it is {mobile or fixed to skin/chest wall}.\n- I gently compress the areola around the {nipple} to check for {nipple discharge, bilateral}.",
+                scriptText: "PATIENT POSITIONING:\n- Ma'am, maaari po ba kayong humiga nang supine? Ipapatong ko po itong maliit na unan sa ilalim ng inyong likod sa kanang bahagi, at paki-taas po ang inyong {kanang kamay} sa likod ng ulo.\n\nMETHODICAL PALPATION & REPORTING (TO PRECEPTOR):\n- The position of the patient is confirmed as {lying down, arms over head}.\n- I perform a systematic examination of both breasts using a {lawnmower or vertical strip} pattern, utilizing the pads of {2-3 fingers} of two hands, and applying {three levels of pressure: light, medium, and deep} at each palpation point.\n- For the {left breast} and {right breast}, I will systematically assess the tissue up to the axillary tail of Spence.\n- If a mass is identified, I will use the {caliper} to measure it, and report the precise findings: {approximate size in cm}, {location according to the face of a clock}, {distance in cm from the nipple}, whether it is {well-circumscribed or not}, {tenderness}, {shape and consistency}, and if it is {mobile or fixed to skin/chest wall}.\n- I gently compress the areola around the {nipple} to check for {nipple discharge, bilateral}.",
                 rubricIds: ["pa1", "pa2", "pa3", "pa4", "pa5"]
             },
             {
                 id: "lymphatics",
                 title: "4. Lymph Node Sweep",
                 icon: "🧼",
-                scriptText: "AXILLARY FLOOR RELAXATION:\n- Ma'am, maaari po ba kayong maupo muli sa gilid ng kama? Ipatong niyo po ang inyong kanang braso sa aking braso para ma-relax nang lubos ang inyong kili-kili.\n\nLYMPH NODE SWEEP REPORTING (TO PRECEPTOR):\n- I ensure that the examination of the {axilla} is fully explained, utilizing my contralateral hand to gently bring the contents caudally. If nodes are palpated, I will note if they are mobile, matted, or fixed.\n- I ensure that the examination of the {supraclavicular area} and infraclavicular area is explained and palpated for adenopathy.",
+                scriptText: "AXILLARY FLOOR RELAXATION:\n- Ma'am, maaari po ba kayong maupo muli sa gilid ng kama? Ipatong niyo po ang inyong kanang braso sa aking braso para ma-relax nang lubos ang inyong kili-kili.\n\nLYMPH NODE SWEEP REPORTING (TO PRECEPTOR):\n- I ensure that the examination of the {axilla} is fully explained, utilizing my contralateral hand to gently bring the contents caudally. I systematically palpate the {central, pectoral, subscapular, and lateral} axillary node groups. If nodes are palpated, I will note if they are mobile, matted, or fixed.\n- I ensure that the examination of the {supraclavicular area} and infraclavicular area is explained and palpated for adenopathy.",
                 rubricIds: ["ln1", "ln2"]
             },
             {
@@ -205,7 +205,20 @@
             const [view, setView] = useState('script'); 
             const [activeIndex, setActiveIndex] = useState(0);
             const [isRecallMode, setIsRecallMode] = useState(false);
-            const [scores, setScores] = useState({});
+            
+            // Persist scores in localStorage
+            const [scores, setScores] = useState(() => {
+                try {
+                    const saved = localStorage.getItem('surg250_breast_scores');
+                    return saved ? JSON.parse(saved) : {};
+                } catch (e) {
+                    return {};
+                }
+            });
+            
+            useEffect(() => {
+                localStorage.setItem('surg250_breast_scores', JSON.stringify(scores));
+            }, [scores]);
             
             const handleScoreChange = (id, type, value) => {
                 setScores(prev => ({
@@ -379,7 +392,7 @@
                                             <div className="bg-slate-50 p-6 rounded-lg border border-slate-200 shadow-inner">
                                                 <ActiveRecallText 
                                                     isRecallMode={isRecallMode} 
-                                                    text={`VISUAL INSPECTION:\nDuring visual inspection, I explain the different maneuvers for patient position. I observe and report the {size and symmetry} of the breasts. I report that there is no visible {mass} from inspection. Furthermore, there are no skin changes such as {peau d’ orange}, no {nipple retraction}, and no {rashes or ulcerations}.\n\nPALPATION:\nWith the patient {lying down, arms over head}, I perform a systematic examination of both breasts using a {spiral or transverse} pattern, utilizing the pads of {2-3 fingers} of two hands. For the left breast, using the {caliper}, I note a lesion located at the {2 o'clock position} ({Location}), at a distance of {4 cm from the nipple}. It measures {2.5 cm} ({Size}), is {not well-circumscribed}, and is {tender} upon palpation. It is {hard and irregular} ({Description}), and is {fixed to the chest wall}. For the right breast, there are no notable lesions to report. Lastly, I check the {nipple} for {nipple discharge, bilateral}.\n\nLYMPHATIC DRAINAGE:\nI ensure that the examination of the {axilla} is explained and the examination of the {supraclavicular area} is explained.\n\nCLINICAL IMPRESSION:\nBased on these findings, my clinical impression for the {Right} breast is normal. My clinical impression for the {Left} breast is Breast Malignancy.`} 
+                                                    text={`VISUAL INSPECTION:\nDuring visual inspection, I explain the different maneuvers for patient position. I observe and report the {size and symmetry} of the breasts. I report that there is no visible {mass} from inspection. Furthermore, there are no skin changes such as {peau d’ orange}, no {nipple retraction}, and no {rashes or ulcerations}.\n\nPALPATION:\nWith the patient {lying down, arms over head}, I perform a systematic examination of both breasts using a {lawnmower or vertical strip} pattern, applying {light, medium, and deep pressure} utilizing the pads of {2-3 fingers} of two hands. For the left breast, using the {caliper}, I note a lesion located at the {2 o'clock position} ({Location}), at a distance of {4 cm from the nipple}. It measures {2.5 cm} ({Size}), is {not well-circumscribed}, and is {tender} upon palpation. It is {hard and irregular} ({Description}), and is {fixed to the chest wall}. For the right breast, there are no notable lesions to report. Lastly, I check the {nipple} for {nipple discharge, bilateral}.\n\nLYMPHATIC DRAINAGE:\nI ensure that the examination of the {axilla} is explained, systematically assessing the {central, pectoral, subscapular, and lateral} nodes, and the examination of the {supraclavicular area} is explained.\n\nCLINICAL IMPRESSION:\nBased on these findings, my clinical impression for the {Right} breast is normal. My clinical impression for the {Left} breast is Breast Malignancy.`} 
                                                 />
                                             </div>
                                         </div>
