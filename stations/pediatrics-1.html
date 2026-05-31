@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 UPCM Pediatrics OSCE - Ultimate Master Edition</title>
+    <title>UPCM Pediatrics Grand OSCE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -26,26 +26,25 @@
         // --- View 1: Ultimate Master Cheat Sheet ---
         const MasterReference = () => (
             <div className="space-y-10 animate-fade-in pb-10">
-                {/* Reporting Scripts */}
+                
+                {/* Reporting & Scripts */}
                 <div>
-                    <h2 className="text-2xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-4">OSCE Execution & Preceptor Scripts</h2>
+                    <h2 className="text-2xl font-bold text-emerald-900 border-b-2 border-emerald-200 pb-2 mb-4">OSCE Execution & Patient Counseling Scripts</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
-                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">1. Consultant Reporting (Anthro & Plan)</h3>
+                            <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">1. Consultant Reporting & 7 Rights</h3>
                             <ul className="text-sm space-y-3 text-slate-800">
-                                <li><strong>Intro & Vitals:</strong> "Good [morning] Doc, presenting my patient, a [Age]-old [Gender]. Vitals show a HR of [X], which is [Normal/Tachy] for age, and a RR of [Y], which is [Normal/Tachypneic]."</li>
-                                <li><strong>Anthro Execution:</strong> "Since the patient is [under/over] 2 years old, I used a [Recumbent Infantometer / Standing Stadiometer]. <span className="italic text-slate-600">(If uncooperative &lt;2y stood up: 'I measured standing and added 0.7cm').</span>"</li>
-                                <li><strong>Diagnosis:</strong> "Based on WHO charts, WFH Z-score is [X], indicating [Diagnosis]. <span className="text-red-700 font-bold">(If MUAC &lt;11.5cm or Edema present: 'However, noting the MUAC of X / Pitting Edema, the final diagnosis is Severe Acute Malnutrition').</span>"</li>
-                                <li><strong>Vaccine Plan:</strong> "The patient is missing [Vaccines]. My plan is to administer [A, B, C] today via [Routes]. I will defer [D] to the next visit to minimize simultaneous IM injections / respect live-vaccine spacing rules."</li>
+                                <li><strong>Pre-Admin Checks:</strong> "Good [morning] Doc, presenting my patient, a [Age]-old [Gender]. Vitals are normal per Table 79.1. I have checked the <strong>7 Rights</strong>: Right patient, drug, dose, route, time, technique, and documentation."</li>
+                                <li><strong>Vaccine Plan:</strong> "The patient is missing [Vaccines]. My plan is to administer [A, B] today via [Routes]. I will give oral vaccines before injectables to keep the infant calm."</li>
+                                <li><strong>Anthro Execution:</strong> "Since the patient is [under/over] 2 years old, I used a [Recumbent Infantometer / Standing Stadiometer] with the head in the Frankfurt plane."</li>
                             </ul>
                         </div>
                         <div className="bg-emerald-50 shadow rounded border border-emerald-200 p-5">
                             <h3 className="font-bold text-emerald-800 border-b border-emerald-200 pb-2 mb-3">2. Patient Counseling & Administration</h3>
                             <ul className="text-sm space-y-3 text-slate-800">
                                 <li><strong>Intro & Rights:</strong> "Magandang araw po Mommy. Ako po si Dok, titingin kay baby. Ito po ba si [Pangalan], [Edad]? Ngayon po ay bibigyan natin siya ng bakuna laban sa [Sakit]."</li>
-                                <li><strong>Administration (PO):</strong> "Papainumin po natin si baby ng oral drops. Dahan-dahan po natin ipapatak sa gilid ng pisngi para hindi mabulunan."</li>
-                                <li><strong>Administration (IM/SC/ID):</strong> "Ituturok po natin ito sa [kanang hita / braso]. Hawakan po natin nang maigi ang mga binti at braso ni baby para hindi gumalaw."</li>
-                                <li><strong>Deferral / Spacing:</strong> "Dahil sa rules ng pagitan ng mga bakuna (o para hindi masyadong masaktan si baby sa dami ng turok), ipagpapaliban po muna natin ang [Vaccine]. Balik po kayo sa [Petsa]."</li>
+                                <li><strong>Administration (PO):</strong> "Siguraduhin po natin na hindi nakadede si baby 2 oras bago ngayon. Uunahin po natin ipatak ang Rotavirus, bago ang Polio. Dahan-dahan po natin ipapatak sa gilid ng pisngi para hindi mabulunan."</li>
+                                <li><strong>Administration (IM/SC/ID):</strong> "Ituturok po natin ito sa [kanang hita / braso]. Hawakan po natin nang maigi ang binti at braso ni baby gamit ang cuddle hold para hindi gumalaw."</li>
                             </ul>
                         </div>
                     </div>
@@ -56,58 +55,158 @@
                     <h2 className="text-2xl font-bold text-amber-900 border-b-2 border-amber-200 pb-2 mb-4">Vaccine-Specific Side Effects (Must Verbalize)</h2>
                     <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm text-slate-800">
-                            <div><strong>BCG:</strong> "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Normal po ito at mag-iiwan ng peklat. Huwag pipisain, kakamutin, o lalagyan ng alcohol/betadine."</div>
-                            <div><strong>Pentavalent & PCV:</strong> "Maaaring magkalagnat, mamula, at sumakit ang hita ni baby. Pwede pong punasan ng maligamgam na tubig at painumin ng paracetamol kung kailangan."</div>
-                            <div><strong>Measles (MCV) / MMR:</strong> "Ang lagnat o banayad na pantal (mild rash) ay maaaring lumabas pagkalipas pa ng 5 hanggang 12 araw. Sa MMR, baka mamaga rin nang bahagya ang pisngi (glands)."</div>
-                            <div><strong>Rotavirus (RV):</strong> "Baka maging iritable o bahagyang magbago ang dumi ni baby. <span className="text-red-600 font-bold">RED FLAG:</span> Kung umiiyak nang matindi dahil sa sakit ng tiyan at ang dumi ay mukhang 'strawberry jelly', dalhin agad sa ER (Intussusception)."</div>
+                            <div><strong>BCG:</strong> "Asahan po ang pag-umbok (2 weeks), pagnanana (1 month), at mag-iiwan ito ng peklat (2-3 months). <span className="text-red-600 font-bold">Huwag pipisain at HINDI po lalagyan ng alcohol.</span> Linisin lang po ng cotton at sterile water."</div>
+                            <div><strong>Pentavalent & PCV (IM):</strong> "Maaaring magkalagnat (high grade within 48h for Penta), mamula, at sumakit ang hita ni baby. Pwede pong punasan ng maligamgam na tubig at painumin ng paracetamol kung kailangan."</div>
+                            <div><strong>Measles (MCV) / MMR (SC):</strong> "Ang lagnat o banayad na pantal (mild rash) ay maaaring lumabas pagkalipas pa ng 6 hanggang 12 araw. Sa MMR, baka mamaga rin nang bahagya ang pisngi (lymphadenopathy)."</div>
+                            <div><strong>Rotavirus (RV):</strong> "Baka maging iritable o mag-iba ang dumi. <span className="text-red-600 font-bold">RED FLAG:</span> Kung umiiyak nang matindi at ang dumi ay mukhang 'strawberry jelly', dalhin agad sa ER (Intussusception)."</div>
                             <div><strong>OPV / IPV:</strong> "Walang malalang side effect ang OPV bukod sa pagiging iritable. Sa IPV, maaaring mangawit ang hita."</div>
-                            <div><strong>Td / HPV (School Age):</strong> "Maaaring mangawit ang braso. Ang mga teenager ay madalas mahilo o himatayin (syncope) sa takot, kaya pauupuin muna natin siya ng 15 minuto pagkatapos turukan."</div>
+                            <div><strong>Td / HPV (School Age):</strong> "Maaaring mangawit ang braso. Dahil ang mga teenager ay madalas mahilo o himatayin (syncope) sa takot, <span className="font-bold">oobserbahan muna natin siya ng 15-20 minuto habang nakaupo o nakahiga</span> bago umuwi."</div>
                         </div>
                     </div>
                 </div>
 
-                {/* Comprehensive Anthro Values */}
+                {/* Anthropometrics & WHO Matrix */}
                 <div>
-                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Complete Anthropometric & Vital Cutoffs</h2>
+                    <h2 className="text-2xl font-bold text-indigo-900 border-b-2 border-indigo-200 pb-2 mb-4">Clinical Anthropometrics & Growth Cutoffs</h2>
+                    
+                    {/* Anthropometric Rules - NELSON TEXTBOOK UPDATES */}
                     <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">Anthropometric Techniques & Proportions (Nelson Textbook)</h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 text-sm text-slate-700">
                             <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">WHO Z-Score (WFH)</h3>
-                                <ul className="text-sm text-slate-700 space-y-1">
-                                    <li><span className="font-bold text-red-600">&gt; +3:</span> Obese</li>
-                                    <li><span className="font-bold text-orange-600">&gt; +2:</span> Overweight</li>
-                                    <li><span className="font-bold text-green-700">+1 to -2:</span> Normal</li>
-                                    <li><span className="font-bold text-amber-600">&lt; -2:</span> Wasted (MAM)</li>
-                                    <li><span className="font-bold text-red-600">&lt; -3:</span> Severely Wasted (SAM)</li>
+                                <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Weight, Length & Height</h4>
+                                <ul className="list-disc pl-5 space-y-2">
+                                    <li><strong>Weight:</strong> Taken with the infant <strong>naked</strong>. Remove hair ornaments and hairstyles that interfere with positioning.</li>
+                                    <li><strong>Length (&lt; 2 years old):</strong> Requires <strong>two examiners</strong> (one to position). Head positioned against inflexible board in the <strong>Frankfurt plane</strong> (outer canthi of eyes inline with external auditory meatus, perpendicular to trunk). Legs fully extended, feet perpendicular to plane. <br/><span className="text-red-600 font-semibold italic">Trap: Marking exam paper at the head/foot or using a loose tape measure is inaccurate and useless.</span></li>
+                                    <li><strong>Height (&ge; 2 years old):</strong> Standing unassisted without shoes using a stadiometer. Head in Frankfurt plane. The <strong>back of the head, thoracic spine, buttocks, and heels</strong> must approximate the vertical axis of the stadiometer.</li>
+                                    <li><strong>BMI:</strong> For children &ge; 5 years old. Weight (kg) / Height (m)².</li>
                                 </ul>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">MUAC (6 to 59 months)</h3>
-                                <ul className="text-sm space-y-2">
-                                    <li><span className="inline-block w-3 h-3 bg-green-500 mr-2 rounded-full"></span><strong>&ge; 12.5 cm:</strong> Normal</li>
-                                    <li><span className="inline-block w-3 h-3 bg-yellow-400 mr-2 rounded-full"></span><strong>11.5 to &lt; 12.5 cm:</strong> MAM</li>
-                                    <li><span className="inline-block w-3 h-3 bg-red-600 mr-2 rounded-full"></span><strong>&lt; 11.5 cm:</strong> SAM (Immediate admission criteria)</li>
-                                </ul>
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Body Proportions (U/L Ratio)</h4>
+                                    <p className="mb-2"><strong>Lower Segment (L):</strong> Top of symphysis pubis to floor. <br/><strong>Upper Segment (U):</strong> Total height minus Lower Segment.</p>
+                                    <ul className="list-disc pl-5 space-y-1 mb-2">
+                                        <li><strong>Normal Ratios:</strong> ~1.7 at birth $\rightarrow$ 1.3 at 3 years $\rightarrow$ 1.0 after 7 years.</li>
+                                        <li><strong className="text-amber-700">High U/L Ratio:</strong> Short-limb dwarfism (Turner syndrome, bone disorders).</li>
+                                        <li><strong className="text-emerald-700">Low U/L Ratio:</strong> Hypogonadism, Marfan syndrome.</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-indigo-600 mb-2 border-l-4 border-indigo-500 pl-2">Circumferences & Arm Span</h4>
+                                    <ul className="list-disc pl-5 space-y-1">
+                                        <li><strong>Head Circumference:</strong> Measure with a flexible tape starting at the <strong>supraorbital ridge</strong> around to the <strong>occipital prominence</strong> to find the maximal circumference.</li>
+                                        <li><strong>Arm Span:</strong> Distance between tips of middle fingers with back against wall and arms at 90° angle. Should be close to height.</li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-indigo-800 border-b pb-1 mb-2">Pediatric Vitals (HR | RR)</h3>
-                                <ul className="text-sm text-slate-700 space-y-1">
-                                    <li><strong>Neonate:</strong> 100-205 | 40-60</li>
-                                    <li><strong>Infant:</strong> 100-190 | 30-53</li>
-                                    <li><strong>Toddler:</strong> 98-140 | 22-37</li>
-                                    <li><strong>Preschool:</strong> 80-120 | 20-28</li>
-                                    <li><strong>School Age:</strong> 75-118 | 18-25</li>
-                                </ul>
-                            </div>
+                        </div>
+                    </div>
+
+                    {/* WHO Z-Score Table */}
+                    <div className="bg-white shadow rounded border border-slate-200 p-5 mb-6">
+                        <h3 className="font-bold text-indigo-800 border-b pb-2 mb-4 text-lg">WHO Growth Indicators (Z-Score Matrix)</h3>
+                        <div className="overflow-x-auto shadow rounded border border-slate-200 mb-4">
+                            <table className="min-w-full text-left text-sm bg-white divide-y divide-slate-200">
+                                <thead className="bg-indigo-50 text-indigo-900">
+                                    <tr>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/6">Z-score</th>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Length/height-for-age</th>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Weight-for-age</th>
+                                        <th className="p-3 font-bold border-r border-slate-200 w-1/5">Weight-for-length/height</th>
+                                        <th className="p-3 font-bold w-1/5">BMI-for-age</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-200">
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 3</td>
+                                        <td className="p-3 border-r border-slate-200 italic text-slate-600">See note 1</td>
+                                        <td className="p-3 border-r border-slate-200 italic text-slate-600" rowSpan="3" style={{verticalAlign: 'top'}}>See note 2</td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Obese</td>
+                                        <td className="p-3 font-semibold text-red-600">Obese</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 2</td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-orange-600">Overweight</td>
+                                        <td className="p-3 font-semibold text-orange-600">Overweight</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Above 1</td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Possible risk of overweight <span className="text-xs font-normal text-slate-500"><br/>(See note 3)</span></td>
+                                        <td className="p-3 font-semibold text-amber-600">Possible risk of overweight <span className="text-xs font-normal text-slate-500"><br/>(See note 3)</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">0 (median)</td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 bg-slate-100"></td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;1</td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 border-r border-slate-200 bg-slate-100"></td>
+                                        <td className="p-3 bg-slate-100"></td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;2</td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Stunted <span className="text-xs font-normal text-slate-500"><br/>(See note 4)</span></td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Underweight</td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-amber-600">Wasted</td>
+                                        <td className="p-3 font-semibold text-amber-600">Wasted</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-3 font-bold bg-slate-50 border-r border-slate-200">Below &minus;3</td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely stunted <span className="text-xs font-normal text-slate-500"><br/>(See note 4)</span></td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely underweight <span className="text-xs font-normal text-slate-500"><br/>(See note 5)</span></td>
+                                        <td className="p-3 border-r border-slate-200 font-semibold text-red-600">Severely wasted</td>
+                                        <td className="p-3 font-semibold text-red-600">Severely wasted</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="bg-indigo-50 p-4 rounded text-xs text-slate-700 space-y-2 border border-indigo-100">
+                            <p className="font-bold text-sm text-indigo-900 mb-2">Notes:</p>
+                            <ol className="list-decimal pl-5 space-y-2">
+                                <li>A child in this range is very tall. Tallness is rarely a problem, unless it is so excessive that it may indicate an endocrine disorder.</li>
+                                <li>A child whose weight-for-age falls in this range may have a growth problem, but this is better assessed from weight-for-length/height or BMI-for-age.</li>
+                                <li>A plotted point above 1 shows possible risk. A trend towards the 2 z-score line shows definite risk.</li>
+                                <li>It is possible for a stunted or severely stunted child to become overweight.</li>
+                                <li>This is referred to as very low weight in IMCI training modules.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="bg-white shadow rounded border border-slate-200 p-5">
+                            <h3 className="font-bold text-indigo-800 border-b pb-1 mb-3">MUAC (6 to 59 months)</h3>
+                            <ul className="text-sm space-y-3">
+                                <li><span className="inline-block w-4 h-4 bg-green-500 mr-2 rounded-full align-middle"></span><strong>&ge; 12.5 cm:</strong> Normal</li>
+                                <li><span className="inline-block w-4 h-4 bg-yellow-400 mr-2 rounded-full align-middle"></span><strong>11.5 to &lt; 12.5 cm:</strong> MAM (Moderate Acute Malnutrition)</li>
+                                <li><span className="inline-block w-4 h-4 bg-red-600 mr-2 rounded-full align-middle"></span><strong className="text-red-700">&lt; 11.5 cm:</strong> SAM (Immediate admission criteria)</li>
+                            </ul>
+                        </div>
+                        <div className="bg-white shadow rounded border border-slate-200 p-5">
+                            <h3 className="font-bold text-teal-800 border-b pb-1 mb-3">Pediatric Vitals (HR | RR) - Table 79.1</h3>
+                            <ul className="text-sm text-slate-700 space-y-2">
+                                <li><strong>Neonate:</strong> 100-205 bpm | 35-55 cpm</li>
+                                <li><strong>Infant:</strong> 100-180 bpm | 30-53 cpm</li>
+                                <li><strong>Toddler:</strong> 98-140 bpm | 22-37 cpm</li>
+                                <li><strong>Preschool:</strong> 80-120 bpm | 20-29 cpm</li>
+                                <li><strong>School Age:</strong> 75-118 bpm | 18-25 cpm</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                {/* COMPREHENSIVE VACCINE MATRIX */}
+                {/* VACCINE MATRIX */}
                 <div>
                     <h2 className="text-2xl font-bold text-blue-900 border-b-2 border-blue-200 pb-2 mb-4">Complete 2026 Vaccine Reference Matrix</h2>
                     <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6 text-sm text-blue-900">
-                        <strong>NIP vs. Routine:</strong> NIP prioritizes BCG, monovalent Hep B, Pentavalent, OPV, IPV, PCV, and MMR/MR. School-based NIP includes Td, MR, and HPV. Routine/Out-of-pocket vaccines include Rotavirus, Varicella, JEV, Hep A.
+                        <strong>Live Spacing Rule:</strong> Two parenteral live vaccines not administered simultaneously must be spaced by exactly <strong>4 weeks (28 days)</strong>. Delay live vaccines for 11 months post-Kawasaki IVIG and 4 months post-RIG.
                     </div>
                     <div className="overflow-x-auto shadow rounded border border-slate-200">
                         <table className="min-w-full text-left text-sm bg-white">
@@ -115,79 +214,64 @@
                                 <tr>
                                     <th className="p-3 font-bold w-1/5">Vaccine</th>
                                     <th className="p-3 font-bold w-1/5">Route / Site</th>
-                                    <th className="p-3 font-bold">OSCE Traps, Cutoffs & Preceptor Pearls</th>
+                                    <th className="p-3 font-bold">2026 Guidelines, Cutoffs & Preceptor Pearls</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-200">
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">BCG</td>
                                     <td className="p-3">ID, Right Deltoid</td>
-                                    <td className="p-3"><strong>Trap:</strong> Max age is &lt; 1 year for healthy children. PPD prior to vaccination is NOT necessary for healthy infants &lt; 1 year old.</td>
+                                    <td className="p-3"><strong>Dose by Age:</strong> 0.05 mL for &lt;12 months; 0.10 mL for &ge;12 months. Do not give if birth weight &lt;2kg.</td>
                                 </tr>
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">Hep B Birth</td>
-                                    <td className="p-3">IM, Thigh</td>
-                                    <td className="p-3"><strong>PRETERM TRAP:</strong> Routine birth dose is for newborns &ge; 2kg. For infants &lt; 2kg with unknown HBsAg status, give HBV + HBIG &le; 12 hours. <span className="text-slate-500 italic">(Pearl: For infants &lt; 2kg, the birth dose doesn't count towards the series).</span></td>
+                                    <td className="p-3">IM, Anterolateral Thigh</td>
+                                    <td className="p-3">0, 1, 6 months routine schedule. For infants &lt;2kg with unknown HBsAg status, give HBV + HBIG &le;12 hours (dose doesn't count towards the 3-dose series).</td>
                                 </tr>
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">Pentavalent (DTP/Hib/HepB)</td>
-                                    <td className="p-3">IM, Thigh</td>
-                                    <td className="p-3"><strong>DTP Max:</strong> 7 years and 0 days is the absolute cutoff. <strong>Hib Max:</strong> Not needed for healthy >5 yrs. <span className="text-slate-500 italic">(Pearl: Whole-cell pertussis (wP) causes high local reactogenicity in older children).</span></td>
+                                    <td className="p-3">IM, Anterolateral Thigh</td>
+                                    <td className="p-3">6, 10, 14 weeks. <strong>DTP Max:</strong> 7 years and 0 days is the absolute cutoff. <strong>Double-Dose Trap:</strong> Never give monovalent Hep B at the same time as Penta.</td>
                                 </tr>
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">Polio (OPV / IPV)</td>
                                     <td className="p-3">OPV: Oral<br/>IPV: IM, Thigh</td>
-                                    <td className="p-3">NIP schedule OPV at 6, 10, 14w. IPV at 14w and 9m. <strong>Trap:</strong> Ensure OPV is routed as Oral. Defer IPV if the infant is already receiving multiple IM injections to prevent distress.</td>
+                                    <td className="p-3">NIP schedule OPV at 6, 10, 14w. IPV strictly at 14w and 9m. For &gt;7yo unimmunized catch-up, use IPV instead of OPV.</td>
                                 </tr>
                                 <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">PCV / PPSV23</td>
+                                    <td className="p-3 font-semibold text-emerald-700">PCV & PPSV23</td>
                                     <td className="p-3">IM, Thigh / Arm</td>
-                                    <td className="p-3">NIP follows 3+0 (at 6, 10, 14 weeks). <strong>Trap:</strong> Healthy >5y do not need PCV catch-up. High-risk patients &ge;2y who finished PCV get PPSV23.</td>
+                                    <td className="p-3">PCV at 6, 10, 14 weeks. Booster at 12-15m. Healthy unvaccinated children &gt;5 years do not require catch-up. High-risk kids &gt;2y get PPSV23.</td>
                                 </tr>
                                 <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Rotavirus</td>
+                                    <td className="p-3 font-semibold text-amber-800">Rotavirus (RV)</td>
                                     <td className="p-3">Oral</td>
-                                    <td className="p-3"><strong>Max 1st dose:</strong> 14w6d (RV5). <strong>Max Final:</strong> RV1 is 24w; RV5 is 32w; RV5-SII is 12 months. Prior infection is NOT a contraindication.</td>
+                                    <td className="p-3"><strong>Max 1st dose:</strong> 14w6d. <strong>Final dose max ages:</strong> RV1 (24 weeks), RV5 (32 weeks), RV5-SII (12 months). Give before OPV.</td>
                                 </tr>
                                 <tr>
-                                    <td className="p-3 font-semibold text-emerald-700">Measles (MCV) / MMR</td>
-                                    <td className="p-3">SC, Outer Arm</td>
-                                    <td className="p-3">NIP provides MMR at 9m and 12m. <strong>Outbreak Trap:</strong> Measles vaccine given at 6m doesn't count towards primary series because maternal IgG antibodies blunt viral replication.</td>
+                                    <td className="p-3 font-semibold text-emerald-700">Measles / MMR</td>
+                                    <td className="p-3">SC, Triceps/Thigh (45°)</td>
+                                    <td className="p-3">NIP provides MMR at 9m and 12m. School-based MR given at Grade 1 and Grade 7. <strong>Outbreak:</strong> Measles vaccine given at 6m doesn't count towards primary series.</td>
                                 </tr>
                                 <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Varicella & Hep A</td>
-                                    <td className="p-3">SC / IM, Arm</td>
-                                    <td className="p-3">Strictly indicated at &ge; 12 months. Giving at 9 months or 11 months is a critical error.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">JEV</td>
-                                    <td className="p-3">SC, Outer Arm</td>
-                                    <td className="p-3">Strictly indicated at &ge; 9 months. Administer alongside MCV1.</td>
+                                    <td className="p-3 font-semibold text-amber-800">Influenza</td>
+                                    <td className="p-3">IM, Thigh/Deltoid</td>
+                                    <td className="p-3">Starting at 6 months. Children 6 months to 8 years receiving it for the first time require 2 doses 4 weeks apart.</td>
                                 </tr>
                                 <tr>
-                                    <td className="p-3 font-semibold text-red-700">Live Spacing / IVIG</td>
-                                    <td className="p-3">-</td>
-                                    <td className="p-3 font-bold text-red-600">Non-simultaneous parenteral live vaccines MUST be spaced by 28 days. Delay live vaccines for 11 months post-IVIG (Kawasaki) and 4 months post-RIG (Rabies).</td>
+                                    <td className="p-3 font-semibold text-emerald-700">Hep A</td>
+                                    <td className="p-3">IM, Thigh/Deltoid</td>
+                                    <td className="p-3">2-dose series starting at 12 months. Doses separated by 6 months.</td>
                                 </tr>
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">Td / Tdap</td>
                                     <td className="p-3">IM, Deltoid</td>
-                                    <td className="p-3">Use instead of DTP for children &ge; 7 years. NIP gives Td school-based boosters at Grade 1 and Grade 7.</td>
+                                    <td className="p-3">For unimmunized children 7-18 years old, catch up using Tdap as one of the doses (preferably the first), followed by Td.</td>
                                 </tr>
                                 <tr>
                                     <td className="p-3 font-semibold text-emerald-700">HPV</td>
                                     <td className="p-3">IM, Deltoid</td>
-                                    <td className="p-3">NIP provides HPV to females via 2 programs: At Grade 4 (school-based) OR 9 years old (community-based). 2 doses one year apart. Must wait 15 minutes post-vaccination due to syncope risk.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Typhoid & Cholera</td>
-                                    <td className="p-3">Typhoid: IM<br/>Cholera: Oral</td>
-                                    <td className="p-3">Given during disaster/flood settings. <strong>Trap:</strong> Minimum age for Typhoid is 2 years. Minimum age for Cholera (Whole-cell bivalent) is 12 months.</td>
-                                </tr>
-                                <tr className="bg-amber-50">
-                                    <td className="p-3 font-semibold text-amber-800">Rabies PreP</td>
-                                    <td className="p-3">IM / ID, Arm</td>
-                                    <td className="p-3">Pre-exposure prophylaxis recommended for 2-10 years old due to high bite risk. <strong>Trap:</strong> Never give in gluteal area (unpredictable absorption).</td>
+                                    <td className="p-3">NIP provides HPV to females: Grade 4 (school-based) or 9 years old (community-based). Must observe 15-20 mins post-vaccination.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -205,14 +289,14 @@
             const [selections, setSelections] = useState({ measure: "", hrStat: "", rrStat: "", nutStat: "" });
 
             const cases = {
-                1: { title: "1. The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Wasting (SAM)" }, pearl: "Infants (1m-1y) HR up to 190. Toddlers (1-2y) HR up to 140. A HR of 145 in an 18mo is slightly tachycardic, but WFH <-3 is classic SAM." },
-                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschoolers (3-5y) normal RR is 20-28. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
-                3: { title: "3. MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM)" }, pearl: "Regardless of a MAM WFH Z-score, a MUAC < 11.5cm is an independent, immediate diagnostic criterion for SAM." },
-                4: { title: "4. The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" }, pearl: "WFH > +2 is Overweight. WFH > +3 is Obese. Standing height is strictly used for >= 2 years." },
-                5: { title: "5. Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 18. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" }, pearl: "Toddler normal RR is 22-37. RR 18 is bradypneic. HFA < -3 defines Severe Stunting." },
-                6: { title: "6. Overweight & Tachycardia", prompt: "10-month-old. HR 200, RR 45. WFH Z-score +2.5.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Overweight" }, pearl: "Infant max HR is 190. 200 is tachycardic. WFH between +2 and +3 is Overweight." },
-                7: { title: "7. School-Age Bradycardia", prompt: "8-year-old. HR 55, RR 20. WFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Bradycardia", rrStat: "Normal", nutStat: "Underweight" }, pearl: "School-age normal HR is 75-118. HR 55 is bradycardic. WFA < -2 is Underweight." },
-                8: { title: "8. Adjustment Rule (+/- 0.7cm)", prompt: "A 2.5-year-old refuses to stand. Measured lying down at 90.0 cm. HR 100, RR 25. WFH Z-score -1.0.", rules: { measure: "Subtract 0.7 cm", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" }, pearl: "Because gravity compresses the spine when standing, recumbent length is naturally ~0.7cm longer. You must subtract 0.7cm if a child >=2y is measured lying down." }
+                1: { title: "1. The 18-Month-Old", prompt: "18-month-old. HR 145, RR 32. WFH Z-score -3.2.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Severe Wasting (SAM)" }, pearl: "Toddler (1-3y) normal HR is 98-140 per Table 79.1. A HR of 145 in an 18mo is tachycardic. WFH < -3 is classic SAM." },
+                2: { title: "2. The 4-Year-Old", prompt: "4-year-old. HR 90, RR 35. HFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Tachypnea", nutStat: "Stunting" }, pearl: "Preschooler normal RR is 20-29 per Table 79.1. RR 35 is tachypneic. HFA between -2 and -3 defines Stunting." },
+                3: { title: "3. MUAC Override", prompt: "18-month-old. HR 120, RR 30. WFH -2.5 (MAM). MUAC is 11.0 cm.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Normal", nutStat: "Severe Acute Malnutrition (SAM - Override)" }, pearl: "Regardless of a MAM WFH Z-score, a MUAC < 11.5cm is an independent, immediate diagnostic criterion for SAM." },
+                4: { title: "4. The Obese Preschooler", prompt: "4-year-old. HR 85, RR 22. WFH Z-score +3.5.", rules: { measure: "Standing", hrStat: "Normal", rrStat: "Normal", nutStat: "Obese" }, pearl: "WFH > +2 is Overweight. WFH > +3 is Obese. Standing height using a stadiometer is strictly used for children >= 2 years old (Nelson)." },
+                5: { title: "5. Severe Stunting & Bradypnea", prompt: "14-month-old. HR 120, RR 18. HFA Z-score -3.5.", rules: { measure: "Recumbent", hrStat: "Normal", rrStat: "Bradypnea", nutStat: "Severe Stunting" }, pearl: "Toddler normal RR is 22-37 per Table 79.1. RR 18 is bradypneic. HFA < -3 defines Severe Stunting." },
+                6: { title: "6. Overweight & Tachycardia", prompt: "10-month-old. HR 200, RR 45. WFH Z-score +2.5.", rules: { measure: "Recumbent", hrStat: "Tachycardia", rrStat: "Normal", nutStat: "Overweight" }, pearl: "Infant max HR is 180 per Table 79.1. 200 is tachycardic. WFH between +2 and +3 is Overweight." },
+                7: { title: "7. School-Age Bradycardia", prompt: "8-year-old. HR 55, RR 20. WFA Z-score -2.5.", rules: { measure: "Standing", hrStat: "Bradycardia", rrStat: "Normal", nutStat: "Underweight" }, pearl: "School-age normal HR is 75-118 per Table 79.1. HR 55 is bradycardic. WFA < -2 is Underweight." },
+                8: { title: "8. Adjustment Rule (+/- 0.7cm)", prompt: "A 2.5-year-old refuses to stand. Measured lying down at 90.0 cm. HR 100, RR 25. WFH Z-score -1.0.", rules: { measure: "Subtract 0.7 cm", hrStat: "Normal", rrStat: "Normal", nutStat: "Normal" }, pearl: "Because gravity compresses the spine when standing, recumbent length is naturally ~0.7cm longer. You must subtract 0.7cm if an older child (>= 2y) is measured lying down to plot on standing height charts." }
             };
 
             const evaluateCase = () => {
@@ -230,7 +314,7 @@
                 if(selections.nutStat === activeCase.nutStat) fb.push({type:'ok', msg: `Diagnosis: ${activeCase.nutStat}`});
                 else { pts -= 25; fb.push({type:'err', msg: `Wrong Diagnosis`, rationale: `Expected: ${activeCase.nutStat}.`}); }
                 
-                fb.push({type: 'info', msg: '🗣️ OSCE REPORTING SCRIPT:', rationale: `"Good morning Doc, presenting my patient. Vitals show a ${selections.hrStat || '[HR]'} heart rate and ${selections.rrStat || '[RR]'} respiratory rate. Because of their age/cooperation, I utilized the ${selections.measure || '[Tool/Adjustment]'}. Based on the parameters, the final assessment is ${selections.nutStat || '[Diagnosis]'}.`});
+                fb.push({type: 'info', msg: '🗣️ IDEAL OSCE REPORTING SCRIPT:', rationale: `"Good morning Doc, presenting my patient. Vitals show a ${activeCase.hrStat} heart rate and ${activeCase.rrStat} respiratory rate. Because of their age/cooperation, I utilized the ${activeCase.measure}. Based on the parameters, the final assessment is ${activeCase.nutStat}."`});
                 fb.push({type: 'pearl', msg: 'Clinical Pearl', rationale: cases[currentCaseId].pearl});
 
                 setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
@@ -258,7 +342,7 @@
                                 </div>
                                 <div>
                                     <label className="block font-bold text-slate-700 mb-2">2. Nutritional Diagnosis:</label>
-                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Normal">Normal</option><option value="Severe Wasting (SAM)">Severe Wasting (SAM)</option><option value="Severe Acute Malnutrition (SAM)">Severe Acute Malnutrition (SAM - Override)</option><option value="Wasting (MAM)">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Underweight">Underweight</option><option value="Overweight">Overweight</option><option value="Obese">Obese</option></select>
+                                    <select disabled={submitted} value={selections.nutStat} onChange={e=>setSelections({...selections, nutStat:e.target.value})} className="w-full p-2 border rounded bg-slate-50 text-sm"><option value="">Select...</option><option value="Normal">Normal</option><option value="Severe Wasting (SAM)">Severe Wasting (SAM)</option><option value="Severe Acute Malnutrition (SAM - Override)">Severe Acute Malnutrition (SAM - Override)</option><option value="Wasting (MAM)">Wasting (MAM)</option><option value="Severe Stunting">Severe Stunting</option><option value="Stunting">Stunting</option><option value="Underweight">Underweight</option><option value="Overweight">Overweight</option><option value="Obese">Obese</option></select>
                                 </div>
                             </div>
                             <div className="space-y-4">
@@ -275,6 +359,17 @@
                         {!submitted ? <button onClick={evaluateCase} disabled={!selections.measure || !selections.hrStat || !selections.rrStat || !selections.nutStat} className="w-full bg-indigo-600 text-white font-bold py-3 rounded shadow hover:bg-indigo-700 disabled:opacity-50 transition-all">Submit Anthro Assessment</button> : 
                             <div className="p-6 rounded border-2 border-indigo-200 bg-indigo-50">
                                 <h3 className="text-xl font-bold text-slate-800 mb-4">Feedback: {score}%</h3>
+                                
+                                <div className="mb-6 bg-white p-4 rounded border border-indigo-300 shadow-sm">
+                                    <h4 className="font-bold text-indigo-900 border-b border-indigo-100 pb-2 mb-3">🔑 Ideal Answer Key</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-800">
+                                        <div><strong>Measurement:</strong> <span className="text-emerald-700 font-semibold">{cases[currentCaseId].rules.measure}</span></div>
+                                        <div><strong>Diagnosis:</strong> <span className="text-emerald-700 font-semibold">{cases[currentCaseId].rules.nutStat}</span></div>
+                                        <div><strong>Heart Rate:</strong> <span className="text-emerald-700 font-semibold">{cases[currentCaseId].rules.hrStat}</span></div>
+                                        <div><strong>Resp Rate:</strong> <span className="text-emerald-700 font-semibold">{cases[currentCaseId].rules.rrStat}</span></div>
+                                    </div>
+                                </div>
+
                                 <ul className="space-y-3">
                                     {feedback.map((f, i) => (
                                         <li key={i} className={`flex flex-col p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-indigo-100 border-indigo-300 text-indigo-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
@@ -301,44 +396,45 @@
             const [currentCaseId, setCurrentCaseId] = useState(1);
             const [selectedVaccines, setSelectedVaccines] = useState({});
 
-            const vaccineList = ["BCG", "Hep B", "Penta", "OPV", "IPV", "PCV", "RV1", "RV5", "MCV0", "MCV1(9m)", "MCV2(12m)", "Td", "Tdap", "Varicella", "JEV", "HPV", "Typhoid", "Cholera", "Rabies PreP"];
+            const vaccineList = ["BCG", "Hep B", "Penta", "OPV", "IPV", "PCV", "PPSV23", "RV", "MCV0", "MMR", "Tdap", "Td", "Flu", "Varicella", "JEV", "Hep A", "HPV", "Typhoid", "Cholera"];
 
             const cases = {
-                1: { title: "1. Preterm <2kg", prompt: "32wks, 1.8kg, Day 1. Unknown maternal HBsAg.", req: ["BCG", "Hep B"], defer: [], traps: [], ratReq: "Give BCG and Hep B (plus HBIG).", ratTrap: "None.", pearl: "For infants <2kg with unknown HBsAg status, give HBV and HBIG within 12 hours, but this birth dose does not count toward the primary series." },
-                2: { title: "2. 14w5d old", prompt: "14w5d. Received birth vaccines, missed all others.", req: ["Penta", "OPV", "PCV"], defer: ["IPV", "RV1"], traps: ["MCV1(9m)", "Td"], ratReq: "Initiate primary series.", ratTrap: "Too young for MCV/Td.", pearl: "14w5d is the absolute last day you can give the 1st dose of Rotavirus. Do not miss it." },
-                3: { title: "3. 16 weeks old", prompt: "16-week-old. Received birth vaccines, missed all others.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Initiate primary series.", ratTrap: "Strict contraindication: >14w6d for 1st dose.", pearl: "Initiating Rotavirus >14w6d significantly increases the background risk of intussusception." },
-                4: { title: "4. 6mo (Outbreak)", prompt: "6mo infant. UTD to 14w. DOH declared local measles outbreak.", req: ["MCV0"], defer: [], traps: ["MCV1(9m)"], ratReq: "MCV0 is indicated at 6m during outbreaks.", ratTrap: "MCV1 is strictly at 9m.", pearl: "MCV0 does not count toward the primary series because maternal IgG antibodies can blunt the viral replication of the vaccine." },
-                5: { title: "5. 26wk RV1 Trap", prompt: "26-week-old. Clinic only has RV1 in stock.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Catch-up primary.", ratTrap: "RV1 max final age is 24w.", pearl: "RV1 (Rotarix) is a 2-dose series maxing at 24w. RV5 (RotaTeq) is a 3-dose series maxing at 32w. RV5-SII maxes at 12 months." },
-                6: { title: "6. 11mo & 3wks", prompt: "11m3w old. Missed 9m visit.", req: ["MCV1(9m)"], defer: [], traps: ["MCV2(12m)", "Varicella"], ratReq: "Catch-up MCV1.", ratTrap: "Live vaccines like MCV2 cannot be given prior to the 1st birthday.", pearl: "Non-simultaneous live vaccines must be spaced by exactly 28 days." },
-                7: { title: "7. 12mo Post-IVIG", prompt: "12mo. High-dose IVIG 2mo ago. UTD until 9m.", req: [], defer: ["MCV2(12m)", "Varicella"], traps: ["MCV1(9m)", "JEV"], ratReq: "None required today.", ratTrap: "Patient already had MCV1.", pearl: "High-dose IVIG contains passive antibodies that neutralize live attenuated vaccines. Delay 11 months." },
-                8: { title: "8. 5-year-old", prompt: "5y child. 0 prior vaccines.", req: ["Penta", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["BCG", "Hib", "PCV", "Td"], ratReq: "Catch-up DTP, OPV, MCV.", ratTrap: "BCG max <1y. Hib/PCV not needed for healthy >5y. Td is for >=7y.", pearl: "Healthy children >5y naturally acquire immunity to Hib and Pneumococcus." },
-                9: { title: "9. 7-year-old", prompt: "Turned 7 years exactly today. 0 prior vaccines.", req: ["Td", "Hep B", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["Penta", "DTP"], ratReq: "Initiate Td, HepB, OPV, MCV.", ratTrap: "Max age for DTP is 7 years and 0 days.", pearl: "Whole-cell pertussis (wP) in Pentavalent causes severe local reactogenicity in older children." },
-                10: { title: "10. 9y Female (Community)", prompt: "9y female in a community program. UTD to 12m.", req: ["HPV"], defer: [], traps: ["Td", "Penta"], ratReq: "HPV NIP for 9-year-olds in community programs.", ratTrap: "Td school booster is Grade 1 and Grade 7.", pearl: "HPV is given via NIP for Grade 4 females or at 9 years old in community programs for cervical cancer prevention." },
-                11: { title: "11. 3y Evacuee", prompt: "3y in flooded evacuation center. UTD on NIP.", req: ["Typhoid", "Cholera"], defer: [], traps: ["Penta"], ratReq: "Waterborne protection.", ratTrap: "UTD.", pearl: "Typhoid minimum age is 2y (IM). Cholera minimum age is 1y (PO)." },
-                12: { title: "12. 11y Female", prompt: "11y female Grade 5. Missed Grade 4 school-based vax.", req: ["HPV"], defer: [], traps: ["Td"], ratReq: "Catch-up Grade 4 HPV.", ratTrap: "Td is Grade 1 and Grade 7.", pearl: "Catch-up HPV is crucial for females who miss the Grade 4 cohort." },
-                13: { title: "13. 16w (Surgery)", prompt: "16w old. Pediatric surgical condition onset at 3w. 0 prior.", req: ["Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["RV1", "RV5"], ratReq: "Initiate primary.", ratTrap: "Age >14w6d. Absolute contraindication.", pearl: "Even if age-eligible, previous intussusception or uncorrected congenital GI tract malformations are absolute contraindications for Rotavirus." },
-                14: { title: "14. Live Spacing", prompt: "13mo. Received Varicella 2 weeks ago.", req: [], defer: ["MCV2(12m)"], traps: ["MCV2(12m)"], ratReq: "None today.", ratTrap: "Cannot give live vaccine today.", pearl: "If two parenteral live vaccines are not administered simultaneously, they must be separated by at least 4 weeks (28 days) to avoid viral interference." },
-                15: { title: "15. 3mo no BCG", prompt: "3mo infant. NEVER received BCG. Healthy.", req: ["BCG", "Penta", "OPV", "PCV"], defer: ["IPV"], traps: ["Hep B"], ratReq: "BCG can be given.", ratTrap: "Hep B is in Penta.", pearl: "BCG can be given without prior PPD testing for healthy asymptomatic infants < 1 year old." },
-                16: { title: "16. 15y Catch-up", prompt: "15y male. 0 prior vaccines.", req: ["Td", "Hep B", "MCV1(9m)"], defer: [], traps: ["Penta", "HPV"], ratReq: "Td, HepB, MCV catchup.", ratTrap: "Penta age out. HPV NIP is strictly for females.", pearl: "Adolescent catch-up prioritizes Td, Hepatitis B (3 doses), and MR/MMR." },
-                17: { title: "17. RV5 Final", prompt: "30w old (7.5m). Had 2 prior doses of RV5. Missed 3rd.", req: ["RV5"], defer: [], traps: ["RV1"], ratReq: "Give 3rd dose.", ratTrap: "RV1 max is 24w.", pearl: "RV5 max final age is 32 weeks. 30w is acceptable." },
-                18: { title: "18. Post-RIG", prompt: "10mo. Rabies IG 1 month ago. Missed 9m visit.", req: [], defer: ["MCV1(9m)"], traps: ["MCV1(9m)"], ratReq: "Delay MCV.", ratTrap: "RIG interference.", pearl: "Unlike IVIG (11 months), Rabies Immunoglobulin (RIG) only requires a 4-month delay for live vaccines." },
-                19: { title: "19. DTP Limit", prompt: "6y and 11mo old child. 0 prior.", req: ["Penta", "OPV", "MCV1(9m)"], defer: ["IPV"], traps: ["Td", "Tdap"], ratReq: "DTP is still valid.", ratTrap: "Not yet 7.", pearl: "DTP can be given up to 6 years and 364 days old." },
-                20: { title: "20. Post-RV Gastro", prompt: "8w old. Rotavirus Gastro at 6w, recovered. Missed 6w visit.", req: ["Penta", "OPV", "PCV", "RV1"], defer: [], traps: ["Hep B"], ratReq: "Give all 6w vaccines.", ratTrap: "Hep B in Penta.", pearl: "Prior rotavirus infection does not confer complete immunity to all serotypes. Complete the vaccine series." }
+                1: { title: "1. The 6-Week-Old (Primary Series)", prompt: "6-week-old FT baby. Home birth, given BCG and Hep B by midwife. First time at pediatrician.", req: ["Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Flu", "MMR", "Hep B", "IPV"], ratReq: "Needs 1st doses of Penta, OPV, PCV, and Rotavirus.", ratTrap: "Too young for Flu/MMR. Hep B is already included in Penta. IPV is not given until 14 weeks.", pearl: "Administer Rotavirus orally first while baby is calm, before injecting IM vaccines in the vastus lateralis. Do NOT give monovalent Hep B alongside Penta." },
+                2: { title: "2. The 12-Month Routine", prompt: "Exactly 12-month-old child. UTD up to 9 months (Received BCG, HepBx3, Pentax3, OPVx3, IPVx2, PCVx3, RVx2, and MMR1 + JEV at 9mo). No vaccines since 9mo.", req: ["MMR", "Varicella", "Hep A", "PCV"], defer: [], traps: ["Penta", "OPV", "RV"], ratReq: "Needs MMR2, Varicella, Hep A, and PCV booster.", ratTrap: "Already UTD on primary series. RV age limit passed.", pearl: "The 12-month visit is heavily focused on live vaccines (MMR2, Varicella) and the PCV booster." },
+                3: { title: "3. 16wks (Surgery)", prompt: "16w old. Intussusception surgery at 6w. 0 prior vaccines.", req: ["BCG", "Penta", "OPV", "PCV"], defer: [], traps: ["RV", "Hep B", "IPV"], ratReq: "Initiate primary. BCG, Penta, OPV, PCV.", ratTrap: "RV contraindicated due to age (>14w6d) AND history of intussusception. IPV is deferred to the 14-week equivalent visit.", pearl: "Even if age-eligible, previous intussusception or uncorrected congenital GI tract malformations are absolute contraindications for Rotavirus." },
+                4: { title: "4. 6mo (Outbreak)", prompt: "6mo infant. UTD to 14w. DOH declared local measles outbreak.", req: ["MCV0"], defer: [], traps: ["MMR"], ratReq: "MCV0 is indicated at 6m during outbreaks.", ratTrap: "Routine MMR is strictly at 12m for non-NIP, 9m for NIP.", pearl: "MCV0 does not count toward the primary series because maternal IgG antibodies can blunt the viral replication of the vaccine." },
+                5: { title: "5. Preterm <2kg", prompt: "32wks, 1.8kg, Day 1. Unknown maternal HBsAg.", req: ["Hep B"], defer: [], traps: ["BCG", "Penta", "OPV"], ratReq: "Give Hep B (plus HBIG within 12h).", ratTrap: "BCG is withheld until infant reaches 2kg. Too young for Penta/OPV.", pearl: "For infants <2kg with unknown HBsAg status, give HBV and HBIG within 12 hours, but this birth dose does not count toward the primary 3-dose series. Delay BCG until 2kg." },
+                6: { title: "6. 12mo Post-IVIG (Kawasaki)", prompt: "12mo. High-dose IVIG for Kawasaki 2mo ago. UTD to 9m.", req: ["PCV", "Hep A"], defer: ["MMR", "Varicella", "JEV"], traps: [], ratReq: "Can give inactivated vaccines like PCV booster and Hep A.", ratTrap: "Delay live vaccines 11 months after high-dose IVIG.", pearl: "High-dose IVIG contains passive antibodies that neutralize live attenuated vaccines. Delay 11 months for Kawasaki." },
+                7: { title: "7. 7-year-old Catch-up", prompt: "Turned 7 years exactly today. 0 prior vaccines.", req: ["Tdap", "Hep B", "IPV", "MMR"], defer: [], traps: ["Penta", "Td", "OPV"], ratReq: "Initiate Tdap, HepB, IPV, MMR.", ratTrap: "Max age for DTP/Penta is <7. Use IPV for older kids instead of OPV.", pearl: "For catch-up in 7-18 year olds, use Tdap as the first dose of the tetanus series instead of DTP/Penta, and IPV instead of OPV." },
+                8: { title: "8. Live Spacing", prompt: "13mo. Received Varicella exactly 2 weeks ago. Wants remaining vaccines.", req: [], defer: ["MMR", "JEV"], traps: ["MMR", "JEV"], ratReq: "None today.", ratTrap: "Must space parenteral live vaccines by exactly 28 days.", pearl: "If two parenteral live vaccines (MMR, Varicella, JEV) are not administered on the exact same day, they must be separated by at least 28 days to avoid viral interference." },
+                9: { title: "9. 3mo no BCG", prompt: "12-week-old (3 months). NEVER received BCG. Healthy.", req: ["BCG", "Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "BCG can be given without PPD <1yo. Initiate primary series including RV.", ratTrap: "Hep B covered by Penta. IPV is not given until 14 weeks.", pearl: "BCG can be given without prior PPD testing for healthy asymptomatic infants < 1 year old. The dose is 0.05 mL." },
+                10: { title: "10. Post-RIG", prompt: "10mo. Rabies IG 1 month ago. Missed 9m visit.", req: ["IPV"], defer: ["MMR", "JEV"], traps: ["MCV0", "MMR", "JEV"], ratReq: "Can give IPV (inactivated) which was due at 9 months.", ratTrap: "Delay live vaccines 4 months after RIG.", pearl: "Unlike IVIG (11 months), Rabies Immunoglobulin (RIG) only requires a 4-month delay for live vaccines." },
+                11: { title: "11. High Risk Pneumo", prompt: "3-year-old with Sickle Cell. Completed PCV13 series at 15mo.", req: ["PPSV23"], defer: [], traps: ["PCV"], ratReq: "Needs PPSV23 for high risk status.", ratTrap: "Already completed PCV series.", pearl: "High-risk children >2 years old who completed their PCV series must receive PPSV23 at least 8 weeks after their last PCV dose." },
+                12: { title: "12. 11y Female Catch-up", prompt: "11y female Grade 5. Missed Grade 4 school-based HPV. UTD on others.", req: ["HPV"], defer: [], traps: ["Td"], ratReq: "Catch-up HPV.", ratTrap: "Td is given at Grade 1 and Grade 7.", pearl: "Catch-up HPV is crucial for females who miss the Grade 4 cohort. NIP provides 2 doses." },
+                13: { title: "13. RV5 Final Dose Max", prompt: "30w old (7.5m). Had 2 prior doses of RV5. Missed 3rd.", req: ["RV"], defer: [], traps: [], ratReq: "Give 3rd dose of Rotavirus.", ratTrap: "None.", pearl: "RV5 max final age is 32 weeks. (RV1 max is 24 weeks). 30w is acceptable for RV5." },
+                14: { title: "14. DTP Limit Check", prompt: "4y 11mo old child. 0 prior vaccines.", req: ["Penta", "OPV", "MMR"], defer: ["IPV"], traps: ["Tdap", "Td"], ratReq: "Penta is valid <5y.", ratTrap: "Td/Tdap is for >7y.", pearl: "Pentavalent (wP) can be given up to 6 years and 364 days old (Hib specifically <5y). At exactly 7 years, switch to Tdap/Td." },
+                15: { title: "15. Influenza Series", prompt: "8mo old. 1st Flu 4w ago.", req: ["Flu"], defer: [], traps: ["MCV0", "MMR"], ratReq: "Needs 2nd dose of Flu.", ratTrap: "MCV0 is only for outbreaks or 9m routine.", pearl: "Children 6 months to 8 years receiving the influenza vaccine for the first time require 2 doses spaced 4 weeks apart." },
+                16: { title: "16. 18mo Routine (Hep A)", prompt: "18-month-old. UTD on all vaccines including 12mo Hep A.", req: ["Hep A"], defer: [], traps: [], ratReq: "Hepatitis A requires 2nd dose 6 months after the 1st.", ratTrap: "None.", pearl: "Hepatitis A vaccine requires a 2-dose series, separated by at least 6 months." },
+                17: { title: "17. 3y Evacuee (Flood)", prompt: "3y in flooded evacuation center. UTD on NIP.", req: ["Typhoid", "Cholera"], defer: [], traps: [], ratReq: "Waterborne protection indicated.", ratTrap: "None.", pearl: "Typhoid minimum age is 2y (IM). Cholera minimum age is 1y (PO). Crucial during disaster/flood settings." },
+                18: { title: "18. Post-RV Gastro", prompt: "8w old. Rotavirus Gastro at 6w, recovered. Missed 6w visit.", req: ["Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "Give all 6w primary vaccines.", ratTrap: "Hep B covered by Penta. IPV given at 14w.", pearl: "Prior rotavirus infection does not confer complete immunity to all serotypes. You must complete the vaccine series." },
+                19: { title: "19. Preterm Catch-up", prompt: "Born at 30w (1.2kg). Given Hep B at birth. Now 8 weeks old, weighing 2.5kg.", req: ["BCG", "Penta", "OPV", "PCV", "RV"], defer: [], traps: ["Hep B", "IPV"], ratReq: "Initiate primary series and catch up BCG.", ratTrap: "Hep B covered by Penta. IPV given at 14w.", pearl: "Vaccinate preterms based on their chronological age without correcting for prematurity. BCG is safe once >=2kg." },
+                20: { title: "20. Spacing Error", prompt: "15mo. Received MMR yesterday at health center. Wants Varicella today.", req: [], defer: ["Varicella"], traps: ["Varicella"], ratReq: "None today.", ratTrap: "Live vaccine spacing violation.", pearl: "If two parenteral live vaccines (MMR, Varicella, JEV) are not administered on the exact same day, they must be separated by at least 28 days." }
             };
 
             const specificSideEffects = {
-                "BCG": "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Normal po ito at mag-iiwan ng peklat. Huwag pipisain, kakamutin, o lalagyan ng alcohol/betadine.",
-                "Penta": "Sa Pentavalent, asahan po natin na baka lagnatin si baby at sumakit o mamaga ang hita.",
-                "PCV": "Sa PCV, maaari rin pong magkalagnat at mamula ang tinurukan.",
-                "MCV0": "Sa bakuna sa tigdas, maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 5-12 araw.",
-                "MCV1(9m)": "Sa bakuna sa tigdas, maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 5-12 araw.",
-                "MCV2(12m)": "Sa MMR, maaaring magkalagnat, mamaga ang pisngi (glands), o magkapantal pagkalipas ng 1-2 linggo.",
-                "RV1": "Sa Rotavirus drops, baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak dahil sa sakit ng tiyan, dalhin agad sa ER).",
-                "RV5": "Sa Rotavirus drops, baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak, dalhin agad sa ER).",
-                "OPV": "Sa Polio drops, wala po tayong masyadong inaasahang side effect, pero baka maging iritable nang bahagya.",
-                "IPV": "Sa IPV, maaaring sumakit at mamula ang tinurukan.",
-                "Td": "Sa Td, maaaring mangawit ang braso. Paminsan-minsan ay nakakahilo ito sa mga bata kaya pauupuin muna natin siya ng 15 minuto.",
-                "HPV": "Sa HPV, bukod sa ngawit sa braso, maaari ring mahilo o himatayin (syncope) ang teenager kaya magpapahinga muna siya ng 15 minuto pagkatapos turukan."
+                "BCG": "Asahan po ang pag-umbok, pamumula, at pagnanana sa tinurukan pagkalipas ng ilang linggo. Mag-iiwan ito ng peklat. Gamitin lamang ang cotton at sterile water. Huwag lagyan ng alcohol.",
+                "Penta": "Asahan po natin na baka lagnatin si baby at sumakit o mamaga ang hita.",
+                "PCV": "Maaari rin pong magkalagnat at mamula ang tinurukan.",
+                "PPSV23": "Maaari rin pong magkalagnat at mamula ang tinurukan.",
+                "MCV0": "Maaaring magkalagnat o magkaroon ng banayad na pantal (rash) pagkalipas ng 6-12 araw.",
+                "MMR": "Maaaring magkalagnat, mamaga ang pisngi (glands), o magkapantal pagkalipas ng 6-12 araw.",
+                "RV": "Baka maging iritable. (RED FLAG: Kung mapansin na parang strawberry jelly ang dumi at iyak nang iyak dahil sa sakit ng tiyan, dalhin agad sa ER).",
+                "OPV": "Wala po tayong masyadong inaasahang side effect, pero baka maging iritable nang bahagya.",
+                "IPV": "Maaaring sumakit at mamula ang tinurukan.",
+                "Tdap": "Maaaring mangawit ang braso.",
+                "Td": "Maaaring mangawit ang braso.",
+                "Flu": "Maaaring magkalagnat ng bahagya o sumakit ang tinurukan.",
+                "HPV": "Bukod sa ngawit sa braso, maaari ring mahilo o himatayin (syncope) ang teenager kaya magpapahinga muna siya ng 15-20 minuto pagkatapos turukan."
             };
 
             const toggle = (v) => {
@@ -351,24 +447,26 @@
                 setSelectedVaccines({...selectedVaccines, [v]: { ...selectedVaccines[v], [field]: value }});
             };
 
-            const generateCounselingScript = (selections) => {
-                let adminIM = []; let adminPO = []; let deferScript = []; let seScript = [];
+            const generateIdealCounselingScript = (activeCase) => {
+                let adminIM = []; let adminPO = []; let adminSQ = []; let adminID = []; let deferScript = [...activeCase.defer]; let seScript = [];
                 
-                Object.keys(selections).forEach(v => {
-                    const route = selections[v].route;
-                    if (route === "Defer") deferScript.push(v);
-                    else if (route === "Oral") adminPO.push(v);
-                    else if (route === "IM" || route === "SC" || route === "ID") adminIM.push(`${v} sa ${selections[v].site === "Mouth" ? "mali" : selections[v].site}`);
+                activeCase.req.forEach(v => {
+                    if (["OPV", "RV", "Cholera"].includes(v)) adminPO.push(v);
+                    else if (["MCV0", "MMR", "Varicella", "JEV"].includes(v)) adminSQ.push(v);
+                    else if (v === "BCG") adminID.push(v);
+                    else adminIM.push(v);
                     
-                    if (route !== "Defer" && specificSideEffects[v]) {
-                        if (!seScript.includes(specificSideEffects[v])) seScript.push(specificSideEffects[v]);
+                    if (specificSideEffects[v] && !seScript.includes(specificSideEffects[v])) {
+                        seScript.push(specificSideEffects[v]);
                     }
                 });
 
+                if (activeCase.req.length === 0 && activeCase.defer.length === 0) return `"Wala po tayong kailangang ibigay na bakuna sa ngayon."`;
+
                 let finalScript = `"Magandang araw po Mommy. Ako po si Dok, titingin kay baby ngayon. `;
-                if (adminPO.length > 0) finalScript += `Papainumin po natin si baby ng drops para sa ${adminPO.join(", ")}. `;
-                if (adminIM.length > 0) finalScript += `Ituturok po natin ang ${adminIM.join(" at ")}. `;
-                if (seScript.length > 0) finalScript += `\n\nMga Inaasahan (Side Effects):\n` + seScript.join(" ") + ` Pwede po punasan ng maligamgam na tubig at painumin ng paracetamol kung lagnatin. `;
+                if (adminPO.length > 0) finalScript += `Ipapainom po muna natin ang ${adminPO.join(", ")} habang kalmado pa si baby. Siguraduhin natin na hindi siya dumede sa nakaraang dalawang oras. `;
+                if (adminIM.length > 0 || adminSQ.length > 0 || adminID.length > 0) finalScript += `Pagkatapos, ituturok po natin ang ${[...adminIM, ...adminSQ, ...adminID].join(" at ")}. `;
+                if (seScript.length > 0) finalScript += `\n\nMga Inaasahan (Side Effects):\n` + seScript.join(" ") + ` Pwede po punasan ng maligamgam na tubig at painumin ng paracetamol kung lagnatin (maliban kung may tiyak na bawal). `;
                 if (deferScript.length > 0) finalScript += `\n\nDahil sa rules ng spacing o para hindi masyadong masaktan si baby ngayon, ipagpapaliban po muna natin ang ${deferScript.join(", ")}. Babalik po kayo sa tamang petsa."`;
                 
                 return finalScript;
@@ -377,19 +475,32 @@
             const evaluateCase = () => {
                 let pts = 100; let fb = []; const activeCase = cases[currentCaseId];
 
-                const hasDTP = selectedVaccines["Penta"] || (selectedVaccines["DTP"] && selectedVaccines["Hib"] && selectedVaccines["Hepatitis B"]);
-                if (hasDTP && activeCase.req.includes("Penta")) {
-                    fb.push({type: 'ok', msg: "💉 PENTAVALENT SYNERGY: Correctly bundled DTP, Hib, Hep B.", rat: "Minimizes patient distress."});
+                // UNIVERSAL UNWARRANTED CHECK
+                Object.keys(selectedVaccines).forEach(v => {
+                    if (!activeCase.req.includes(v) && !activeCase.traps.includes(v) && !activeCase.defer.includes(v) && selectedVaccines[v].route !== "Defer") {
+                        pts -= 10;
+                        fb.push({
+                            type: 'warn', 
+                            msg: `⚠ Unwarranted Selection: ${v}`, 
+                            rat: "This vaccine is not the primary objective for this specific clinical scenario or age group. Focus only on the indicated priority vaccines."
+                        });
+                    }
+                });
+
+                if (selectedVaccines["Penta"] && selectedVaccines["Hep B"] && selectedVaccines["Hep B"].route !== "Defer") {
+                    pts -= 25;
+                    fb.push({type: 'err', msg: "💉 DOUBLE DOSING ERROR: Pentavalent already contains Hepatitis B.", rat: "Never administer a separate monovalent Hep B shot on the same day you give Pentavalent."});
                 }
 
                 activeCase.req.forEach(req => {
                     if (!selectedVaccines[req]) { pts -= 15; fb.push({type: 'err', msg: `Missed: ${req}.`, rat: activeCase.ratReq}); }
-                    else if (req !== "Penta") { fb.push({type: 'ok', msg: `Correct: ${req}`}); }
+                    else if (req !== "Penta" && req !== "Hep B") { fb.push({type: 'ok', msg: `Correct: ${req}`}); }
+                    else if (req === "Penta" && !selectedVaccines["Hep B"]) { fb.push({type: 'ok', msg: `Correct: Penta (Hep B safely integrated).`}); }
                 });
 
                 activeCase.traps.forEach(trap => {
-                    if (selectedVaccines[trap]) {
-                        pts -= 25; fb.push({type: 'err', msg: `Contraindicated: ${trap}.`, rat: activeCase.ratTrap});
+                    if (selectedVaccines[trap] && selectedVaccines[trap].route !== "Defer") {
+                        pts -= 25; fb.push({type: 'err', msg: `Contraindicated/Trap: ${trap}.`, rat: activeCase.ratTrap});
                     }
                 });
 
@@ -404,22 +515,19 @@
                 });
 
                 Object.keys(selectedVaccines).forEach(v => {
-                    if (activeCase.traps.includes(v) || selectedVaccines[v].route === "Defer") return; 
+                    if (activeCase.traps.includes(v) || selectedVaccines[v].route === "Defer" || (!activeCase.req.includes(v) && !activeCase.defer.includes(v))) return; 
                     const d = selectedVaccines[v];
                     if (d.route === "" || d.site === "") { pts -= 10; fb.push({type: 'err', msg: `Missing Route/Site for ${v}.`}); return; }
                     
                     const isSC = (d.route === "SC"); const isIM = (d.route === "IM");
                     if(v === "BCG" && (d.route !== "ID" || d.site !== "Right Deltoid")) pts -= 10;
-                    if(["Hepatitis B", "Penta", "PCV", "HPV", "Typhoid", "Rabies PreP"].includes(v) && !isIM) pts -= 10;
+                    if(["Hep B", "Penta", "PCV", "PPSV23", "HPV", "Typhoid", "Flu", "Hep A"].includes(v) && !isIM) pts -= 10;
                     if(["Td", "Tdap"].includes(v) && (!isIM || d.site !== "Deltoid (Arm)")) pts -= 10;
-                    if(["OPV", "RV1", "RV5", "Cholera"].includes(v) && d.route !== "Oral") pts -= 10;
-                    if(["MCV0", "MCV1(9m)", "MCV2(12m)", "Varicella", "JEV"].includes(v) && !isSC) pts -= 10;
+                    if(["OPV", "RV", "Cholera"].includes(v) && d.route !== "Oral") pts -= 10;
+                    if(["MCV0", "MMR", "Varicella", "JEV"].includes(v) && !isSC) pts -= 10;
                 });
 
-                if (Object.keys(selectedVaccines).length > 0) {
-                     fb.push({type: 'info', msg: '🗣️ OSCE COUNSELING SCRIPT (Verbalize to Mother):', rat: generateCounselingScript(selectedVaccines)});
-                }
-                
+                fb.push({type: 'info', msg: '🗣️ IDEAL OSCE COUNSELING SCRIPT (Verbalize to Mother):', rat: generateIdealCounselingScript(activeCase)});
                 fb.push({type: 'pearl', msg: 'Clinical Pearl', rat: activeCase.pearl});
 
                 setScore(Math.max(0, pts)); setFeedback(fb); setSubmitted(true);
@@ -453,7 +561,7 @@
                                     <div key={v} className="flex gap-2 bg-slate-50 p-2 rounded border">
                                         <span className="font-bold w-24 text-sm pt-1">{v}</span>
                                         <select disabled={submitted} value={selectedVaccines[v].route} onChange={e => handleDetailChange(v, 'route', e.target.value)} className="p-1 border rounded text-sm"><option value="">Route</option><option value="Oral">Oral</option><option value="IM">IM</option><option value="SC">SC</option><option value="ID">ID</option><option value="Defer">Defer</option></select>
-                                        <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-1 border rounded text-sm disabled:opacity-50"><option value="">Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Outer Upper Arm">Outer Upper Arm</option></select>
+                                        <select disabled={submitted || selectedVaccines[v].route === 'Defer'} value={selectedVaccines[v].site} onChange={e => handleDetailChange(v, 'site', e.target.value)} className="p-1 border rounded text-sm disabled:opacity-50"><option value="">Site...</option><option value="Mouth">Mouth</option><option value="Right Deltoid">Right Deltoid</option><option value="Deltoid (Arm)">Deltoid (Arm)</option><option value="Anterolateral Thigh">Anterolateral Thigh</option><option value="Triceps Fatty Tissue">Triceps Fatty Tissue</option></select>
                                     </div>
                                 ))}
                             </div>
@@ -461,14 +569,24 @@
                         {!submitted ? <button onClick={evaluateCase} disabled={Object.keys(selectedVaccines).length === 0} className="w-full bg-blue-600 text-white font-bold py-2 rounded shadow hover:bg-blue-700 disabled:opacity-50">Evaluate Station</button> : 
                             <div className="p-4 rounded border-2 border-slate-200 bg-slate-50">
                                 <h3 className="text-xl font-bold text-slate-800 mb-3">Feedback: {score}%</h3>
-                                <ul className="space-y-2">
+                                
+                                <div className="mb-6 bg-white p-4 rounded border border-blue-300 shadow-sm">
+                                    <h4 className="font-bold text-blue-900 border-b border-blue-100 pb-2 mb-3">🔑 Ideal Answer Key</h4>
+                                    <div className="text-sm text-slate-800 space-y-2">
+                                        <div><strong>💉 Administer Today:</strong> <span className="text-emerald-700 font-semibold">{cases[currentCaseId].req.length > 0 ? cases[currentCaseId].req.join(", ") : "None"}</span></div>
+                                        <div><strong>⏳ Defer:</strong> <span className="text-amber-600 font-semibold">{cases[currentCaseId].defer.length > 0 ? cases[currentCaseId].defer.join(", ") : "None"}</span></div>
+                                        <div><strong>🚫 Contraindicated (Traps):</strong> <span className="text-red-600 font-semibold">{cases[currentCaseId].traps.length > 0 ? cases[currentCaseId].traps.join(", ") : "None"}</span></div>
+                                    </div>
+                                </div>
+
+                                <ul className="space-y-3">
                                     {feedback.map((f, i) => (
-                                        <li key={i} className={`p-2 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-indigo-100 border-indigo-300 text-indigo-900' : f.type === 'warn' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+                                        <li key={i} className={`flex flex-col p-3 rounded border ${f.type === 'err' ? 'bg-red-50 border-red-200 text-red-900' : f.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-900' : f.type === 'pearl' ? 'bg-indigo-100 border-indigo-300 text-indigo-900' : f.type === 'warn' ? 'bg-amber-50 border-amber-200 text-amber-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
                                             <div className="flex items-start">
                                                 <span className="mr-2 font-bold">{f.type === 'err' ? '✘' : f.type === 'info' ? '🗣️' : f.type === 'pearl' ? '💡' : f.type === 'warn' ? '⚠' : '✔'}</span>
                                                 <span className="font-semibold">{f.msg}</span>
                                             </div>
-                                            {f.rat && <div className={`mt-1 ml-6 text-sm ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium' : ''} whitespace-pre-line`}>{f.rat}</div>}
+                                            {f.rationale && <div className={`mt-1 ml-6 text-sm ${f.type === 'info' || f.type === 'pearl' ? 'italic font-medium' : ''} whitespace-pre-line`}>{f.rationale}</div>}
                                         </li>
                                     ))}
                                 </ul>
@@ -482,141 +600,111 @@
         // --- View 4: Proper Sequence & Scripts ---
         const ProcedureScript = () => (
             <div className="space-y-10 animate-fade-in pb-10">
-                
-                {/* Header */}
                 <div>
-                    <h2 className="text-3xl font-bold text-teal-900 border-b-2 border-teal-200 pb-2 mb-4">Proper Sequence & Full Procedure Script</h2>
-                    <p className="text-slate-600 mb-6">Master checklist and verbatim scripts for the preparation, administration, and post-procedure documentation of vaccines.</p>
+                    <h2 className="text-3xl font-bold text-teal-900 border-b-2 border-teal-200 pb-2 mb-4">Master Procedure Script (2026 Guidelines)</h2>
+                    <p className="text-slate-600 mb-6">Master checklist and verbatim scripts for the preparation, administration, and post-procedure documentation of vaccines based on the 2026 UP Trans.</p>
                 </div>
 
-                {/* Section 1: Preparation */}
                 <div className="bg-white shadow rounded border border-slate-200 p-6">
                     <h3 className="text-xl font-bold text-teal-800 border-b pb-2 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 1</span> Preparation
+                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 1</span> Preparation & The 7 Rights
                     </h3>
                     <ul className="space-y-3 text-slate-700 font-medium ml-2">
-                        <li className="flex items-center gap-3"><input type="checkbox" className="w-5 h-5 accent-teal-600 cursor-pointer" /> Wash hands</li>
-                        <li className="flex items-center gap-3"><input type="checkbox" className="w-5 h-5 accent-teal-600 cursor-pointer" /> Wear gloves</li>
+                        <li className="flex items-center gap-3"><input type="checkbox" className="w-5 h-5 accent-teal-600 cursor-pointer" /> Wash hands and prepare a clean designated area.</li>
                         <li className="flex flex-col gap-1">
                             <div className="flex items-center gap-3">
-                                <input type="checkbox" className="w-5 h-5 accent-teal-600 cursor-pointer" /> Prepare materials:
+                                <input type="checkbox" className="w-5 h-5 accent-teal-600 cursor-pointer" /> Verbalize the <strong>7 Rights of Administration</strong>:
                             </div>
-                            <ul className="list-disc pl-12 text-sm text-slate-600 space-y-1 mt-1">
-                                <li>Vaccine bottle with own needle</li>
-                                <li className="font-bold text-red-600">CHECK EXPIRATION DATE</li>
-                                <li>Syringe and needle</li>
-                                <li>Cotton with alcohol</li>
-                                <li>Dry cotton with micropore</li>
+                            <ul className="list-disc pl-12 text-sm text-slate-600 space-y-1 mt-1 font-mono bg-slate-50 p-3 border rounded">
+                                <li>Right patient (Check baby book & ask name)</li>
+                                <li>Right drug</li>
+                                <li>Right dose</li>
+                                <li>Right route</li>
+                                <li>Right time</li>
+                                <li>Right technique</li>
+                                <li>Right documentation</li>
                             </ul>
                         </li>
                     </ul>
                 </div>
 
-                {/* Section 2: Introduction Phase */}
                 <div className="bg-white shadow rounded border border-slate-200 p-6">
                     <h3 className="text-xl font-bold text-teal-800 border-b pb-2 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 2</span> Introduction Phase
+                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 2</span> Execution / Administration Routes
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 gap-6">
+                        <div className="border-l-4 border-purple-500 rounded p-4 bg-slate-50 shadow-sm">
+                            <h4 className="font-bold text-purple-900 mb-2 uppercase tracking-wide">A. Oral (PO) - Rotavirus & OPV</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700 mb-3">
+                                <li><strong>Timing:</strong> Do not feed baby 2 hours prior. Give Oral vaccines <em>before</em> injectables.</li>
+                                <li><strong>Sequence:</strong> Give Rotavirus first (larger volume), then OPV (2 drops).</li>
+                                <li><strong>Technique:</strong> Cuddle position, head tilted back. Gently squeeze cheeks. Angle RV tube to inner cheek. Do not let OPV dropper touch the mouth.</li>
+                            </ul>
+                        </div>
+
+                        <div className="border-l-4 border-emerald-500 rounded p-4 bg-slate-50 shadow-sm">
+                            <h4 className="font-bold text-emerald-900 mb-2 uppercase tracking-wide">B. Intradermal (ID) - BCG</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700 mb-3">
+                                <li><strong>Dose & Site:</strong> 0.05 mL (&lt;12 mos) or 0.10 mL (&ge;12 mos) via Right Deltoid.</li>
+                                <li><strong>Technique:</strong> Stretch skin firmly. Needle almost flat, <strong>bevel up</strong>. Inject to form a white wheal.</li>
+                            </ul>
+                            <div className="bg-emerald-100 p-3 rounded">
+                                <span className="font-bold text-emerald-800">🗣️ To Consultant:</span>
+                                <p className="italic mt-1 text-slate-700">"The mode of administration is intradermal. Based on the patient's age, the dose is [0.05/0.10] mL. I am pulling the skin taut, inserting the needle almost flat with the bevel up, and slowly injecting to form a wheal."</p>
+                            </div>
+                        </div>
+
+                        <div className="border-l-4 border-blue-500 rounded p-4 bg-slate-50 shadow-sm">
+                            <h4 className="font-bold text-blue-900 mb-2 uppercase tracking-wide">C. Intramuscular (IM)</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700 mb-3">
+                                <li><strong>Site Selection:</strong> Vastus lateralis (anterolateral thigh) for &lt;3yo. Deltoid for &ge;3yo. Separate multiple vaccines by 1 inch.</li>
+                                <li><strong>Technique:</strong> Use Z-technique to displace skin. Dart-like swift movement at a <strong>90° angle</strong>.</li>
+                                <li><strong className="text-red-600">CRITICAL RULE:</strong> Routine aspiration is <strong>no longer recommended</strong> for pediatric vaccines.</li>
+                            </ul>
+                            <div className="bg-blue-100 p-3 rounded">
+                                <span className="font-bold text-blue-800">🗣️ To Consultant:</span>
+                                <p className="italic mt-1 text-slate-700">"The route is intramuscular on the vastus lateralis. I clean the site moving outward. Using the Z-technique, I insert the needle swiftly at a 90-degree angle. Without aspirating, I inject the vaccine, remove the needle, and apply pressure with dry gauze."</p>
+                            </div>
+                        </div>
+                        
+                        <div className="border-l-4 border-amber-500 rounded p-4 bg-slate-50 shadow-sm">
+                            <h4 className="font-bold text-amber-900 mb-2 uppercase tracking-wide">D. Subcutaneous (SC) - MMR, Varicella, JEV</h4>
+                            <ul className="list-disc pl-5 space-y-2 text-sm text-slate-700 mb-3">
+                                <li><strong>Needle:</strong> Must use a 5/8 inch (23-25G) needle.</li>
+                                <li><strong>Site:</strong> Fatty tissue over anterolateral thigh (&lt;1yo) or Triceps (&ge;1yo).</li>
+                                <li><strong>Technique:</strong> Pinch the fatty tissue. Insert at a <strong>45° angle</strong>.</li>
+                            </ul>
+                            <div className="bg-amber-100 p-3 rounded">
+                                <span className="font-bold text-amber-800">🗣️ To Consultant:</span>
+                                <p className="italic mt-1 text-slate-700">"The route is subcutaneous. I am using a 5/8 inch needle to avoid reaching the muscle. I pinch the fatty tissue over the triceps and insert the needle at a 45-degree angle. I inject the vaccine, slowly withdraw, and apply pressure."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white shadow rounded border border-slate-200 p-6">
+                    <h3 className="text-xl font-bold text-teal-800 border-b pb-2 mb-4 flex items-center gap-2">
+                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 3</span> Post-Admin Observation & Documentation
                     </h3>
                     
                     <div className="space-y-6">
+                        <div className="bg-red-50 p-4 rounded border-l-4 border-red-500">
+                            <h4 className="font-bold text-red-900 mb-2">⚠ Mandatory Observation (Syncope/Anaphylaxis)</h4>
+                            <p className="text-slate-800 text-sm">Must observe the patient seated or lying down for <strong>15-20 minutes</strong> post-vaccination (especially adolescents receiving HPV or Tdap) to monitor for syncope or immediate allergic reactions.</p>
+                        </div>
+                        
                         <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-                            <h4 className="font-bold text-blue-900 mb-2">🗣️ Introductory remarks to patient:</h4>
-                            <p className="italic text-slate-800">"Magandang araw po. Ako po is <span className="font-bold text-blue-700">[name of student]</span> at nandito po ako upang bakunahan ang inyong anak. Ano pong pangalan ng inyong anak? Ilang taon na po siya? Ngayon po ay bibigyan siya ng <span className="font-bold text-blue-700">[vaccine name]</span> vaccine. Okay lang po ba na magsimula na tayo? Paki hawakan po ng maigi si <span className="font-bold text-blue-700">[patient's name]</span>."</p>
+                            <h4 className="font-bold text-blue-900 mb-2">🗣️ Counseling Example (Hep B):</h4>
+                            <p className="italic text-slate-800">"Nabigay na po ang Hepatitis B vaccine. Oobserbahan po muna natin si baby ng 15-20 minuto dito bago kayo umuwi para makasigurado tayong walang masamang reaksyon. Maaari po siyang lagnatin o mamula ang hita. Punasan po ng maligamgam na tubig at painumin ng paracetamol kung kailangan. Babalik po kayo makalipas ang [X] buwan para sa susunod na dose."</p>
                         </div>
-                        
+
                         <div className="bg-indigo-50 p-4 rounded border-l-4 border-indigo-500">
-                            <h4 className="font-bold text-indigo-900 mb-2">🗣️ Introductory remarks to consultant:</h4>
-                            <p className="italic text-slate-800">"The mode of administration for <span className="font-bold text-indigo-700">[vaccine name]</span> is <span className="font-bold text-indigo-700">[mode of administration]</span>, which I will now perform."</p>
+                            <h4 className="font-bold text-indigo-900 mb-2">📝 Documentation (To Consultant):</h4>
+                            <p className="italic text-slate-800">"I will now document the date, vaccine name, lot number, manufacturer, and administration site in the patient's baby book to ensure accurate spacing for future doses."</p>
                         </div>
                     </div>
                 </div>
-
-                {/* Section 3: Administration Routes */}
-                <div className="bg-white shadow rounded border border-slate-200 p-6">
-                    <h3 className="text-xl font-bold text-teal-800 border-b pb-2 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 3</span> Execution / Administration Routes
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Intradermal */}
-                        <div className="border border-slate-200 rounded p-4 bg-slate-50">
-                            <h4 className="font-bold text-slate-800 mb-3 bg-slate-200 py-1 px-2 rounded">A. Intradermal (ID)</h4>
-                            <div className="space-y-4 text-sm">
-                                <div>
-                                    <span className="font-bold text-blue-800">To Patient:</span>
-                                    <p className="italic mt-1 text-slate-700">"Babakunahan ko na po siya. Paki-hawakan na lang po siya nang maigi."</p>
-                                </div>
-                                <div>
-                                    <span className="font-bold text-indigo-800">To Consultant:</span>
-                                    <p className="italic mt-1 text-slate-700">"The mode of administration for <span className="font-bold">[vaccine name]</span> vaccine is intradermal. I am pulling the patient’s skin taut before I insert the needle, with the bevel of the needle parallel to the skin. I am now slowly injecting the vaccine to the patient. After injecting, I am withdrawing the needle slowly."</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Intramuscular */}
-                        <div className="border border-slate-200 rounded p-4 bg-slate-50">
-                            <h4 className="font-bold text-slate-800 mb-3 bg-slate-200 py-1 px-2 rounded">B. Intramuscular (IM)</h4>
-                            <div className="space-y-4 text-sm">
-                                <div>
-                                    <span className="font-bold text-blue-800">To Patient:</span>
-                                    <p className="italic mt-1 text-slate-700">"Babakunahan ko na po siya. Paki-hawakan na lang po siya nang maigi."</p>
-                                </div>
-                                <div>
-                                    <span className="font-bold text-indigo-800">To Consultant:</span>
-                                    <p className="italic mt-1 text-slate-700">"The mode of administration for <span className="font-bold">[vaccine name]</span> vaccine is intramuscular. I am pulling the patient’s skin taut before I insert the needle, with the bevel of the needle at a 90° angle. I am now slowly injecting the vaccine to the patient. After injecting, I am withdrawing the needle slowly."</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        {/* Subcutaneous */}
-                        <div className="border border-slate-200 rounded p-4 bg-slate-50">
-                            <h4 className="font-bold text-slate-800 mb-3 bg-slate-200 py-1 px-2 rounded">C. Subcutaneous (SC)</h4>
-                            <div className="space-y-4 text-sm">
-                                <div>
-                                    <span className="font-bold text-blue-800">To Patient:</span>
-                                    <p className="italic mt-1 text-slate-700">"Babakunahan ko na po siya. Paki-hawakan na lang po siya nang maigi."</p>
-                                </div>
-                                <div>
-                                    <span className="font-bold text-indigo-800">To Consultant:</span>
-                                    <p className="italic mt-1 text-slate-700">"The mode of administration for <span className="font-bold">[vaccine name]</span> vaccine is subcutaneous. First, I clean the injection site using cotton and alcohol, making sure I wipe from the center going outward. Then, I pinch the patient’s fatty tissue before inserting the needle, with the bevel up. I aspirate to check if any blood vessels are hit and since there is no blood aspirated, I can now inject the vaccine into the patient. For subcutaneous administration, this is done at a 45° angle. After injecting, I slowly withdraw the needle, applying pressure with my [non-dominant] hand using a cotton. Once completely out, I tape the cotton ball and dispose of the syringe properly."</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Section 4: Post-Administration */}
-                <div className="bg-white shadow rounded border border-slate-200 p-6">
-                    <h3 className="text-xl font-bold text-teal-800 border-b pb-2 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm">Step 4</span> Sample Reporting of Findings
-                    </h3>
-                    
-                    <div className="space-y-6">
-                        {/* Consultant Documentation */}
-                        <div className="bg-indigo-50 p-4 rounded border-l-4 border-indigo-500">
-                            <h4 className="font-bold text-indigo-900 mb-2">📝 To Consultant (Documentation phase):</h4>
-                            <p className="italic text-slate-800">"After administering the vaccines, we must document all these in the patient’s record. We should put the date of administration, name of vaccine, vaccine lot number, vaccine manufacturer, and administration site."</p>
-                        </div>
-                        
-                        {/* Patient Counseling */}
-                        <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-                            <h4 className="font-bold text-blue-900 mb-2">🗣️ To Patient / Guardian (Post-admin & Adverse Effects):</h4>
-                            <p className="italic text-slate-800">"Nabigay na po ang <span className="font-bold text-blue-700">[vaccine name]</span> vaccine kay <span className="font-bold text-blue-700">[patient’s name]</span>. Oobserbahan lang po natin ng 15-20 minutes kung magkakaroon ng reaksyon, tapos pwede na po kayong umuwi. Maari pong makaramdam ang anak ninyo ng paglalagnat o kaya pagbigat, pamumula o pagkati sa parte ng pinagtusukan. Normal lang po iyon, pero kung hindi nawawala matapos ang ilang araw, magpatingin na po kayo sa doktor."</p>
-                            
-                            <div className="mt-4 pt-4 border-t border-blue-200">
-                                <span className="font-bold text-blue-900 text-sm">If Multiple Doses are needed:</span>
-                                <p className="italic text-slate-800 mt-1 text-sm">"Pakitandaan na may <span className="font-bold text-blue-700">[number of doses]</span> pang injection na kailangan gawin para makumpleto ang bakuna. Follow-up po sila makalipas ang <span className="font-bold text-blue-700">[number of weeks/months]</span> na linggo/buwan."</p>
-                            </div>
-                        </div>
-
-                        {/* Full Example */}
-                        <div className="bg-emerald-50 p-4 rounded border border-emerald-300">
-                            <h4 className="font-bold text-emerald-900 mb-2">🌟 Example Script: Administration of Hep B at Birth</h4>
-                            <p className="text-slate-700 italic">"Nabigay na po ang Hepatitis B vaccine kay James. Oobserbahan lang po natin ng 15-20 minutes kung magkakaroon ng reaksyon, tapos pwede na po kayong umuwi. Maari pong makaramdam ang anak ninyo ng paglalagnat o kaya pagbigat, pamumula o pagkati sa parte ng pinagtusukan. Normal lang po iyon, pero kung hindi nawawala matapos ang 1-2 araw, magpatingin na po kayo sa doktor. Pakitandaan din po na may dalawa pang injection/doses na kailangan gawin para makumpleto ang bakuna. Follow-up po sila makalipas ang 1-2 na buwan."</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         );
 
@@ -626,12 +714,12 @@
                 <div className="min-h-screen flex flex-col md:flex-row">
                     <nav className="w-full md:w-64 bg-slate-900 text-white p-6 shadow-xl flex-shrink-0">
                         <h1 className="text-xl font-bold text-emerald-400">UPCM Pedia OSCE</h1>
-                        <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider mb-6">LU5 Master Trainer</p>
+                        <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider mb-6">2026 Immunization</p>
                         <ul className="space-y-2">
                             <li><button onClick={() => setView('ref')} className={`w-full text-left p-2 rounded font-bold transition-colors ${view === 'ref' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>1. Ultimate Cheat Sheet</button></li>
                             <li><button onClick={() => setView('sim-anthro')} className={`w-full text-left p-2 rounded font-bold transition-colors ${view === 'sim-anthro' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>2. Anthro/SAM Sim (8)</button></li>
                             <li><button onClick={() => setView('sim-vac')} className={`w-full text-left p-2 rounded font-bold transition-colors ${view === 'sim-vac' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>3. Vaccine Sim (20 Cases)</button></li>
-                            <li><button onClick={() => setView('procedure')} className={`w-full text-left p-2 rounded font-bold transition-colors ${view === 'procedure' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>4. Procedure & Scripts</button></li>
+                            <li><button onClick={() => setView('procedure')} className={`w-full text-left p-2 rounded font-bold transition-colors ${view === 'procedure' ? 'bg-emerald-700' : 'hover:bg-slate-800'}`}>4. Procedures & Rules</button></li>
                         </ul>
                     </nav>
                     <main className="flex-1 p-4 md:p-8 overflow-y-auto bg-slate-100 h-screen">
